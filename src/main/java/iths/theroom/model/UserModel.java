@@ -1,12 +1,20 @@
 package iths.theroom.model;
 
-public class UserModel {
+import java.io.Serializable;
+import java.util.Set;
+
+public class UserModel implements Serializable {
 
     private String userName;
     private String email;
 
     private String firstName;
     private String lastName;
+
+    private Set<MessageModel> messages;
+
+    public UserModel() {
+    }
 
     public String getUserName() {
         return userName;
@@ -39,4 +47,9 @@ public class UserModel {
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
+
+    public Set<MessageModel> getMessages() {
+        return messages;
+    }
+
 }
