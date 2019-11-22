@@ -1,52 +1,72 @@
 package iths.theroom.entity;
 
-import iths.theroom.config.DataBaseConfig;
+import static iths.theroom.config.DataBaseConfig.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.Instant;
 import java.util.Objects;
+import java.util.UUID;
+
 
 @Entity
-@Table(name = DataBaseConfig.TABLE_MESSAGE)
+@Table(name = TABLE_MESSAGE)
 public class Message {
 
     @Id
     @GeneratedValue
     private Long id;
+    @Column(name = "uuid", unique = true)
+    private String uuid;
     private Type type;
     private String content;
-    // Can change to User object or uuid when created
-    private String sender;
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch=FetchType.LAZY)
+    @JoinColumn(name=COLUMN_USER_ID)
+    private User sender;
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch=FetchType.LAZY)
+    @JoinColumn(name=COLUMN_ROOM_ID)
+    private Room room;
     private Instant time;
     private long upVotes;
     private long downVotes;
 
     public Message() {
+        this.sender = new User("guest");
+        this.room = new Room("unspecified");
+        this.time = Instant.now();
     }
 
-    public Message(Type type, String content, String sender, Instant time, long upVotes, long downVotes) {
+    public Message(Type type, String content, User sender, Room room, Instant time, long upVotes, long downVotes) {
         this.type = Objects.requireNonNullElse(type, Type.UNDEFINED);
         this.content = Objects.requireNonNullElse(content, "");
-        this.sender = Objects.requireNonNullElse(content, "unknown");
+        this.sender = Objects.requireNonNullElse(sender, new User("guest"));
+        this.room = Objects.requireNonNullElse(room, new Room("unspecified"));
         this.time = Objects.requireNonNullElse(time, Instant.now());
         this.upVotes = upVotes;
         this.downVotes = downVotes;
     }
 
-    public Message(Type type, String content, String sender, Instant time) {
-       this(type, content, sender, time, 0L, 0L);
+    public Message(Type type, String content, User sender, Room room, Instant time) {
+       this(type, content, sender, room, time, 0L, 0L);
     }
 
-    public Message(Type type, String content, String sender) {
-        this(type, content, sender, Instant.now(), 0L, 0L);
+    public Message(Type type, String content, User sender, Room room) {
+        this(type, content, sender, room, Instant.now(), 0L, 0L);
     }
 
 
     public long getId() {
         return id;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        if(this.uuid==null)
+            this.uuid = uuid;
+        else
+            throw new UnsupportedOperationException("set uuid only allowed once");
     }
 
     public Type getType() {
@@ -65,11 +85,11 @@ public class Message {
         this.content = content;
     }
 
-    public String getSender() {
+    public User getSender() {
         return sender;
     }
 
-    public void setSender(String sender) {
+    public void setSender(User sender) {
         this.sender = sender;
     }
 
@@ -103,4 +123,33 @@ public class Message {
         UNDEFINED
     }
 
+    public Room getRoom() {
+        return room;
+    }
+
+    public void setRoom(Room room) {
+        this.room = room;
+    }
+
+    @PrePersist
+    public void initializeUUID() {
+        if (getUuid() == null) {
+            setUuid(UUID.randomUUID().toString());
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "Message{" +
+                "id=" + id +
+                ", uuid='" + uuid + '\'' +
+                ", type=" + type +
+                ", content='" + content + '\'' +
+                ", sender=" + sender +
+                ", room=" + room +
+                ", time=" + time +
+                ", upVotes=" + upVotes +
+                ", downVotes=" + downVotes +
+                '}';
+    }
 }

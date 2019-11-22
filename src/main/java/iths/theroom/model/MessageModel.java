@@ -1,8 +1,11 @@
 package iths.theroom.model;
 
 import iths.theroom.entity.Message;
+import iths.theroom.entity.Room;
+import iths.theroom.entity.User;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -14,20 +17,30 @@ public class MessageModel {
     private String content;
     private String sender;
     private String time;
+    private String room;
     private long upVotes;
     private long downVotes;
 
 
-    public MessageModel() {
-    }
-
-    public MessageModel(String type, String content, String sender, String time, long upVotes, long downVotes) {
+    public MessageModel(String type, String content, String sender, String time, String room, long upVotes, long downVotes) {
         this.type = type;
         this.content = content;
         this.sender = sender;
         this.time = time;
+        this.room = room;
         this.upVotes = upVotes;
         this.downVotes = downVotes;
+    }
+
+    public MessageModel() {
+    }
+
+    public String getRoom() {
+        return room;
+    }
+
+    public void setRoom(String room) {
+        this.room = room;
     }
 
     public String getType() {
@@ -81,10 +94,26 @@ public class MessageModel {
     public static MessageModel toModel(Message message){
         MessageModel messageModel = new MessageModel();
         if(message!=null) {
-            Optional.of(message).map(Message::getContent).filter(Predicate.not(String::isBlank)).ifPresent(messageModel::setContent);
-            Optional.of(message).map(Message::getSender).filter(Predicate.not(String::isBlank)).ifPresent(messageModel::setSender);
-            Optional.of(message).map(Message::getTime).map(Instant::toString).filter(Predicate.not(String::isBlank)).ifPresent(messageModel::setTime);
-            Optional.of(message).map(Message::getType).map(Enum::toString).filter(Predicate.not(String::isBlank)).ifPresent(messageModel::setType);
+            Optional.of(message)
+                    .map(Message::getContent)
+                    .filter(Predicate.not(String::isBlank))
+                    .ifPresent(messageModel::setContent);
+            Optional.of(message).map(Message::getSender)
+                    .map(User::getName)
+                    .filter(Predicate.not(String::isBlank))
+                    .ifPresent(messageModel::setSender);
+            Optional.of(message).map(Message::getRoom)
+                    .map(Room::getName)
+                    .filter(Predicate.not(String::isBlank))
+                    .ifPresent(messageModel::setRoom);
+            Optional.of(message).map(Message::getTime)
+                    .map(i -> i.truncatedTo(ChronoUnit.SECONDS).toString())
+                    .filter(Predicate.not(String::isBlank))
+                    .ifPresent(messageModel::setTime);
+            Optional.of(message).map(Message::getType)
+                    .map(Enum::toString)
+                    .filter(Predicate.not(String::isBlank))
+                    .ifPresent(messageModel::setType);
             messageModel.setUpVotes(message.getUpVotes());
             messageModel.setDownVotes(message.getDownVotes());
         }

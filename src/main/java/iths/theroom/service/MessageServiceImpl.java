@@ -23,6 +23,11 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
+    public MessageModel getMessageByUuid(String uuid) {
+        return MessageModel.toModel(messageRepository.findByUuid(uuid).orElseThrow(NoSuchElementException::new));
+    }
+
+    @Override
     public List<MessageModel> getAllMessages() {
         return MessageModel.toModel(messageRepository.findAll());
     }

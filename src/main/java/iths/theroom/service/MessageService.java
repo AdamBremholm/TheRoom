@@ -9,6 +9,8 @@ public interface MessageService {
 
     MessageModel getMessageById(Long id);
 
+    MessageModel getMessageByUuid(String uuid);
+
     List<MessageModel> getAllMessages();
 
     MessageModel save(Message message);
