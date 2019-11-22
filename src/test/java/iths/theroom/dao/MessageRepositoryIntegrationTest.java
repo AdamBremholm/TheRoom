@@ -2,7 +2,7 @@ package iths.theroom.dao;
 
 import iths.theroom.entity.Message;
 import iths.theroom.entity.Room;
-import iths.theroom.entity.User;
+import iths.theroom.entity.UserEntity;
 import iths.theroom.model.MessageModel;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,35 +28,35 @@ public class MessageRepositoryIntegrationTest {
 
     @Test
     public void saveRead() {
-        Message message = new Message(Message.Type.CHAT, "hello", new User("sven"), new Room("one"));
+        Message message = new Message(Message.Type.CHAT, "hello", new UserEntity("sven"), new Room("one"));
         entityManager.persist(message);
         assertThat(messageRepository.findById(message.getId()).orElseThrow(NoSuchElementException::new)).isEqualTo(message);
     }
     @Test
     public void getByUuid() {
-        Message message = new Message(Message.Type.CHAT, "hello", new User("sven"), new Room("one"));
+        Message message = new Message(Message.Type.CHAT, "hello", new UserEntity("sven"), new Room("one"));
         entityManager.persist(message);
         assertThat(messageRepository.findByUuid(message.getUuid()).orElseThrow(NoSuchElementException::new)).isEqualTo(message);
     }
 
     @Test
     public void getRoom() {
-        Message message = new Message(Message.Type.CHAT, "hello", new User("sven"), new Room("one"));
+        Message message = new Message(Message.Type.CHAT, "hello", new UserEntity("sven"), new Room("one"));
         entityManager.persist(message);
         assertThat(messageRepository.findById(message.getId()).orElseThrow(NoSuchElementException::new).getRoom().getName()).isEqualTo("one");
     }
 
     @Test
     public void getSender() {
-        Message message = new Message(Message.Type.CHAT, "hello", new User("sven"), new Room("one"));
+        Message message = new Message(Message.Type.CHAT, "hello", new UserEntity("sven"), new Room("one"));
         entityManager.persist(message);
-        assertThat(messageRepository.findById(message.getId()).orElseThrow(NoSuchElementException::new).getSender().getName()).isEqualTo("sven");
+        assertThat(messageRepository.findById(message.getId()).orElseThrow(NoSuchElementException::new).getSender().getUserName()).isEqualTo("sven");
     }
 
 
     @Test
     public void updateRoom() {
-        Message message = new Message(Message.Type.CHAT, "hello", new User("sven"), new Room("one"));
+        Message message = new Message(Message.Type.CHAT, "hello", new UserEntity("sven"), new Room("one"));
         entityManager.persist(message);
         message.setRoom(new Room("two"));
         entityManager.merge(message);
@@ -65,19 +65,19 @@ public class MessageRepositoryIntegrationTest {
 
     @Test
     public void updateSender() {
-        Message message = new Message(Message.Type.CHAT, "hello", new User("sven"), new Room("one"));
+        Message message = new Message(Message.Type.CHAT, "hello", new UserEntity("sven"), new Room("one"));
         entityManager.persist(message);
-        message.setSender(new User("johan"));
+        message.setSender(new UserEntity("johan"));
         entityManager.merge(message);
-        assertThat(messageRepository.findById(message.getId()).orElseThrow(NoSuchElementException::new).getSender().getName()).isEqualTo("johan");
+        assertThat(messageRepository.findById(message.getId()).orElseThrow(NoSuchElementException::new).getSender().getUserName()).isEqualTo("johan");
     }
 
 
     @Test
-    public void getUser() {
-        Message message = new Message(Message.Type.CHAT, "hello", new User("sven"), new Room("one"));
+    public void getUserEntity() {
+        Message message = new Message(Message.Type.CHAT, "hello", new UserEntity("sven"), new Room("one"));
         entityManager.persist(message);
-        assertThat(messageRepository.findById(message.getId()).orElseThrow(NoSuchElementException::new).getSender().getName()).isEqualTo("sven");
+        assertThat(messageRepository.findById(message.getId()).orElseThrow(NoSuchElementException::new).getSender().getUserName()).isEqualTo("sven");
     }
 
     @Test
@@ -92,7 +92,7 @@ public class MessageRepositoryIntegrationTest {
 
     @Test
     public void saveWithNewInfoUpdates() {
-        Message message = new Message(Message.Type.CHAT, "hello", new User("sven"), new Room("one"));
+        Message message = new Message(Message.Type.CHAT, "hello", new UserEntity("sven"), new Room("one"));
         entityManager.persist(message);
         Message foundMessage = messageRepository.findById(message.getId()).orElseThrow(NoSuchElementException::new);
         foundMessage.setContent("bye");
@@ -102,7 +102,7 @@ public class MessageRepositoryIntegrationTest {
 
     @Test
     public void remove() {
-        Message message = new Message(Message.Type.CHAT, "hello", new User("sven"), new Room("one"));
+        Message message = new Message(Message.Type.CHAT, "hello", new UserEntity("sven"), new Room("one"));
         entityManager.persist(message);
         Message foundMessage = messageRepository.findById(message.getId()).orElseThrow(NoSuchElementException::new);
         messageRepository.delete(foundMessage);

@@ -19,37 +19,39 @@ public class Message {
     private String uuid;
     private Type type;
     private String content;
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch=FetchType.LAZY)
-    @JoinColumn(name=COLUMN_USER_ID)
-    private User sender;
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch=FetchType.LAZY)
-    @JoinColumn(name=COLUMN_ROOM_ID)
-    private Room room;
     private Instant time;
     private long upVotes;
     private long downVotes;
 
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch=FetchType.LAZY)
+    @JoinColumn(name=COLUMN_USER_ID)
+    private UserEntity sender;
+
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch=FetchType.LAZY)
+    @JoinColumn(name=COLUMN_ROOM_ID)
+    private Room room;
+
     public Message() {
-        this.sender = new User("guest");
+        this.sender = new UserEntity("guest");
         this.room = new Room("unspecified");
         this.time = Instant.now();
     }
 
-    public Message(Type type, String content, User sender, Room room, Instant time, long upVotes, long downVotes) {
+    public Message(Type type, String content, UserEntity sender, Room room, Instant time, long upVotes, long downVotes) {
         this.type = Objects.requireNonNullElse(type, Type.UNDEFINED);
         this.content = Objects.requireNonNullElse(content, "");
-        this.sender = Objects.requireNonNullElse(sender, new User("guest"));
+        this.sender = Objects.requireNonNullElse(sender, new UserEntity("guest"));
         this.room = Objects.requireNonNullElse(room, new Room("unspecified"));
         this.time = Objects.requireNonNullElse(time, Instant.now());
         this.upVotes = upVotes;
         this.downVotes = downVotes;
     }
 
-    public Message(Type type, String content, User sender, Room room, Instant time) {
+    public Message(Type type, String content, UserEntity sender, Room room, Instant time) {
        this(type, content, sender, room, time, 0L, 0L);
     }
 
-    public Message(Type type, String content, User sender, Room room) {
+    public Message(Type type, String content, UserEntity sender, Room room) {
         this(type, content, sender, room, Instant.now(), 0L, 0L);
     }
 
@@ -85,11 +87,11 @@ public class Message {
         this.content = content;
     }
 
-    public User getSender() {
+    public UserEntity getSender() {
         return sender;
     }
 
-    public void setSender(User sender) {
+    public void setSender(UserEntity sender) {
         this.sender = sender;
     }
 

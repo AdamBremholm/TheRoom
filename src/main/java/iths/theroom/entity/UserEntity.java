@@ -2,8 +2,12 @@ package iths.theroom.entity;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Set;
+
+import static iths.theroom.config.DataBaseConfig.*;
 
 @Entity
+@Table(name=TABLE_USER)
 public class UserEntity implements Serializable {
 
     @Id
@@ -19,6 +23,13 @@ public class UserEntity implements Serializable {
 
     private String firstName;
     private String lastName;
+
+    @OneToMany(mappedBy = "sender")
+    private Set<Message> messages;
+
+    public UserEntity(String userName) {
+        this.userName = userName;
+    }
 
     public Long getId() {
         return id;

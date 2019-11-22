@@ -2,7 +2,7 @@ package iths.theroom.model;
 
 import iths.theroom.entity.Message;
 import iths.theroom.entity.Room;
-import iths.theroom.entity.User;
+import iths.theroom.entity.UserEntity;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -99,7 +99,7 @@ public class MessageModel {
                     .filter(Predicate.not(String::isBlank))
                     .ifPresent(messageModel::setContent);
             Optional.of(message).map(Message::getSender)
-                    .map(User::getName)
+                    .map(UserEntity::getUserName)
                     .filter(Predicate.not(String::isBlank))
                     .ifPresent(messageModel::setSender);
             Optional.of(message).map(Message::getRoom)
