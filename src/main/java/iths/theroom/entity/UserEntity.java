@@ -8,7 +8,7 @@ import static iths.theroom.config.DataBaseConfig.*;
 
 @Entity
 @Table(name=TABLE_USER)
-public class UserEntity implements Serializable {
+public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,6 +26,9 @@ public class UserEntity implements Serializable {
 
     @OneToMany(mappedBy = "sender")
     private Set<Message> messages;
+
+    public UserEntity() {
+    }
 
     public UserEntity(String userName) {
         this.userName = userName;
@@ -85,5 +88,13 @@ public class UserEntity implements Serializable {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public Set<Message> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(Set<Message> messages) {
+        this.messages = messages;
     }
 }
