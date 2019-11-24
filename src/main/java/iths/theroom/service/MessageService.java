@@ -1,18 +1,18 @@
 package iths.theroom.service;
 
-import iths.theroom.entity.Message;
+import iths.theroom.entity.MessageEntity;
 
 import java.util.List;
 
 public interface MessageService {
 
-    Message getMessageById(Long id);
+    MessageEntity getMessageById(Long id);
 
-    Message getMessageByUuid(String uuid);
+    MessageEntity getMessageByUuid(String uuid);
 
-    List<Message> getAllMessages();
+    List<MessageEntity> getAllMessages();
 
-    Message save(Message message);
+    MessageEntity save(MessageEntity message);
 
     void remove(String uuid);
 

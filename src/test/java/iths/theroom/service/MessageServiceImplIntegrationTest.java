@@ -1,7 +1,7 @@
 package iths.theroom.service;
 
 import iths.theroom.dao.MessageRepository;
-import iths.theroom.entity.Message;
+import iths.theroom.entity.MessageEntity;
 import iths.theroom.entity.Room;
 import iths.theroom.entity.UserEntity;
 import org.junit.Before;
@@ -36,7 +36,7 @@ public class MessageServiceImplIntegrationTest {
 
     @Before
     public void setUp() {
-        iths.theroom.entity.Message message = new iths.theroom.entity.Message(iths.theroom.entity.Message.Type.CHAT, "hello", new UserEntity("sven"), new Room("one"));
+        MessageEntity message = new MessageEntity(MessageEntity.Type.CHAT, "hello", new UserEntity("sven"), new Room("one"));
         message.setUuid("123abc");
 
         Mockito.when(messageRepository.findByUuid(message.getUuid()))
@@ -47,7 +47,7 @@ public class MessageServiceImplIntegrationTest {
     @Test
     public void whenValidUuid_thenMessageModelShouldBeReturned() {
         String content = "hello";
-        Message found = messageService.getMessageByUuid("123abc");
+        MessageEntity found = messageService.getMessageByUuid("123abc");
 
         assertThat(found.getContent())
                 .isEqualTo(content);

@@ -1,7 +1,6 @@
 package iths.theroom.dao;
 
-import iths.theroom.entity.Message;
-import iths.theroom.entity.Room;
+
 import iths.theroom.entity.UserEntity;
 import org.junit.Test;
 import org.junit.runner.RunWith;

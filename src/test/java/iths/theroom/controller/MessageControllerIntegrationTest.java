@@ -1,6 +1,6 @@
 package iths.theroom.controller;
 
-import iths.theroom.entity.Message;
+import iths.theroom.entity.MessageEntity;
 import iths.theroom.entity.Room;
 import iths.theroom.entity.UserEntity;
 import iths.theroom.service.MessageService;
@@ -43,9 +43,9 @@ public class MessageControllerIntegrationTest {
     public void givenMessages_whenGetMessages_thenReturnJsonArray()
             throws Exception {
 
-        Message message = new Message(Message.Type.CHAT, "hello", new UserEntity("sven"), new Room("one"));
+        MessageEntity message = new MessageEntity(MessageEntity.Type.CHAT, "hello", new UserEntity("sven"), new Room("one"));
 
-        List<Message> allMessages = Collections.singletonList(message);
+        List<MessageEntity> allMessages = Collections.singletonList(message);
 
         given(service.getAllMessages()).willReturn(allMessages);
 
@@ -62,8 +62,8 @@ public class MessageControllerIntegrationTest {
     public void addMessage()
             throws Exception {
 
-        Message message = new Message(Message.Type.CHAT, "hello", new UserEntity("sven"), new Room("one"));
-        List<Message> allMessages = Collections.singletonList(message);
+        MessageEntity message = new MessageEntity(MessageEntity.Type.CHAT, "hello", new UserEntity("sven"), new Room("one"));
+        List<MessageEntity> allMessages = Collections.singletonList(message);
 
         given(service.getAllMessages()).willReturn(allMessages);
 

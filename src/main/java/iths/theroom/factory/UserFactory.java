@@ -7,6 +7,8 @@ import iths.theroom.entity.UserEntity;
 import iths.theroom.model.MessageModel;
 import iths.theroom.model.UserModel;
 
+import static iths.theroom.factory.MessageFactory.toModel;
+
 public class UserFactory {
 
     public UserEntity jsonToEntity(String userJson){
@@ -31,7 +33,7 @@ public class UserFactory {
         if(userEntity.getMessages() != null){
 
             for(MessageEntity message : userEntity.getMessages()){
-                MessageModel messageModel = MessageModel.toModel(message);
+                MessageModel messageModel = toModel(message);
                 userModel.getMessages().add(messageModel);
             }
         }

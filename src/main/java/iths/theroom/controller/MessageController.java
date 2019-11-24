@@ -1,6 +1,6 @@
 package iths.theroom.controller;
 
-import iths.theroom.entity.Message;
+import iths.theroom.entity.MessageEntity;
 import iths.theroom.model.MessageModel;
 import iths.theroom.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,12 +25,12 @@ public class MessageController {
 
     @GetMapping("/messages/{uuid}")
     public MessageModel getMessage(@PathVariable("uuid") String uuid) {
-            Message found = messageService.getMessageByUuid(uuid);
+            MessageEntity found = messageService.getMessageByUuid(uuid);
             return toModel(found);
     }
 
     @PostMapping("/messages")
-    public MessageModel addMessage(@RequestBody Message message) {
+    public MessageModel addMessage(@RequestBody MessageEntity message) {
         return toModel(messageService.save(message));
     }
     @DeleteMapping("/messages/{uuid}")
