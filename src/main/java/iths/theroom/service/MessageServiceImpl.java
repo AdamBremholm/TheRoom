@@ -1,6 +1,6 @@
 package iths.theroom.service;
 
-import iths.theroom.dao.MessageRepository;
+import iths.theroom.repository.MessageRepository;
 import iths.theroom.entity.Message;
 import iths.theroom.model.MessageModel;
 import org.springframework.beans.factory.annotation.Autowired;

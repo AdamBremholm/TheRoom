@@ -1,4 +1,4 @@
-package iths.theroom.dao;
+package iths.theroom.repository;
 
 import iths.theroom.entity.Message;
 import org.springframework.data.jpa.repository.JpaRepository;
