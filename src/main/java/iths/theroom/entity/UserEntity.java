@@ -1,7 +1,6 @@
 package iths.theroom.entity;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.Set;
 
 import static iths.theroom.config.DataBaseConfig.*;
@@ -25,7 +24,7 @@ public class UserEntity {
     private String lastName;
 
     @OneToMany(mappedBy = "sender")
-    private Set<Message> messages;
+    private Set<MessageEntity> messageEntities;
 
     public UserEntity() {
     }
@@ -90,11 +89,11 @@ public class UserEntity {
         this.lastName = lastName;
     }
 
-    public Set<Message> getMessages() {
-        return messages;
+    public Set<MessageEntity> getMessageEntities() {
+        return messageEntities;
     }
 
-    public void setMessages(Set<Message> messages) {
-        this.messages = messages;
+    public void setMessageEntities(Set<MessageEntity> messageEntities) {
+        this.messageEntities = messageEntities;
     }
 }

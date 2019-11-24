@@ -10,7 +10,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = TABLE_MESSAGE)
-public class Message {
+public class MessageEntity {
 
     @Id
     @GeneratedValue
@@ -29,30 +29,30 @@ public class Message {
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch=FetchType.LAZY)
     @JoinColumn(name=COLUMN_ROOM_ID)
-    private Room room;
+    private RoomEntity roomEntity;
 
-    public Message() {
+    public MessageEntity() {
         this.sender = new UserEntity("guest");
-        this.room = new Room("unspecified");
+        this.roomEntity = new RoomEntity("unspecified");
         this.time = Instant.now();
     }
 
-    public Message(Type type, String content, UserEntity sender, Room room, Instant time, long upVotes, long downVotes) {
+    public MessageEntity(Type type, String content, UserEntity sender, RoomEntity roomEntity, Instant time, long upVotes, long downVotes) {
         this.type = Objects.requireNonNullElse(type, Type.UNDEFINED);
         this.content = Objects.requireNonNullElse(content, "");
         this.sender = Objects.requireNonNullElse(sender, new UserEntity("guest"));
-        this.room = Objects.requireNonNullElse(room, new Room("unspecified"));
+        this.roomEntity = Objects.requireNonNullElse(roomEntity, new RoomEntity("unspecified"));
         this.time = Objects.requireNonNullElse(time, Instant.now());
         this.upVotes = upVotes;
         this.downVotes = downVotes;
     }
 
-    public Message(Type type, String content, UserEntity sender, Room room, Instant time) {
-       this(type, content, sender, room, time, 0L, 0L);
+    public MessageEntity(Type type, String content, UserEntity sender, RoomEntity roomEntity, Instant time) {
+       this(type, content, sender, roomEntity, time, 0L, 0L);
     }
 
-    public Message(Type type, String content, UserEntity sender, Room room) {
-        this(type, content, sender, room, Instant.now(), 0L, 0L);
+    public MessageEntity(Type type, String content, UserEntity sender, RoomEntity roomEntity) {
+        this(type, content, sender, roomEntity, Instant.now(), 0L, 0L);
     }
 
 
@@ -125,12 +125,12 @@ public class Message {
         UNDEFINED
     }
 
-    public Room getRoom() {
-        return room;
+    public RoomEntity getRoomEntity() {
+        return roomEntity;
     }
 
-    public void setRoom(Room room) {
-        this.room = room;
+    public void setRoomEntity(RoomEntity roomEntity) {
+        this.roomEntity = roomEntity;
     }
 
     @PrePersist
@@ -142,13 +142,13 @@ public class Message {
 
     @Override
     public String toString() {
-        return "Message{" +
+        return "MessageEntity{" +
                 "id=" + id +
                 ", uuid='" + uuid + '\'' +
                 ", type=" + type +
                 ", content='" + content + '\'' +
                 ", sender=" + sender +
-                ", room=" + room +
+                ", roomEntity=" + roomEntity +
                 ", time=" + time +
                 ", upVotes=" + upVotes +
                 ", downVotes=" + downVotes +

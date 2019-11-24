@@ -1,10 +1,9 @@
 package iths.theroom.model;
 
-import iths.theroom.entity.Message;
-import iths.theroom.entity.Room;
+import iths.theroom.entity.MessageEntity;
+import iths.theroom.entity.RoomEntity;
 import iths.theroom.entity.UserEntity;
 
-import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -91,39 +90,39 @@ public class MessageModel {
         this.downVotes = downVotes;
     }
 
-    public static MessageModel toModel(Message message){
+    public static MessageModel toModel(MessageEntity messageEntity){
         MessageModel messageModel = new MessageModel();
-        if(message!=null) {
-            Optional.of(message)
-                    .map(Message::getContent)
+        if(messageEntity !=null) {
+            Optional.of(messageEntity)
+                    .map(MessageEntity::getContent)
                     .filter(Predicate.not(String::isBlank))
                     .ifPresent(messageModel::setContent);
-            Optional.of(message).map(Message::getSender)
+            Optional.of(messageEntity).map(MessageEntity::getSender)
                     .map(UserEntity::getUserName)
                     .filter(Predicate.not(String::isBlank))
                     .ifPresent(messageModel::setSender);
-            Optional.of(message).map(Message::getRoom)
-                    .map(Room::getName)
+            Optional.of(messageEntity).map(MessageEntity::getRoomEntity)
+                    .map(RoomEntity::getRoomName)
                     .filter(Predicate.not(String::isBlank))
                     .ifPresent(messageModel::setRoom);
-            Optional.of(message).map(Message::getTime)
+            Optional.of(messageEntity).map(MessageEntity::getTime)
                     .map(i -> i.truncatedTo(ChronoUnit.SECONDS).toString())
                     .filter(Predicate.not(String::isBlank))
                     .ifPresent(messageModel::setTime);
-            Optional.of(message).map(Message::getType)
+            Optional.of(messageEntity).map(MessageEntity::getType)
                     .map(Enum::toString)
                     .filter(Predicate.not(String::isBlank))
                     .ifPresent(messageModel::setType);
-            messageModel.setUpVotes(message.getUpVotes());
-            messageModel.setDownVotes(message.getDownVotes());
+            messageModel.setUpVotes(messageEntity.getUpVotes());
+            messageModel.setDownVotes(messageEntity.getDownVotes());
         }
         return messageModel;
     }
 
-    public static List<MessageModel> toModel(List<Message> messages){
+    public static List<MessageModel> toModel(List<MessageEntity> messageEntities){
         List<MessageModel> messageModels = new ArrayList<>();
-        if(messages!=null){
-            messages.forEach(m -> messageModels.add(MessageModel.toModel(m)));
+        if(messageEntities !=null){
+            messageEntities.forEach(m -> messageModels.add(MessageModel.toModel(m)));
         }
         return messageModels;
 

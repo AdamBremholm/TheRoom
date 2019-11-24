@@ -1,6 +1,6 @@
 package iths.theroom.service;
 
-import iths.theroom.entity.Message;
+import iths.theroom.entity.MessageEntity;
 import iths.theroom.model.MessageModel;
 
 import java.util.List;
@@ -13,8 +13,8 @@ public interface MessageService {
 
     List<MessageModel> getAllMessages();
 
-    MessageModel save(Message message);
+    MessageModel save(MessageEntity messageEntity);
 
-    void remove(Message message);
+    void remove(MessageEntity messageEntity);
 
 }

@@ -2,7 +2,7 @@ package iths.theroom.factory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import iths.theroom.entity.Message;
+import iths.theroom.entity.MessageEntity;
 import iths.theroom.entity.UserEntity;
 import iths.theroom.model.MessageModel;
 import iths.theroom.model.UserModel;
@@ -28,10 +28,10 @@ public class UserFactory {
         userModel.setFirstName(userEntity.getFirstName());
         userModel.setLastName(userEntity.getLastName());
 
-        if(userEntity.getMessages() != null){
+        if(userEntity.getMessageEntities() != null){
 
-            for(Message message : userEntity.getMessages()){
-                MessageModel messageModel = MessageModel.toModel(message);
+            for(MessageEntity messageEntity : userEntity.getMessageEntities()){
+                MessageModel messageModel = MessageModel.toModel(messageEntity);
                 userModel.getMessages().add(messageModel);
             }
         }
