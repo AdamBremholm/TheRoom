@@ -8,10 +8,11 @@ import java.util.Set;
 
 public class RoomModel {
     private String roomName;
-    private Set<MessageEntity> messages;
+
+    private Set<MessageEntity> messageEntities;
 
     public RoomModel(){}
-    public RoomModel(RoomEntity room, Role role){}
+    public RoomModel(RoomEntity roomEntity, Role role){}
 
     public String getRoomName() {
         return roomName;
@@ -21,11 +22,12 @@ public class RoomModel {
         this.roomName = roomName;
     }
 
-    public Set<MessageEntity> getMessages() {
-        return messages;
+    public Set<MessageEntity> getMessageEntities() {
+        return messageEntities;
     }
 
-    public void setMessages(Set<MessageEntity> messages) {
-        this.messages = messages;
+    public void setMessageEntities(Set<MessageEntity> messageEntities) {
+        this.messageEntities = messageEntities;
+
     }
 }

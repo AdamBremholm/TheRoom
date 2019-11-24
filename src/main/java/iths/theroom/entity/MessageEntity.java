@@ -29,30 +29,32 @@ public class MessageEntity {
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch=FetchType.LAZY)
     @JoinColumn(name=COLUMN_ROOM_ID)
-    private RoomEntity room;
+
+    private RoomEntity roomEntity;
 
     public MessageEntity() {
         this.sender = new UserEntity("guest");
-        this.room = new RoomEntity("unspecified");
+        this.roomEntity = new RoomEntity("unspecified");
         this.time = Instant.now();
     }
 
-    public MessageEntity(Type type, String content, UserEntity sender, RoomEntity room, Instant time, long upVotes, long downVotes) {
+    public MessageEntity(Type type, String content, UserEntity sender, RoomEntity roomEntity, Instant time, long upVotes, long downVotes) {
         this.type = Objects.requireNonNullElse(type, Type.UNDEFINED);
         this.content = Objects.requireNonNullElse(content, "");
         this.sender = Objects.requireNonNullElse(sender, new UserEntity("guest"));
-        this.room = Objects.requireNonNullElse(room, new RoomEntity("unspecified"));
+        this.roomEntity = Objects.requireNonNullElse(roomEntity, new RoomEntity("unspecified"));
         this.time = Objects.requireNonNullElse(time, Instant.now());
         this.upVotes = upVotes;
         this.downVotes = downVotes;
     }
 
-    public MessageEntity(Type type, String content, UserEntity sender, RoomEntity room, Instant time) {
-       this(type, content, sender, room, time, 0L, 0L);
+    public MessageEntity(Type type, String content, UserEntity sender, RoomEntity roomEntity, Instant time) {
+       this(type, content, sender, roomEntity, time, 0L, 0L);
     }
 
-    public MessageEntity(Type type, String content, UserEntity sender, RoomEntity room) {
-        this(type, content, sender, room, Instant.now(), 0L, 0L);
+    public MessageEntity(Type type, String content, UserEntity sender, RoomEntity roomEntity) {
+        this(type, content, sender, roomEntity, Instant.now(), 0L, 0L);
+
     }
 
 
@@ -125,12 +127,13 @@ public class MessageEntity {
         UNDEFINED
     }
 
-    public RoomEntity getRoom() {
-        return room;
+    public RoomEntity getRoomEntity() {
+        return roomEntity;
     }
 
-    public void setRoom(RoomEntity room) {
-        this.room = room;
+    public void setRoomEntity(RoomEntity roomEntity) {
+        this.roomEntity = roomEntity;
+
     }
 
     @PrePersist
@@ -142,13 +145,13 @@ public class MessageEntity {
 
     @Override
     public String toString() {
-        return "Message{" +
+        return "MessageEntity{" +
                 "id=" + id +
                 ", uuid='" + uuid + '\'' +
                 ", type=" + type +
                 ", content='" + content + '\'' +
                 ", sender=" + sender +
-                ", room=" + room +
+                ", roomEntity=" + roomEntity +
                 ", time=" + time +
                 ", upVotes=" + upVotes +
                 ", downVotes=" + downVotes +
