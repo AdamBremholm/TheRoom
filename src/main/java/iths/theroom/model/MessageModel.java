@@ -13,6 +13,7 @@ import java.util.function.Predicate;
 
 public class MessageModel {
 
+    private String uuid;
     private String type;
     private String content;
     private String sender;
@@ -33,6 +34,15 @@ public class MessageModel {
     }
 
     public MessageModel() {
+    }
+
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     public String getRoom() {
@@ -94,6 +104,10 @@ public class MessageModel {
     public static MessageModel toModel(Message message){
         MessageModel messageModel = new MessageModel();
         if(message!=null) {
+            Optional.of(message)
+                    .map(Message::getUuid)
+                    .filter(Predicate.not(String::isBlank))
+                    .ifPresent(messageModel::setUuid);
             Optional.of(message)
                     .map(Message::getContent)
                     .filter(Predicate.not(String::isBlank))
