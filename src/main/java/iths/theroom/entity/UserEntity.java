@@ -1,7 +1,6 @@
 package iths.theroom.entity;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.Set;
 
 import static iths.theroom.config.DataBaseConfig.*;

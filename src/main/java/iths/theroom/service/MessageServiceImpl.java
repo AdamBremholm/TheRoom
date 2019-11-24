@@ -2,13 +2,12 @@ package iths.theroom.service;
 
 import iths.theroom.dao.MessageRepository;
 import iths.theroom.entity.Message;
-import iths.theroom.model.MessageModel;
+import iths.theroom.exception.NoSuchMessageException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
 @Transactional
@@ -18,27 +17,28 @@ public class MessageServiceImpl implements MessageService {
     private MessageRepository messageRepository;
 
     @Override
-    public MessageModel getMessageById(Long id) {
-       return MessageModel.toModel(messageRepository.findById(id).orElseThrow(NoSuchElementException::new));
+    public Message getMessageById(Long id) {
+       return messageRepository.findById(id).orElseThrow(NoSuchMessageException::new);
     }
 
     @Override
-    public MessageModel getMessageByUuid(String uuid) {
-        return MessageModel.toModel(messageRepository.findByUuid(uuid).orElseThrow(NoSuchElementException::new));
+    public Message getMessageByUuid(String uuid) {
+        return messageRepository.findByUuid(uuid).orElseThrow(NoSuchMessageException::new);
     }
 
     @Override
-    public List<MessageModel> getAllMessages() {
-        return MessageModel.toModel(messageRepository.findAll());
+    public List<Message> getAllMessages() {
+        return messageRepository.findAll();
     }
 
     @Override
-    public MessageModel save(Message message) {
-       return MessageModel.toModel(messageRepository.save(message));
+    public Message save(Message message) {
+       return messageRepository.save(message);
     }
 
     @Override
-    public void remove(Message message) {
-        messageRepository.delete(message);
+    public void remove(String uuid) {
+        Message found = getMessageByUuid(uuid);
+        messageRepository.delete(found);
     }
 }

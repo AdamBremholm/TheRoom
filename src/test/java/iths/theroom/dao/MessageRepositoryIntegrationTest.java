@@ -3,7 +3,6 @@ package iths.theroom.dao;
 import iths.theroom.entity.Message;
 import iths.theroom.entity.Room;
 import iths.theroom.entity.UserEntity;
-import iths.theroom.model.MessageModel;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,15 +79,6 @@ public class MessageRepositoryIntegrationTest {
         assertThat(messageRepository.findById(message.getId()).orElseThrow(NoSuchElementException::new).getSender().getUserName()).isEqualTo("sven");
     }
 
-    @Test
-    public void deleteSenderDoesNotDeleteRealSender() {
-        //TODO
-    }
-
-    @Test
-    public void deleteRoomDoesNotDeleteRealRoom() {
-        //TODO
-    }
 
     @Test
     public void saveWithNewInfoUpdates() {
