@@ -1,36 +1,37 @@
 package iths.theroom.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.HashSet;
-import java.util.Set;
 
-@Entity
+@Entity(name="room")
 public class Room {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
-    private String name;
+
+    @Column(name="ROOM_NAME", length=50, nullable=false, unique=true)
+    private String roomName;
+
     @OneToMany(mappedBy = "room")
+    @Column(name="ROOM_MESSAGES", unique=false)
     private Set<Message> messages;
 
-    public Room() {
-       this.messages = new HashSet<>();
+    public Room(){
+        this.messages = new HashSet<>();
     }
 
-    public Room(String name) {
-        this.name = name;
+    public Room(String roomName){
+        this.roomName = roomName;
+        this.messages = new HashSet<>();
     }
 
-    public String getName() {
-        return name;
+    public String getRoomName() {
+        return roomName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setRoomName(String roomName) {
+        this.roomName = roomName;
     }
 
     public Set<Message> getMessages() {
@@ -39,5 +40,15 @@ public class Room {
 
     public void setMessages(Set<Message> messages) {
         this.messages = messages;
+    }
+
+    public addMessage(Message message){
+        //Called when posting a message
+        this.messages.add(message);
+    }
+
+    public removeMessage(Message message){
+       //Called when deleting a users message
+        this.messages.remove(message);
     }
 }
