@@ -5,8 +5,7 @@ import java.util.Set;
 
 import static iths.theroom.config.DataBaseConfig.*;
 
-@Entity
-@Table(name=TABLE_USER)
+@Entity(name= TABLE_USER)
 public class UserEntity {
 
     @Id
@@ -24,7 +23,6 @@ public class UserEntity {
     private String lastName;
 
     @OneToMany(mappedBy = "sender")
-
     private Set<MessageEntity> messages;
 
     public UserEntity() {
