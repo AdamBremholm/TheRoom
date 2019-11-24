@@ -48,7 +48,7 @@ public class RoomEntity {
         this.messages.add(message);
     }
 
-    public void removeMessage(Message message){
+    public void removeMessage(MessageEntity message){
        //Called when deleting a users message
         this.messages.remove(message);
     }

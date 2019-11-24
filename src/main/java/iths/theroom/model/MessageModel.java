@@ -1,9 +1,8 @@
 package iths.theroom.model;
 
-import iths.theroom.entity.Message;
-import iths.theroom.entity.Room;
+import iths.theroom.entity.MessageEntity;
+import iths.theroom.entity.RoomEntity;
 import iths.theroom.entity.UserEntity;
-
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -91,26 +90,26 @@ public class MessageModel {
         this.downVotes = downVotes;
     }
 
-    public static MessageModel toModel(Message message){
+    public static MessageModel toModel(MessageEntity message){
         MessageModel messageModel = new MessageModel();
         if(message!=null) {
             Optional.of(message)
-                    .map(Message::getContent)
+                    .map(MessageEntity::getContent)
                     .filter(Predicate.not(String::isBlank))
                     .ifPresent(messageModel::setContent);
-            Optional.of(message).map(Message::getSender)
+            Optional.of(message).map(MessageEntity::getSender)
                     .map(UserEntity::getUserName)
                     .filter(Predicate.not(String::isBlank))
                     .ifPresent(messageModel::setSender);
-            Optional.of(message).map(Message::getRoom)
-                    .map(Room::getRoomName)
+            Optional.of(message).map(MessageEntity::getRoom)
+                    .map(RoomEntity::getRoomName)
                     .filter(Predicate.not(String::isBlank))
                     .ifPresent(messageModel::setRoom);
-            Optional.of(message).map(Message::getTime)
+            Optional.of(message).map(MessageEntity::getTime)
                     .map(i -> i.truncatedTo(ChronoUnit.SECONDS).toString())
                     .filter(Predicate.not(String::isBlank))
                     .ifPresent(messageModel::setTime);
-            Optional.of(message).map(Message::getType)
+            Optional.of(message).map(MessageEntity::getType)
                     .map(Enum::toString)
                     .filter(Predicate.not(String::isBlank))
                     .ifPresent(messageModel::setType);
@@ -120,7 +119,7 @@ public class MessageModel {
         return messageModel;
     }
 
-    public static List<MessageModel> toModel(List<Message> messages){
+    public static List<MessageModel> toModel(List<MessageEntity> messages){
         List<MessageModel> messageModels = new ArrayList<>();
         if(messages!=null){
             messages.forEach(m -> messageModels.add(MessageModel.toModel(m)));
