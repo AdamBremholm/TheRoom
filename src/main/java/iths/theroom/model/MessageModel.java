@@ -3,7 +3,11 @@ package iths.theroom.model;
 import iths.theroom.entity.MessageEntity;
 import iths.theroom.entity.RoomEntity;
 import iths.theroom.entity.UserEntity;
+<<<<<<< HEAD
 
+=======
+import java.time.Instant;
+>>>>>>> d927a0b98ff829cd04b8c5413b9df02c313b9ba7
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -90,6 +94,7 @@ public class MessageModel {
         this.downVotes = downVotes;
     }
 
+<<<<<<< HEAD
     public static MessageModel toModel(MessageEntity messageEntity){
         MessageModel messageModel = new MessageModel();
         if(messageEntity !=null) {
@@ -110,6 +115,28 @@ public class MessageModel {
                     .filter(Predicate.not(String::isBlank))
                     .ifPresent(messageModel::setTime);
             Optional.of(messageEntity).map(MessageEntity::getType)
+=======
+    public static MessageModel toModel(MessageEntity message){
+        MessageModel messageModel = new MessageModel();
+        if(message!=null) {
+            Optional.of(message)
+                    .map(MessageEntity::getContent)
+                    .filter(Predicate.not(String::isBlank))
+                    .ifPresent(messageModel::setContent);
+            Optional.of(message).map(MessageEntity::getSender)
+                    .map(UserEntity::getUserName)
+                    .filter(Predicate.not(String::isBlank))
+                    .ifPresent(messageModel::setSender);
+            Optional.of(message).map(MessageEntity::getRoom)
+                    .map(RoomEntity::getRoomName)
+                    .filter(Predicate.not(String::isBlank))
+                    .ifPresent(messageModel::setRoom);
+            Optional.of(message).map(MessageEntity::getTime)
+                    .map(i -> i.truncatedTo(ChronoUnit.SECONDS).toString())
+                    .filter(Predicate.not(String::isBlank))
+                    .ifPresent(messageModel::setTime);
+            Optional.of(message).map(MessageEntity::getType)
+>>>>>>> d927a0b98ff829cd04b8c5413b9df02c313b9ba7
                     .map(Enum::toString)
                     .filter(Predicate.not(String::isBlank))
                     .ifPresent(messageModel::setType);
@@ -119,7 +146,11 @@ public class MessageModel {
         return messageModel;
     }
 
+<<<<<<< HEAD
     public static List<MessageModel> toModel(List<MessageEntity> messageEntities){
+=======
+    public static List<MessageModel> toModel(List<MessageEntity> messages){
+>>>>>>> d927a0b98ff829cd04b8c5413b9df02c313b9ba7
         List<MessageModel> messageModels = new ArrayList<>();
         if(messageEntities !=null){
             messageEntities.forEach(m -> messageModels.add(MessageModel.toModel(m)));

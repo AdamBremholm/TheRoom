@@ -29,6 +29,7 @@ public class MessageEntity {
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch=FetchType.LAZY)
     @JoinColumn(name=COLUMN_ROOM_ID)
+
     private RoomEntity roomEntity;
 
     public MessageEntity() {
@@ -53,6 +54,7 @@ public class MessageEntity {
 
     public MessageEntity(Type type, String content, UserEntity sender, RoomEntity roomEntity) {
         this(type, content, sender, roomEntity, Instant.now(), 0L, 0L);
+
     }
 
 
@@ -131,6 +133,7 @@ public class MessageEntity {
 
     public void setRoomEntity(RoomEntity roomEntity) {
         this.roomEntity = roomEntity;
+
     }
 
     @PrePersist

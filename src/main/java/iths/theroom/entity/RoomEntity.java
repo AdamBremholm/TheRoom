@@ -16,15 +16,15 @@ public class RoomEntity {
 
     @OneToMany(mappedBy = "room")
     @Column(name="ROOM_MESSAGES", unique=false)
-    private Set<MessageEntity> messageEntities;
+    private Set<MessageEntity> messages;
 
     public RoomEntity(){
-        this.messageEntities = new HashSet<>();
+        this.messages = new HashSet<>();
     }
 
     public RoomEntity(String roomName){
         this.roomName = roomName;
-        this.messageEntities = new HashSet<>();
+        this.messages = new HashSet<>();
     }
 
     public String getRoomName() {
@@ -35,21 +35,21 @@ public class RoomEntity {
         this.roomName = roomName;
     }
 
-    public Set<MessageEntity> getMessageEntities() {
-        return messageEntities;
+    public Set<MessageEntity> getMessages() {
+        return messages;
     }
 
-    public void setMessageEntities(Set<MessageEntity> messageEntities) {
-        this.messageEntities = messageEntities;
+    public void setMessages(Set<MessageEntity> messages) {
+        this.messages = messages;
     }
 
-    public void addMessage(MessageEntity messageEntity){
-        //Called when posting a messageEntity
-        this.messageEntities.add(messageEntity);
+    public void addMessage(MessageEntity message){
+        //Called when posting a message
+        this.messages.add(message);
     }
 
-    public void removeMessage(MessageEntity messageEntity){
-       //Called when deleting a users messageEntity
-        this.messageEntities.remove(messageEntity);
+    public void removeMessage(MessageEntity message){
+       //Called when deleting a users message
+        this.messages.remove(message);
     }
 }

@@ -32,6 +32,7 @@ public class UserFactory {
 
             for(MessageEntity messageEntity : userEntity.getMessageEntities()){
                 MessageModel messageModel = MessageModel.toModel(messageEntity);
+
                 userModel.getMessages().add(messageModel);
             }
         }
