@@ -10,6 +10,7 @@ public class RoleEntity {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name="role")
     private String role;
 
     public RoleEntity() {
@@ -19,5 +20,7 @@ public class RoleEntity {
         this.role = role;
     }
 
-
+    public String getRole() {
+        return role;
+    }
 }
