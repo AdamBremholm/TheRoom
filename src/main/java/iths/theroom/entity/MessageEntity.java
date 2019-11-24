@@ -10,7 +10,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = TABLE_MESSAGE)
-public class Message {
+public class MessageEntity {
 
     @Id
     @GeneratedValue
@@ -29,29 +29,29 @@ public class Message {
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch=FetchType.LAZY)
     @JoinColumn(name=COLUMN_ROOM_ID)
-    private Room room;
+    private RoomEntity room;
 
-    public Message() {
+    public MessageEntity() {
         this.sender = new UserEntity("guest");
-        this.room = new Room("unspecified");
+        this.room = new RoomEntity("unspecified");
         this.time = Instant.now();
     }
 
-    public Message(Type type, String content, UserEntity sender, Room room, Instant time, long upVotes, long downVotes) {
+    public MessageEntity(Type type, String content, UserEntity sender, RoomEntity room, Instant time, long upVotes, long downVotes) {
         this.type = Objects.requireNonNullElse(type, Type.UNDEFINED);
         this.content = Objects.requireNonNullElse(content, "");
         this.sender = Objects.requireNonNullElse(sender, new UserEntity("guest"));
-        this.room = Objects.requireNonNullElse(room, new Room("unspecified"));
+        this.room = Objects.requireNonNullElse(room, new RoomEntity("unspecified"));
         this.time = Objects.requireNonNullElse(time, Instant.now());
         this.upVotes = upVotes;
         this.downVotes = downVotes;
     }
 
-    public Message(Type type, String content, UserEntity sender, Room room, Instant time) {
+    public MessageEntity(Type type, String content, UserEntity sender, RoomEntity room, Instant time) {
        this(type, content, sender, room, time, 0L, 0L);
     }
 
-    public Message(Type type, String content, UserEntity sender, Room room) {
+    public MessageEntity(Type type, String content, UserEntity sender, RoomEntity room) {
         this(type, content, sender, room, Instant.now(), 0L, 0L);
     }
 
@@ -125,11 +125,11 @@ public class Message {
         UNDEFINED
     }
 
-    public Room getRoom() {
+    public RoomEntity getRoom() {
         return room;
     }
 
-    public void setRoom(Room room) {
+    public void setRoom(RoomEntity room) {
         this.room = room;
     }
 
