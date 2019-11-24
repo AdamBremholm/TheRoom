@@ -2,6 +2,7 @@ package iths.theroom.entity;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Set;
 
 @Entity(name="room")
 public class Room {
@@ -42,12 +43,12 @@ public class Room {
         this.messages = messages;
     }
 
-    public addMessage(Message message){
+    public void addMessage(Message message){
         //Called when posting a message
         this.messages.add(message);
     }
 
-    public removeMessage(Message message){
+    public void removeMessage(Message message){
        //Called when deleting a users message
         this.messages.remove(message);
     }
