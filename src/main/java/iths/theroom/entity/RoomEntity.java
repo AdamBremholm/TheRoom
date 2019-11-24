@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity(name="room")
-public class Room {
+public class RoomEntity {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -16,13 +16,13 @@ public class Room {
 
     @OneToMany(mappedBy = "room")
     @Column(name="ROOM_MESSAGES", unique=false)
-    private Set<Message> messages;
+    private Set<MessageEntity> messages;
 
-    public Room(){
+    public RoomEntity(){
         this.messages = new HashSet<>();
     }
 
-    public Room(String roomName){
+    public RoomEntity(String roomName){
         this.roomName = roomName;
         this.messages = new HashSet<>();
     }
@@ -35,15 +35,15 @@ public class Room {
         this.roomName = roomName;
     }
 
-    public Set<Message> getMessages() {
+    public Set<MessageEntity> getMessages() {
         return messages;
     }
 
-    public void setMessages(Set<Message> messages) {
+    public void setMessages(Set<MessageEntity> messages) {
         this.messages = messages;
     }
 
-    public void addMessage(Message message){
+    public void addMessage(MessageEntity message){
         //Called when posting a message
         this.messages.add(message);
     }
