@@ -1,5 +1,6 @@
 package iths.theroom.service;
 
+
 import iths.theroom.entity.MessageEntity;
 import iths.theroom.model.MessageModel;
 
@@ -13,8 +14,10 @@ public interface MessageService {
 
     List<MessageModel> getAllMessages();
 
+
     MessageModel save(MessageEntity messageEntity);
 
     void remove(MessageEntity messageEntity);
+
 
 }

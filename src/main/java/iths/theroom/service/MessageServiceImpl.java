@@ -1,6 +1,7 @@
 package iths.theroom.service;
 
 import iths.theroom.repository.MessageRepository;
+
 import iths.theroom.entity.MessageEntity;
 import iths.theroom.model.MessageModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,5 +41,6 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public void remove(MessageEntity messageEntity) {
         messageRepository.delete(messageEntity);
+
     }
 }
