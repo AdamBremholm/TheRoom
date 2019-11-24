@@ -1,7 +1,8 @@
 package iths.theroom.model;
 
 import iths.theroom.entity.Message;
-import iths.theroom.entity.Room;
+import iths.theroom.entity.RoomEntity;
+
 
 import java.util.Set;
 
@@ -10,7 +11,7 @@ public class RoomModel {
     private Set<Message> messages;
 
     public RoomModel(){}
-    public RoomModel(Room room, Role role){}
+    public RoomModel(RoomEntity room, Role role){}
 
     public String getRoomName() {
         return roomName;
