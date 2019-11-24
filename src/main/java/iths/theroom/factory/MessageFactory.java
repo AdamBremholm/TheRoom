@@ -28,7 +28,7 @@ public class MessageFactory {
                 .map(UserEntity::getUserName)
                 .filter(Predicate.not(String::isBlank))
                 .ifPresent(messageModel::setSender);
-        Optional.of(message).map(MessageEntity::getRoom)
+        Optional.of(message).map(MessageEntity::getRoomEntity)
                 .map(RoomEntity::getRoomName)
                 .filter(Predicate.not(String::isBlank))
                 .ifPresent(messageModel::setRoom);

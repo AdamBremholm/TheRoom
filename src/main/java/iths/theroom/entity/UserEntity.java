@@ -24,11 +24,8 @@ public class UserEntity {
     private String lastName;
 
     @OneToMany(mappedBy = "sender")
-<<<<<<< HEAD
-    private Set<MessageEntity> messageEntities;
-=======
+
     private Set<MessageEntity> messages;
->>>>>>> d927a0b98ff829cd04b8c5413b9df02c313b9ba7
 
     public UserEntity() {
     }
@@ -93,20 +90,12 @@ public class UserEntity {
         this.lastName = lastName;
     }
 
-<<<<<<< HEAD
-    public Set<MessageEntity> getMessageEntities() {
-        return messageEntities;
-    }
 
-    public void setMessageEntities(Set<MessageEntity> messageEntities) {
-        this.messageEntities = messageEntities;
-=======
     public Set<MessageEntity> getMessages() {
         return messages;
     }
 
     public void setMessages(Set<MessageEntity> messages) {
         this.messages = messages;
->>>>>>> d927a0b98ff829cd04b8c5413b9df02c313b9ba7
     }
 }

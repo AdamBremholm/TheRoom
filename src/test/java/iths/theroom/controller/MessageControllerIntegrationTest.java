@@ -1,7 +1,7 @@
 package iths.theroom.controller;
 
 import iths.theroom.entity.MessageEntity;
-import iths.theroom.entity.Room;
+import iths.theroom.entity.RoomEntity;
 import iths.theroom.entity.UserEntity;
 import iths.theroom.service.MessageService;
 import org.junit.Test;
@@ -43,7 +43,7 @@ public class MessageControllerIntegrationTest {
     public void givenMessages_whenGetMessages_thenReturnJsonArray()
             throws Exception {
 
-        MessageEntity message = new MessageEntity(MessageEntity.Type.CHAT, "hello", new UserEntity("sven"), new Room("one"));
+        MessageEntity message = new MessageEntity(MessageEntity.Type.CHAT, "hello", new UserEntity("sven"), new RoomEntity("one"));
 
         List<MessageEntity> allMessages = Collections.singletonList(message);
 
@@ -62,7 +62,7 @@ public class MessageControllerIntegrationTest {
     public void addMessage()
             throws Exception {
 
-        MessageEntity message = new MessageEntity(MessageEntity.Type.CHAT, "hello", new UserEntity("sven"), new Room("one"));
+        MessageEntity message = new MessageEntity(MessageEntity.Type.CHAT, "hello", new UserEntity("sven"), new RoomEntity("one"));
         List<MessageEntity> allMessages = Collections.singletonList(message);
 
         given(service.getAllMessages()).willReturn(allMessages);
