@@ -1,7 +1,7 @@
 package iths.theroom.service;
 
 import iths.theroom.dao.MessageRepository;
-import iths.theroom.entity.Message;
+import iths.theroom.entity.MessageEntity;
 import iths.theroom.model.MessageModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,12 +33,12 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public MessageModel save(Message message) {
+    public MessageModel save(MessageEntity message) {
        return MessageModel.toModel(messageRepository.save(message));
     }
 
     @Override
-    public void remove(Message message) {
+    public void remove(MessageEntity message) {
         messageRepository.delete(message);
     }
 }
