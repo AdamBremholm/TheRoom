@@ -6,9 +6,11 @@ import iths.theroom.entity.MessageEntity;
 import iths.theroom.entity.UserEntity;
 import iths.theroom.model.MessageModel;
 import iths.theroom.model.UserModel;
+import org.springframework.stereotype.Component;
 
 import static iths.theroom.factory.MessageFactory.toModel;
 
+@Component
 public class UserFactory {
 
     public UserEntity jsonToEntity(String userJson){
