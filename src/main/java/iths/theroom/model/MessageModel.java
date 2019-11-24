@@ -103,7 +103,7 @@ public class MessageModel {
                     .filter(Predicate.not(String::isBlank))
                     .ifPresent(messageModel::setSender);
             Optional.of(message).map(Message::getRoom)
-                    .map(Room::getName)
+                    .map(Room::getRoomName)
                     .filter(Predicate.not(String::isBlank))
                     .ifPresent(messageModel::setRoom);
             Optional.of(message).map(Message::getTime)
