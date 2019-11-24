@@ -29,7 +29,6 @@ public class MessageEntity {
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch=FetchType.LAZY)
     @JoinColumn(name=COLUMN_ROOM_ID)
-
     private RoomEntity roomEntity;
 
     public MessageEntity() {

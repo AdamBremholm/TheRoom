@@ -14,7 +14,7 @@ public class RoomEntity {
     @Column(name="ROOM_NAME", length=50, nullable=false, unique=true)
     private String roomName;
 
-    @OneToMany(mappedBy = "room")
+    @OneToMany(mappedBy = "roomEntity")
     @Column(name="ROOM_MESSAGES", unique=false)
     private Set<MessageEntity> messages;
 
