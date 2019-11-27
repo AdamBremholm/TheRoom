@@ -4,6 +4,7 @@ import iths.theroom.entity.MessageEntity;
 import iths.theroom.entity.RoomEntity;
 import iths.theroom.entity.UserEntity;
 import iths.theroom.model.MessageModel;
+import org.springframework.stereotype.Component;
 
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
+@Component
 public class MessageFactory {
 
     public MessageModel entityToModel(MessageEntity messageEntity){
