@@ -1,16 +1,17 @@
 package iths.theroom.service;
 
-import iths.theroom.entity.MessageEntity;
 import iths.theroom.entity.RoomEntity;
 import iths.theroom.factory.RoomFactory;
 import iths.theroom.model.RoomModel;
 import iths.theroom.repository.RoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Component
+@Service
+@Transactional
 public class RoomServiceImpl implements RoomService {
 
     private final RoomFactory roomFactory;
