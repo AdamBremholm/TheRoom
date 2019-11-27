@@ -50,10 +50,22 @@ public class RoleEntity {
         this.users = users;
     }
 
+    public Long getId() {
+        return id;
+    }
+
     public enum Role {
         GLOBAL_ADMIN,
         MODERATOR,
         USER,
         GUEST,
+    }
+
+    public static boolean existsInRole(String str) {
+        for (Role r : Role.values()) {
+            if (r.name().equalsIgnoreCase(str))
+               return true;
+        }
+        return false;
     }
 }

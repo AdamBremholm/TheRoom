@@ -48,7 +48,7 @@ public class UserRepositoryIntegrationTest {
         roleEntity = new RoleEntity(RoleEntity.Role.USER);
         roleEntities.add(roleEntity);
         userEntity = new UserEntity("sven", "sve123", "sven@gmail.com"
-                , roleEntities, "sve123", "sven", "svensson", new HashSet<>());
+                , roleEntities, "sve123", "sven", "svensson", new HashSet<>(), null);
 
 
     }

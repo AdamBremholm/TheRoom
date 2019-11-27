@@ -18,6 +18,7 @@ public class MessageController {
     @Autowired
     private MessageService messageService;
 
+
     @GetMapping("/messages")
     public List<MessageModel> getAllMessages() {
         return toModel(messageService.getAllMessages());

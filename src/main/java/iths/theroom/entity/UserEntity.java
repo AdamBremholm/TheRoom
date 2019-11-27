@@ -2,6 +2,7 @@ package iths.theroom.entity;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import static iths.theroom.config.DataBaseConfig.*;
@@ -27,6 +28,8 @@ public class UserEntity {
 
     @Transient
     private String passwordConfirm;
+    @Transient
+    private List<String> roleList;
 
     private String firstName;
     private String lastName;
@@ -35,7 +38,8 @@ public class UserEntity {
     private Set<MessageEntity> messages;
 
 
-    public UserEntity(String userName, String password, String email, Set<RoleEntity> roles, String passwordConfirm, String firstName, String lastName, Set<MessageEntity> messages) {
+    public UserEntity(String userName, String password, String email, Set<RoleEntity> roles,
+                      String passwordConfirm, String firstName, String lastName, Set<MessageEntity> messages, List<String> roleList) {
         this.userName = userName;
         this.password = password;
         this.email = email;
@@ -44,14 +48,15 @@ public class UserEntity {
         this.firstName = firstName;
         this.lastName = lastName;
         this.messages = Objects.requireNonNullElse(messages, new HashSet<>());
+        this.roleList = roleList;
     }
 
     public UserEntity() {
-        this(null, null, null, null, null, null, null, null);
+        this(null, null, null, null, null, null, null, null, null);
     }
 
     public UserEntity(String userName) {
-        this(userName, null, null, null, null, null, null, null);
+        this(userName, null, null, null, null, null, null, null, null);
     }
 
     public Long getId() {
@@ -124,5 +129,13 @@ public class UserEntity {
 
     public void setMessages(Set<MessageEntity> messages) {
         this.messages = messages;
+    }
+
+    public List<String> getRoleList() {
+        return roleList;
+    }
+
+    public void setRoleList(List<String> roleList) {
+        this.roleList = roleList;
     }
 }
