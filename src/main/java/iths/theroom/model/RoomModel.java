@@ -8,13 +8,11 @@ import iths.theroom.entity.RoomEntity;
 import java.util.Set;
 
 public class RoomModel {
+
     private String roomName;
-    private Set<MessageEntity> messages;
+    private Set<MessageModel> messages;
 
     public RoomModel(){}
-    public RoomModel(RoomEntity room, RoleEntity role){
-
-    }
 
     public String getRoomName() {
         return roomName;
@@ -24,11 +22,11 @@ public class RoomModel {
         this.roomName = roomName;
     }
 
-    public Set<MessageEntity> getMessages() {
+    public Set<MessageModel> getMessages() {
         return messages;
     }
 
-    public void setMessages(Set<MessageEntity> messages) {
+    public void setMessages(Set<MessageModel> messages) {
         this.messages = messages;
     }
 }
