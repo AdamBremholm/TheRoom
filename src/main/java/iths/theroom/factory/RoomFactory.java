@@ -5,6 +5,9 @@ import iths.theroom.model.RoomModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Component
 public class RoomFactory {
 
@@ -29,6 +32,21 @@ public class RoomFactory {
         }
 
         return roomModel;
+
+    }
+
+    public List<RoomModel> entityToModel(List<RoomEntity> roomEntities) {
+
+        List<RoomModel> roomModels = new ArrayList<>();
+
+        if(roomEntities != null){
+
+            roomEntities.forEach(roomEntity ->
+                roomModels.add(entityToModel(roomEntity))
+            );
+        }
+
+        return roomModels;
 
     }
 }
