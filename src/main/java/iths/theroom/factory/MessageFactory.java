@@ -13,40 +13,45 @@ import java.util.function.Predicate;
 
 public class MessageFactory {
 
-
-    public static MessageModel toModel(MessageEntity message){
+    public MessageModel entityToModel(MessageEntity messageEntity){
         MessageModel messageModel = new MessageModel();
-        Optional.of(message)
+
+        Optional.of(messageEntity)
                 .map(MessageEntity::getUuid)
                 .filter(Predicate.not(String::isBlank))
                 .ifPresent(messageModel::setUuid);
-        Optional.of(message)
+
+        Optional.of(messageEntity)
                 .map(MessageEntity::getContent)
                 .filter(Predicate.not(String::isBlank))
                 .ifPresent(messageModel::setContent);
-        Optional.of(message).map(MessageEntity::getSender)
+
+        Optional.of(messageEntity).map(MessageEntity::getSender)
                 .map(UserEntity::getUserName)
                 .filter(Predicate.not(String::isBlank))
                 .ifPresent(messageModel::setSender);
-        Optional.of(message).map(MessageEntity::getRoomEntity)
+
+        Optional.of(messageEntity).map(MessageEntity::getRoomEntity)
                 .map(RoomEntity::getRoomName)
                 .filter(Predicate.not(String::isBlank))
                 .ifPresent(messageModel::setRoom);
-        Optional.of(message).map(MessageEntity::getTime)
+
+        Optional.of(messageEntity).map(MessageEntity::getTime)
                 .map(i -> i.truncatedTo(ChronoUnit.SECONDS).toString())
                 .filter(Predicate.not(String::isBlank))
                 .ifPresent(messageModel::setTime);
-        messageModel.setType(message.getType().name());
-        messageModel.setUpVotes(message.getUpVotes());
-        messageModel.setDownVotes(message.getDownVotes());
+
+        messageModel.setType(messageEntity.getType().name());
+        messageModel.setUpVotes(messageEntity.getUpVotes());
+        messageModel.setDownVotes(messageEntity.getDownVotes());
 
         return messageModel;
     }
 
-    public static List<MessageModel> toModel(List<MessageEntity> messages){
+    public List<MessageModel> entityListToModelList(List<MessageEntity> messages){
         List<MessageModel> messageModels = new ArrayList<>();
-        if(messages!=null){
-            messages.forEach(m -> messageModels.add(toModel(m)));
+        if(messages != null){
+            messages.forEach(m -> messageModels.add(entityToModel(m)));
         }
         return messageModels;
 
