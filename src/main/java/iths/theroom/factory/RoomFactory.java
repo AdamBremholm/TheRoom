@@ -27,7 +27,7 @@ public class RoomFactory implements EntityFactory<RoomModel, RoomEntity> {
         if(roomEntity.getMessages() != null){
 
             roomEntity.getMessages().forEach(messageEntity ->
-                roomModel.getMessages().add(messageFactory.entityToModel(messageEntity))
+                roomModel.getMessages().add(messageFactory.toModel(messageEntity))
             );
         }
 

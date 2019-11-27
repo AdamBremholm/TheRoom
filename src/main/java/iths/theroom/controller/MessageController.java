@@ -6,7 +6,7 @@ import iths.theroom.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import static iths.theroom.factory.MessageFactory.toModel;
+import static iths.theroom.factory.MessageFactory.*;
 
 import java.util.List;
 

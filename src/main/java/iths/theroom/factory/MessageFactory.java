@@ -15,7 +15,7 @@ import java.util.function.Predicate;
 @Component
 public class MessageFactory {
 
-    public MessageModel entityToModel(MessageEntity messageEntity){
+    public static MessageModel toModel(MessageEntity messageEntity){
         MessageModel messageModel = new MessageModel();
 
         Optional.of(messageEntity)
@@ -50,10 +50,10 @@ public class MessageFactory {
         return messageModel;
     }
 
-    public List<MessageModel> entityToModel(List<MessageEntity> messages){
+    public static List<MessageModel> toModel(List<MessageEntity> messages){
         List<MessageModel> messageModels = new ArrayList<>();
         if(messages != null){
-            messages.forEach(m -> messageModels.add(entityToModel(m)));
+            messages.forEach(m -> messageModels.add(toModel(m)));
         }
         return messageModels;
 
