@@ -1,10 +1,5 @@
 package iths.theroom.model;
 
-import iths.theroom.entity.MessageEntity;
-import iths.theroom.entity.RoleEntity;
-import iths.theroom.entity.RoomEntity;
-
-
 import java.util.Set;
 
 public class RoomModel {
