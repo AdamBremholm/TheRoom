@@ -1,6 +1,7 @@
 package iths.theroom.model;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 
 public class UserModel implements Serializable {
@@ -12,8 +13,11 @@ public class UserModel implements Serializable {
     private String lastName;
 
     private Set<MessageModel> messages;
+    private Set<String> roles;
 
     public UserModel() {
+        this.messages = new HashSet<>();
+        this.roles = new HashSet<>();
     }
 
     public String getUserName() {
@@ -52,4 +56,11 @@ public class UserModel implements Serializable {
         return messages;
     }
 
+    public Set<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<String> roles) {
+        this.roles = roles;
+    }
 }

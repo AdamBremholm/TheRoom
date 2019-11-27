@@ -1,9 +1,12 @@
 package iths.theroom.entity;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
 import java.util.Set;
-
 import static iths.theroom.config.DataBaseConfig.*;
+
 
 @Entity(name= TABLE_USER)
 public class UserEntity {
@@ -12,12 +15,21 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true)
     private String userName;
     private String password;
     private String email;
 
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch=FetchType.LAZY)
+    @JoinTable(name = JOIN_TABLE_USER_ROLE,
+            joinColumns=@JoinColumn(name=COLUMN_ROLE_ID, referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = COLUMN_USER_ID, referencedColumnName = "id"))
+    private Set<RoleEntity> roles;
+
     @Transient
     private String passwordConfirm;
+    @Transient
+    private List<String> roleList;
 
     private String firstName;
     private String lastName;
@@ -25,11 +37,26 @@ public class UserEntity {
     @OneToMany(mappedBy = "sender")
     private Set<MessageEntity> messages;
 
+
+    public UserEntity(String userName, String password, String email, Set<RoleEntity> roles,
+                      String passwordConfirm, String firstName, String lastName, Set<MessageEntity> messages, List<String> roleList) {
+        this.userName = userName;
+        this.password = password;
+        this.email = email;
+        this.roles = Objects.requireNonNullElse(roles, new HashSet<>());
+        this.passwordConfirm = passwordConfirm;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.messages = Objects.requireNonNullElse(messages, new HashSet<>());
+        this.roleList = roleList;
+    }
+
     public UserEntity() {
+        this(null, null, null, null, null, null, null, null, null);
     }
 
     public UserEntity(String userName) {
-        this.userName = userName;
+        this(userName, null, null, null, null, null, null, null, null);
     }
 
     public Long getId() {
@@ -88,6 +115,13 @@ public class UserEntity {
         this.lastName = lastName;
     }
 
+    public Set<RoleEntity> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<RoleEntity> roles) {
+        this.roles = roles;
+    }
 
     public Set<MessageEntity> getMessages() {
         return messages;
@@ -95,5 +129,13 @@ public class UserEntity {
 
     public void setMessages(Set<MessageEntity> messages) {
         this.messages = messages;
+    }
+
+    public List<String> getRoleList() {
+        return roleList;
+    }
+
+    public void setRoleList(List<String> roleList) {
+        this.roleList = roleList;
     }
 }

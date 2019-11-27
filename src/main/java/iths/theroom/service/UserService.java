@@ -1,8 +1,16 @@
 package iths.theroom.service;
 
-import iths.theroom.model.UserModel;
+import iths.theroom.entity.UserEntity;
+
+import java.util.List;
 
 public interface UserService {
 
-    UserModel getUserById(Long id) throws RuntimeException;
+    UserEntity getUserById(Long id);
+
+    UserEntity save(UserEntity userEntity);
+
+    UserEntity getByUserName(String userName);
+
+    List<UserEntity> getAll();
 }

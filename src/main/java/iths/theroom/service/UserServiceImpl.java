@@ -1,38 +1,43 @@
 package iths.theroom.service;
 
+import iths.theroom.entity.RoleEntity;
 import iths.theroom.entity.UserEntity;
-import iths.theroom.factory.UserFactory;
-import iths.theroom.model.UserModel;
+import iths.theroom.exception.NoSuchUserException;
 import iths.theroom.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
+import java.util.List;
+
 
 @Service
 @Transactional
 public class UserServiceImpl implements UserService {
 
-    private UserRepository userRepository;
-    private UserFactory userFactory;
-
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, UserFactory userFactory) {
-        this.userRepository = userRepository;
-        this.userFactory = userFactory;
+    private UserRepository userRepository;
+
+
+    @Override
+    public UserEntity getUserById(Long id) throws RuntimeException {
+         return userRepository.findById(id).orElseThrow(NoSuchUserException::new);
+    }
+
+
+    @Override
+    public UserEntity save(UserEntity userEntity) {
+        return userRepository.save(userEntity);
     }
 
     @Override
-    public UserModel getUserById(Long id) throws RuntimeException {
-
-        Optional<UserEntity> userEntityFound = userRepository.findById(id);
-
-        if(userEntityFound.isPresent()){
-            return userFactory.entityToModel(userEntityFound.get());
-        }
-
-        throw new RuntimeException("No entity found");
-
+    public UserEntity getByUserName(String userName) {
+       return userRepository.findByUserName(userName).orElseThrow(NoSuchUserException::new);
     }
+
+    @Override
+    public List<UserEntity> getAll() {
+        return userRepository.findAll();
+    }
+
 }
