@@ -46,12 +46,10 @@ public class RoomEntity {
     }
 
     public void addMessage(MessageEntity message){
-        //Called when posting a message
         this.messages.add(message);
     }
 
     public void removeMessage(MessageEntity message){
-       //Called when deleting a users message
         this.messages.remove(message);
     }
 }
