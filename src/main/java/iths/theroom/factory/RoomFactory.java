@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class RoomFactory {
+public class RoomFactory implements EntityFactory<RoomModel, RoomEntity> {
 
     private final MessageFactory messageFactory;
 
@@ -49,4 +49,5 @@ public class RoomFactory {
         return roomModels;
 
     }
+
 }
