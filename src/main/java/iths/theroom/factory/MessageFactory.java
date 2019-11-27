@@ -50,7 +50,7 @@ public class MessageFactory {
         return messageModel;
     }
 
-    public List<MessageModel> entityListToModelList(List<MessageEntity> messages){
+    public List<MessageModel> entityToModel(List<MessageEntity> messages){
         List<MessageModel> messageModels = new ArrayList<>();
         if(messages != null){
             messages.forEach(m -> messageModels.add(entityToModel(m)));
