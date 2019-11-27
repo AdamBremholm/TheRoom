@@ -4,6 +4,7 @@ import iths.theroom.entity.RoomEntity;
 import iths.theroom.exception.BadRequestException;
 import iths.theroom.exception.NotFoundException;
 import iths.theroom.exception.RequestException;
+import iths.theroom.factory.EntityFactory;
 import iths.theroom.factory.RoomFactory;
 import iths.theroom.model.RoomModel;
 import iths.theroom.repository.RoomRepository;
@@ -17,12 +18,12 @@ import java.util.List;
 @Transactional
 public class RoomServiceImpl implements RoomService {
 
-    private final RoomFactory roomFactory;
+    private final EntityFactory<RoomModel, RoomEntity> entityFactory;
     private final RoomRepository roomRepository;
 
     @Autowired
-    public RoomServiceImpl(RoomFactory roomFactory, RoomRepository roomRepository) {
-        this.roomFactory = roomFactory;
+    public RoomServiceImpl(RoomFactory entityFactory, RoomRepository roomRepository) {
+        this.entityFactory = entityFactory;
         this.roomRepository = roomRepository;
     }
 
@@ -30,7 +31,7 @@ public class RoomServiceImpl implements RoomService {
     public List<RoomModel> getAllRooms() {
 
         List<RoomEntity> roomEntities = roomRepository.findAll();
-        return roomFactory.entityToModel(roomEntities);
+        return entityFactory.entityToModel(roomEntities);
 
     }
 
@@ -43,7 +44,7 @@ public class RoomServiceImpl implements RoomService {
 
         RoomEntity roomEntity = checkIfRoomExists(name);
 
-        return roomFactory.entityToModel(roomEntity);
+        return entityFactory.entityToModel(roomEntity);
     }
 
     @Override
@@ -51,7 +52,7 @@ public class RoomServiceImpl implements RoomService {
 
         try{
             RoomEntity savedRoomEntity = roomRepository.saveAndFlush(roomEntity);
-            return roomFactory.entityToModel(savedRoomEntity);
+            return entityFactory.entityToModel(savedRoomEntity);
 
         } catch (Exception e){
             throw new BadRequestException(e.getMessage());
@@ -67,7 +68,7 @@ public class RoomServiceImpl implements RoomService {
 
         try {
             RoomEntity updatedRoomEntity = roomRepository.saveAndFlush(roomEntityToUpdate);
-            return roomFactory.entityToModel(updatedRoomEntity);
+            return entityFactory.entityToModel(updatedRoomEntity);
 
         } catch (Exception e) {
             throw new BadRequestException(e.getMessage());
@@ -86,7 +87,7 @@ public class RoomServiceImpl implements RoomService {
             throw new BadRequestException(e.getMessage());
         }
 
-        return roomFactory.entityToModel(roomToDelete);
+        return entityFactory.entityToModel(roomToDelete);
     }
 
     private RoomEntity checkIfRoomExists(String name) throws RequestException {
