@@ -33,7 +33,9 @@ public class RoomController {
             return ResponseEntity.ok(roomService.getOneByName(name));
 
         } catch (RequestException e) {
-            return ResponseEntity.status(e.getHttpStatus()).body(e.getResponseBody());
+            return ResponseEntity.status(e.getHttpStatus())
+                    .header("Content-Type", "application/json+problem")
+                    .body(e.getResponseBody());
         }
     }
 
@@ -44,7 +46,9 @@ public class RoomController {
             return ResponseEntity.status(HttpStatus.CREATED).body(roomService.save(roomEntity));
 
         } catch (RequestException e) {
-            return ResponseEntity.status(e.getHttpStatus()).body(e.getResponseBody());
+            return ResponseEntity.status(e.getHttpStatus())
+                    .header("Content-Type", "application/json+problem")
+                    .body(e.getResponseBody());
         }
     }
 
@@ -55,7 +59,9 @@ public class RoomController {
             return ResponseEntity.ok(roomService.updateRoom(name, roomEntity));
 
         } catch (RequestException e) {
-            return ResponseEntity.status(e.getHttpStatus()).body(e.getResponseBody());
+            return ResponseEntity.status(e.getHttpStatus())
+                    .header("Content-Type", "application/json+problem")
+                    .body(e.getResponseBody());
         }
     }
 
@@ -66,7 +72,9 @@ public class RoomController {
             return ResponseEntity.ok(roomService.deleteRoom(name));
 
         } catch (RequestException e) {
-            return ResponseEntity.status(e.getHttpStatus()).body(e.getResponseBody());
+            return ResponseEntity.status(e.getHttpStatus())
+                    .header("Content-Type", "application/json+problem")
+                    .body(e.getResponseBody());
         }
     }
 }
