@@ -11,13 +11,13 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/avatars")
 public class AvatarController {
 
     @Autowired
     private AvatarService avatarService;
 
-    @GetMapping("/avatars")
+    @GetMapping
     public List<AvatarModel> getAllAvatars() {
         return avatarService.getAllAvatars();
     }
@@ -35,6 +35,11 @@ public class AvatarController {
     @PutMapping(value="/update", produces=MediaType.APPLICATION_JSON_VALUE)
     public AvatarModel updateAvatar(@RequestBody AvatarEntity avatar) {
         return avatarService.updateAvatar(avatar);
+    }
+
+    @DeleteMapping(value="/delete")
+    public AvatarModel deleteAvatar(Long id) {
+        return avatarService.deleteAvatar(id);
     }
 
 }
