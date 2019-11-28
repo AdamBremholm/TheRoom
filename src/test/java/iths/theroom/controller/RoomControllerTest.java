@@ -1,6 +1,7 @@
 package iths.theroom.controller;
 
 import iths.theroom.entity.RoomEntity;
+import iths.theroom.exception.BadRequestException;
 import iths.theroom.exception.RequestException;
 import iths.theroom.model.RoomModel;
 import iths.theroom.service.RoomService;
@@ -28,6 +29,7 @@ public class RoomControllerTest {
 
     private static final int STATUS_OK = 200;
     private static final int STATUS_CREATED = 201;
+    private static final int STATUS_BAD_REQUEST = 400;
 
     private RoomEntity roomEntity;
     private RoomModel roomModel1;
@@ -84,6 +86,24 @@ public class RoomControllerTest {
 
         Assert.assertEquals(expectedRoomName, actualRoomName);
         assertEquals(STATUS_OK, actualStatus);
+    }
+
+    @Test
+    public void whenGetOneByNameInvalidName_ReturnErrorInResponseBodyAndStatusBadRequest() throws RequestException {
+
+        String expectedErrorDetails = "12345";
+
+        Mockito.when(roomService.getOneByName(null)).thenThrow(new BadRequestException(expectedErrorDetails));
+
+        ResponseEntity result = roomController.getOneByName(null);
+
+        String actualErrorDetails = (String) result.getBody();
+        Assert.assertNotNull(actualErrorDetails);
+
+        int actualStatus = result.getStatusCode().value();
+
+        Assert.assertEquals(expectedRoomName, actualRoomName);
+        assertEquals(STATUS_BAD, actualStatus);
     }
 
     @Test
