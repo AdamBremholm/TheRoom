@@ -9,9 +9,9 @@ import java.util.Optional;
 public interface AvatarService {
 
     List<AvatarModel> getAllAvatars();
-    Optional<AvatarModel> getAvatarById(Long id);
+    AvatarModel getAvatarById(Long id);
     AvatarModel createAvatar(AvatarEntity avatar);
     AvatarModel updateAvatar(AvatarEntity avatar);
-    AvatarModel deleteAvatar(Long id);
+    void deleteAvatar(Long id);
 
 }

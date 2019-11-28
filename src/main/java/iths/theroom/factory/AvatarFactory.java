@@ -6,10 +6,9 @@ import iths.theroom.model.AvatarModel;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AvatarFactory implements EntityFactory<AvatarModel, AvatarEntity> {
+public class AvatarFactory {
 
-    @Override
-    public AvatarModel entityToModel(AvatarEntity avatarEntity) {
+    public static AvatarModel entityToModel(AvatarEntity avatarEntity) {
         AvatarModel model = new AvatarModel();
         model.setBase(avatarEntity.getBase());
         model.setHead(avatarEntity.getHead());
@@ -19,8 +18,7 @@ public class AvatarFactory implements EntityFactory<AvatarModel, AvatarEntity> {
         return model;
     }
 
-    @Override
-    public List<AvatarModel> entityToModel(List<AvatarEntity> avatarEntities) {
+    public static List<AvatarModel> entitiesToModel(List<AvatarEntity> avatarEntities) {
         List<AvatarModel> avatarModels = new ArrayList<>();
         if(avatarEntities != null) {
             avatarEntities.forEach(avatarEntity ->
@@ -29,13 +27,4 @@ public class AvatarFactory implements EntityFactory<AvatarModel, AvatarEntity> {
         return avatarModels;
     }
 
-   /* public AvatarModel toModel(AvatarEntity avatar) {
-        AvatarModel model = new AvatarModel();
-        model.setBase(avatar.getBase());
-        model.setHead(avatar.getHead());
-        model.setTorso(avatar.getTorso());
-        model.setLegs(avatar.getLegs());
-
-        return model;
-    }*/
 }
