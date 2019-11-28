@@ -1,12 +1,11 @@
 package iths.theroom.controller;
 
+import iths.theroom.entity.AvatarEntity;
 import iths.theroom.model.AvatarModel;
 import iths.theroom.service.AvatarService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,6 +27,9 @@ public class AvatarController {
         return avatarService.getAvatarById(id);
     }
 
-    
+    @PostMapping(produces= MediaType.APPLICATION_JSON_VALUE)
+    public AvatarModel createAvatar(@RequestBody AvatarEntity avatar) {
+        return avatarService.createAvatar(avatar);
+    }
 
 }

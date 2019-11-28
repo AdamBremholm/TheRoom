@@ -30,7 +30,7 @@ public class AvatarServiceImpl implements AvatarService {
     }
 
     @Override
-    public AvatarModel saveAvatar(AvatarEntity avatar) {
+    public AvatarModel createAvatar(AvatarEntity avatar) {
         AvatarEntity entity = repository.save(avatar);
         return (AvatarModel) factory.entityToModel(entity);
     }

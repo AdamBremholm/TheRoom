@@ -10,7 +10,7 @@ public interface AvatarService {
 
     List<AvatarModel> getAllAvatars();
     Optional<AvatarModel> getAvatarById(Long id);
-    AvatarModel saveAvatar(AvatarEntity avatar);
+    AvatarModel createAvatar(AvatarEntity avatar);
     AvatarModel updateAvatar(AvatarEntity avatar);
     AvatarModel deleteAvatar(Long id);
 
