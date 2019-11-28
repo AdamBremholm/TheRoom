@@ -8,7 +8,9 @@ import iths.theroom.factory.EntityFactory;
 import iths.theroom.factory.RoomFactory;
 import iths.theroom.model.RoomModel;
 import iths.theroom.repository.RoomRepository;
+import iths.theroom.service.helper.EntityValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,11 +22,13 @@ public class RoomServiceImpl implements RoomService {
 
     private final EntityFactory<RoomModel, RoomEntity> entityFactory;
     private final RoomRepository roomRepository;
+    private final EntityValidator<RoomEntity> entityValidator;
 
     @Autowired
-    public RoomServiceImpl(RoomFactory entityFactory, RoomRepository roomRepository) {
+    public RoomServiceImpl(RoomFactory entityFactory, RoomRepository roomRepository, EntityValidator<RoomEntity> entityValidator) {
         this.entityFactory = entityFactory;
         this.roomRepository = roomRepository;
+        this.entityValidator = entityValidator;
     }
 
     @Override
@@ -39,7 +43,7 @@ public class RoomServiceImpl implements RoomService {
     public RoomModel getOneByName(String name) throws RequestException {
 
         if(name == null){
-            throw new BadRequestException("Missing critical path parameter: 'Name'");
+            throw new BadRequestException("Missing critical path parameter: 'name'");
         }
 
         RoomEntity roomEntity = checkIfRoomExists(name);
@@ -49,6 +53,11 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public RoomModel save(RoomEntity roomEntity) throws RequestException {
+
+        entityValidator.validate(roomEntity);
+        if(roomRepository.exists(Example.of(roomEntity))){
+            throw new BadRequestException("Room with name '" + roomEntity.getRoomName() + "' already exists.");
+        }
 
         try{
             RoomEntity savedRoomEntity = roomRepository.saveAndFlush(roomEntity);
