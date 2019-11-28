@@ -1,5 +1,6 @@
 package iths.theroom.model;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class RoomModel {
@@ -7,7 +8,9 @@ public class RoomModel {
     private String roomName;
     private Set<MessageModel> messages;
 
-    public RoomModel(){}
+    public RoomModel(){
+        this.messages = new HashSet<>();
+    }
 
     public String getRoomName() {
         return roomName;
@@ -21,6 +24,9 @@ public class RoomModel {
         return messages;
     }
 
+    public void addMessage(MessageModel message) {
+        this.messages.add(message);
+    }
     public void setMessages(Set<MessageModel> messages) {
         this.messages = messages;
     }

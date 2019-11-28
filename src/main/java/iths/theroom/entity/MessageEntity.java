@@ -1,7 +1,7 @@
 package iths.theroom.entity;
 
+import iths.theroom.enums.Type;
 import static iths.theroom.config.DataBaseConfig.*;
-
 import javax.persistence.*;
 import java.time.Instant;
 import java.util.Objects;
@@ -27,7 +27,7 @@ public class MessageEntity {
     @JoinColumn(name=COLUMN_USER_ID)
     private UserEntity sender;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch=FetchType.LAZY)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.PERSIST}, fetch=FetchType.LAZY)
     @JoinColumn(name=COLUMN_ROOM_ID)
     private RoomEntity roomEntity;
 
@@ -120,11 +120,7 @@ public class MessageEntity {
         this.downVotes = downVotes;
     }
 
-    public enum Type {
-        CHAT,
-        PM,
-        UNDEFINED
-    }
+
 
     public RoomEntity getRoomEntity() {
         return roomEntity;

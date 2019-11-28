@@ -3,6 +3,7 @@ package iths.theroom.service;
 import iths.theroom.entity.MessageEntity;
 import iths.theroom.entity.RoomEntity;
 import iths.theroom.entity.UserEntity;
+import iths.theroom.enums.Type;
 import iths.theroom.repository.MessageRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,7 +37,7 @@ public class MessageServiceImplIntegrationTest {
 
     @Before
     public void setUp() {
-        MessageEntity message = new MessageEntity(MessageEntity.Type.CHAT, "hello", new UserEntity("sven"), new RoomEntity("one"));
+        MessageEntity message = new MessageEntity(Type.CHAT, "hello", new UserEntity("sven"), new RoomEntity("one"));
         message.setUuid("123abc");
 
         Mockito.when(messageRepository.findByUuid(message.getUuid()))
