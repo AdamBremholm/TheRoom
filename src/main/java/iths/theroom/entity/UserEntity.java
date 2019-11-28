@@ -1,10 +1,8 @@
 package iths.theroom.entity;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
+
 import static iths.theroom.config.DataBaseConfig.*;
 
 
@@ -15,17 +13,11 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String userName;
     private String password;
+    @Column(unique = true, nullable = false)
     private String email;
-
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch=FetchType.LAZY)
-    @JoinTable(name = JOIN_TABLE_USER_ROLE,
-            joinColumns=@JoinColumn(name=COLUMN_ROLE_ID, referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = COLUMN_USER_ID, referencedColumnName = "id"))
-    private Set<RoleEntity> roles;
-
     @Transient
     private String passwordConfirm;
     @Transient
@@ -38,25 +30,24 @@ public class UserEntity {
     private Set<MessageEntity> messages;
 
 
-    public UserEntity(String userName, String password, String email, Set<RoleEntity> roles,
+    public UserEntity(String userName, String password, String email,
                       String passwordConfirm, String firstName, String lastName, Set<MessageEntity> messages, List<String> roleList) {
         this.userName = userName;
         this.password = password;
         this.email = email;
-        this.roles = Objects.requireNonNullElse(roles, new HashSet<>());
         this.passwordConfirm = passwordConfirm;
         this.firstName = firstName;
         this.lastName = lastName;
         this.messages = Objects.requireNonNullElse(messages, new HashSet<>());
-        this.roleList = roleList;
+        this.roleList = Objects.requireNonNullElse(roleList, new ArrayList<>());
     }
 
     public UserEntity() {
-        this(null, null, null, null, null, null, null, null, null);
+        this(null, null, null, null, null, null, null, null);
     }
 
     public UserEntity(String userName) {
-        this(userName, null, null, null, null, null, null, null, null);
+        this(userName, null, null, null, null, null, null, null);
     }
 
     public Long getId() {
@@ -113,14 +104,6 @@ public class UserEntity {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
-
-    public Set<RoleEntity> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<RoleEntity> roles) {
-        this.roles = roles;
     }
 
     public Set<MessageEntity> getMessages() {
