@@ -102,8 +102,8 @@ public class RoomControllerTest {
 
         int actualStatus = result.getStatusCode().value();
 
-        Assert.assertEquals(expectedRoomName, actualRoomName);
-        assertEquals(STATUS_BAD, actualStatus);
+        Assert.assertTrue(actualErrorDetails.contains(expectedErrorDetails));
+        assertEquals(STATUS_BAD_REQUEST, actualStatus);
     }
 
     @Test
