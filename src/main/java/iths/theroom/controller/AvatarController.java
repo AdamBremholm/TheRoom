@@ -27,9 +27,14 @@ public class AvatarController {
         return avatarService.getAvatarById(id);
     }
 
-    @PostMapping(produces= MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(produces=MediaType.APPLICATION_JSON_VALUE)
     public AvatarModel createAvatar(@RequestBody AvatarEntity avatar) {
         return avatarService.createAvatar(avatar);
+    }
+
+    @PutMapping(value="/update", produces=MediaType.APPLICATION_JSON_VALUE)
+    public AvatarModel updateAvatar(@RequestBody AvatarEntity avatar) {
+        return avatarService.updateAvatar(avatar);
     }
 
 }
