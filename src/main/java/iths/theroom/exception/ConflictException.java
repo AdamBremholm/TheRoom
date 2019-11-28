@@ -1,19 +1,27 @@
 package iths.theroom.exception;
 
-import iths.theroom.entity.UserEntity;
+
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
-public class ConflictException extends RequestException {
+@ResponseStatus(HttpStatus.CONFLICT)
+public class ConflictException extends RuntimeException {
 
-    public ConflictException(String message) {
-        super(message, HttpStatus.CONFLICT);
+
+    public ConflictException(String errorMessage, Throwable err) {
+        super(errorMessage, err);
+    }
+
+    public ConflictException(Throwable err) {
+        super(err);
+    }
+
+    public ConflictException(String errorMessage) {
+        super(errorMessage);
     }
 
     public ConflictException() {
-        super(HttpStatus.CONFLICT);
+        super();
     }
 
-    public ConflictException(UserEntity userEntity) {
-        super(HttpStatus.CONFLICT);
-    }
 }

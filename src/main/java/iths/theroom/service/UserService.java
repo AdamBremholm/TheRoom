@@ -21,4 +21,6 @@ public interface UserService {
     void validateUserEntity(UserEntity userEntity) throws BadRequestException;
 
     void checkForDuplicates(UserEntity userEntity) throws ConflictException;
+
+    public void encodePassword(UserEntity userEntity);
 }
