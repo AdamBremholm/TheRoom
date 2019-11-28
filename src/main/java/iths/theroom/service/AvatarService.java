@@ -3,9 +3,10 @@ package iths.theroom.service;
 import iths.theroom.entity.AvatarEntity;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface AvatarService {
 
     List<AvatarEntity> getAllAvatars();
-    AvatarEntity getAvatarById(Long id);
+    Optional<AvatarEntity> getAvatarById(Long id);
 }
