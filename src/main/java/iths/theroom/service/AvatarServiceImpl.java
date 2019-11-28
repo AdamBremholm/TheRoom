@@ -41,7 +41,8 @@ public class AvatarServiceImpl implements AvatarService {
     }
 
     @Override
-    public AvatarModel deleteAvatar(AvatarEntity avatar) {
-        return null;
+    public AvatarModel deleteAvatar(Long id) {
+        repository.deleteById(id);
+        return (AvatarModel) factory.entityToModel(repository.findById(id));
     }
 }
