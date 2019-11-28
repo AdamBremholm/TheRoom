@@ -37,7 +37,7 @@ public class AvatarServiceImpl implements AvatarService {
 
     @Override
     public AvatarModel updateAvatar(AvatarEntity avatar) {
-        return null;
+        return (AvatarModel) factory.entityToModel(avatar);
     }
 
     @Override
