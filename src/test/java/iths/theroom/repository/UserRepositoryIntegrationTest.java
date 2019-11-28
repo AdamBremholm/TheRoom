@@ -7,6 +7,7 @@ import iths.theroom.entity.RoleEntity;
 import iths.theroom.entity.RoomEntity;
 import iths.theroom.entity.UserEntity;
 
+import iths.theroom.enums.Type;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -43,7 +44,7 @@ public class UserRepositoryIntegrationTest {
     @Before
     public void setUp() {
 
-        messageEntity = new MessageEntity(MessageEntity.Type.CHAT, "hello", new UserEntity("sven"), new RoomEntity("one"));
+        messageEntity = new MessageEntity(Type.CHAT, "hello", new UserEntity("sven"), new RoomEntity("one"));
         messageEntities.add(messageEntity);
         roleEntity = new RoleEntity(RoleEntity.Role.USER);
         roleEntities.add(roleEntity);

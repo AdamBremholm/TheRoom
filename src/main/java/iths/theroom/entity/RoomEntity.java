@@ -17,7 +17,6 @@ public class RoomEntity {
     private String roomName;
 
     @OneToMany(mappedBy = "roomEntity")
-    @Column(name=COLUMN_ROOM_MESSAGES, unique=false)
     private Set<MessageEntity> messages;
 
     public RoomEntity(){
@@ -30,7 +29,7 @@ public class RoomEntity {
     }
 
     public String getRoomName() {
-        return roomName;
+        return this.roomName;
     }
 
     public void setRoomName(String roomName) {
@@ -38,7 +37,7 @@ public class RoomEntity {
     }
 
     public Set<MessageEntity> getMessages() {
-        return messages;
+        return this.messages;
     }
 
     public void setMessages(Set<MessageEntity> messages) {

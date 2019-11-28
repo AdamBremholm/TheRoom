@@ -4,6 +4,7 @@ import iths.theroom.entity.MessageEntity;
 import iths.theroom.entity.RoleEntity;
 import iths.theroom.entity.RoomEntity;
 import iths.theroom.entity.UserEntity;
+import iths.theroom.enums.Type;
 import iths.theroom.repository.MessageRepository;
 import iths.theroom.repository.UserRepository;
 import org.junit.Before;
@@ -51,7 +52,7 @@ public class UserServiceImplIntegrationTest {
     @Before
     public void setUp() {
 
-        messageEntity = new MessageEntity(MessageEntity.Type.CHAT, "hello", new UserEntity("sven"), new RoomEntity("one"));
+        messageEntity = new MessageEntity(Type.CHAT, "hello", new UserEntity("sven"), new RoomEntity("one"));
         messageEntities.add(messageEntity);
         roleEntity = new RoleEntity(RoleEntity.Role.USER);
         roleEntities.add(roleEntity);

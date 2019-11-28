@@ -1,10 +1,11 @@
 package iths.theroom.factory;
 
+import iths.theroom.entity.MessageEntity;
 import iths.theroom.entity.RoomEntity;
+import iths.theroom.model.MessageModel;
 import iths.theroom.model.RoomModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,20 +20,16 @@ public class RoomFactory implements EntityFactory<RoomModel, RoomEntity> {
     }
 
     public RoomModel entityToModel(RoomEntity roomEntity) {
-
         RoomModel roomModel = new RoomModel();
-
         roomModel.setRoomName(roomEntity.getRoomName());
 
         if(roomEntity.getMessages() != null){
-
-            roomEntity.getMessages().forEach(messageEntity ->
-                roomModel.getMessages().add(messageFactory.toModel(messageEntity))
-            );
+            for(MessageEntity message : roomEntity.getMessages()){
+                MessageModel messageModel = MessageFactory.toModel(message);
+                roomModel.getMessages().add(messageModel);
+            }
         }
-
         return roomModel;
-
     }
 
     public List<RoomModel> entityToModel(List<RoomEntity> roomEntities) {
@@ -40,14 +37,10 @@ public class RoomFactory implements EntityFactory<RoomModel, RoomEntity> {
         List<RoomModel> roomModels = new ArrayList<>();
 
         if(roomEntities != null){
-
             roomEntities.forEach(roomEntity ->
                 roomModels.add(entityToModel(roomEntity))
             );
         }
-
         return roomModels;
-
     }
-
 }

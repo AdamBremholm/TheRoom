@@ -1,8 +1,14 @@
 package iths.theroom.service;
 
+import iths.theroom.entity.RoomEntity;
+import iths.theroom.entity.UserEntity;
+import iths.theroom.exception.NoSuchUserException;
+import iths.theroom.pojos.MessageForm;
 import iths.theroom.repository.MessageRepository;
 import iths.theroom.entity.MessageEntity;
 import iths.theroom.exception.NoSuchMessageException;
+import iths.theroom.repository.RoomRepository;
+import iths.theroom.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +21,11 @@ public class MessageServiceImpl implements MessageService {
 
     @Autowired
     private MessageRepository messageRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private RoomRepository roomRepository;
+
 
     @Override
     public MessageEntity getMessageById(Long id) {
@@ -32,8 +43,14 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public MessageEntity save(MessageEntity message) {
-       return messageRepository.save(message);
+    public MessageEntity save(MessageForm form) {
+        UserEntity user = userRepository.findByUserName(form.getUserName()).orElseThrow(NoSuchUserException::new);
+        RoomEntity room = roomRepository.getOneByRoomName(form.getRoomName());
+        MessageEntity message = new MessageEntity(form.getType(), form.getContent(), user, room);
+        messageRepository.save(message);
+        room.addMessage(message);
+        roomRepository.save(room);
+        return message;
     }
 
     @Override
