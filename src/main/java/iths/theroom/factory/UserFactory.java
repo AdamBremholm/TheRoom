@@ -3,10 +3,8 @@ package iths.theroom.factory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import iths.theroom.entity.MessageEntity;
-import iths.theroom.entity.RoleEntity;
 import iths.theroom.entity.UserEntity;
 import iths.theroom.model.MessageModel;
-import iths.theroom.model.RoleModel;
 import iths.theroom.model.UserModel;
 import org.springframework.stereotype.Component;
 
@@ -42,12 +40,6 @@ public class UserFactory {
                 MessageModel messageModel = MessageFactory.toModel(message);
                 userModel.getMessages().add(messageModel);
             }
-        }
-        if(userEntity.getRoles()!=null){
-           for(RoleEntity role: userEntity.getRoles()){
-               RoleModel roleModel = RoleFactory.toModel(role);
-               userModel.getRoles().add(roleModel.getRole().name().toLowerCase());
-           }
         }
 
         return userModel;

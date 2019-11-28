@@ -12,6 +12,11 @@ public abstract class RequestException extends Throwable {
         this.httpStatus = httpStatus;
     }
 
+    RequestException(HttpStatus httpStatus){
+        this.httpStatus = httpStatus;
+        this.message = "";
+    }
+
     @Override
     public String getMessage(){
         return this.message;
