@@ -1,11 +1,11 @@
 package iths.theroom.service;
 
 import iths.theroom.entity.AvatarEntity;
+import iths.theroom.factory.EntityFactory;
 import iths.theroom.model.AvatarModel;
 import iths.theroom.repository.AvatarRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -14,20 +14,25 @@ public class AvatarServiceImpl implements AvatarService {
 
     @Autowired
     private AvatarRepository repository;
+    @Autowired
+    private EntityFactory factory;
 
     @Override
     public List<AvatarModel> getAllAvatars() {
-        return null;
+        List<AvatarEntity> entities = repository.findAll();
+        return factory.entityToModel(entities);
     }
 
     @Override
     public Optional<AvatarModel> getAvatarById(Long id) {
-        return null;
+        Optional<AvatarEntity> entity = repository.findById(id);
+        return (Optional<AvatarModel>) factory.entityToModel(entity);
     }
 
     @Override
     public AvatarModel saveAvatar(AvatarEntity avatar) {
-        return null;
+        AvatarEntity entity = repository.save(avatar);
+        return (AvatarModel) factory.entityToModel(entity);
     }
 
     @Override
