@@ -36,8 +36,8 @@ public class AvatarController {
         return avatarService.updateAvatar(avatar);
     }
 
-    @DeleteMapping(value="/delete")
-    public void deleteAvatar(Long id) {
+    @DeleteMapping(value="/delete/{avatarId}")
+    public void deleteAvatar(@PathVariable(name="avatarId")Long id) {
         avatarService.deleteAvatar(id);
     }
 
