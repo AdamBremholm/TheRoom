@@ -1,12 +1,10 @@
 package iths.theroom.service;
 
 import iths.theroom.entity.UserEntity;
-import iths.theroom.exception.BadRequestBetaException;
 import iths.theroom.exception.BadRequestException;
 import iths.theroom.exception.ConflictException;
 import iths.theroom.exception.NoSuchUserException;
 import iths.theroom.repository.UserRepository;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -52,25 +50,25 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public void validateUserEntity(UserEntity userEntity) throws BadRequestBetaException {
+    public void validateUserEntity(UserEntity userEntity) throws BadRequestException {
         Optional<UserEntity> optionalUserEntity = Optional.ofNullable(userEntity);
         optionalUserEntity.map(UserEntity::getUserName)
-                .filter(Predicate.not(String::isBlank)).orElseThrow(() -> new BadRequestBetaException("username must be provided"));
+                .filter(Predicate.not(String::isBlank)).orElseThrow(() -> new BadRequestException("username must be provided"));
         optionalUserEntity.map(UserEntity::getEmail)
-                .filter(Predicate.not(String::isBlank)).orElseThrow(() -> new BadRequestBetaException("email must be provided"));
+                .filter(Predicate.not(String::isBlank)).orElseThrow(() -> new BadRequestException("email must be provided"));
         optionalUserEntity.map(UserEntity::getPassword)
-                .filter(Predicate.not(String::isBlank)).orElseThrow(() -> new BadRequestBetaException("password must be provided"));
+                .filter(Predicate.not(String::isBlank)).orElseThrow(() -> new BadRequestException("password must be provided"));
         optionalUserEntity.map(UserEntity::getPasswordConfirm)
-                .filter(Predicate.not(String::isBlank)).orElseThrow(() -> new BadRequestBetaException("password confirmation must be provided"));
+                .filter(Predicate.not(String::isBlank)).orElseThrow(() -> new BadRequestException("password confirmation must be provided"));
         validatePassword(optionalUserEntity.get());
         encodePassword(optionalUserEntity.get());
     }
 
     @Override
-    public void validatePassword(UserEntity userEntity) throws BadRequestBetaException {
+    public void validatePassword(UserEntity userEntity) throws BadRequestException {
         if(userEntity!=null) {
             if (!userEntity.getPassword().equals(userEntity.getPasswordConfirm()))
-                throw new BadRequestBetaException("passwords does not match");
+                throw new BadRequestException("passwords does not match");
 
         }
 
