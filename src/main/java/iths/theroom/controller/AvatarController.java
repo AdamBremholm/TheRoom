@@ -8,7 +8,6 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/avatars")
@@ -23,7 +22,7 @@ public class AvatarController {
     }
 
     @GetMapping(value="/{avatarId}")
-    public Optional<AvatarModel> getAvatarById(@PathVariable(name="avatarId") Long id) {
+    public AvatarModel getAvatarById(@PathVariable(name="avatarId") Long id) {
         return avatarService.getAvatarById(id);
     }
 
@@ -38,8 +37,8 @@ public class AvatarController {
     }
 
     @DeleteMapping(value="/delete")
-    public AvatarModel deleteAvatar(Long id) {
-        return avatarService.deleteAvatar(id);
+    public void deleteAvatar(Long id) {
+        avatarService.deleteAvatar(id);
     }
 
 }
