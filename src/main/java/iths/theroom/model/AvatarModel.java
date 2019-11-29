@@ -2,50 +2,50 @@ package iths.theroom.model;
 
 public class AvatarModel {
 
-    private String base;
-    private String head;
-    private String torso;
-    private String legs;
+    private int base;
+    private int head;
+    private int torso;
+    private int legs;
 
     public AvatarModel() {
     }
 
-    public AvatarModel(String base, String head, String torso, String legs) {
+    public AvatarModel(int base, int head, int torso, int legs) {
         this.base = base;
         this.head = head;
         this.torso = torso;
         this.legs = legs;
     }
 
-    public String getBase() {
+    public int getBase() {
         return base;
     }
 
-    public void setBase(String base) {
+    public void setBase(int base) {
         this.base = base;
     }
 
-    public String getHead() {
+    public int getHead() {
         return head;
     }
 
-    public void setHead(String head) {
+    public void setHead(int head) {
         this.head = head;
     }
 
-    public String getTorso() {
+    public int getTorso() {
         return torso;
     }
 
-    public void setTorso(String torso) {
+    public void setTorso(int torso) {
         this.torso = torso;
     }
 
-    public String getLegs() {
+    public int getLegs() {
         return legs;
     }
 
-    public void setLegs(String legs) {
+    public void setLegs(int legs) {
         this.legs = legs;
     }
 }
