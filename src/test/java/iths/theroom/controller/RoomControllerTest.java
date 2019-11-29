@@ -2,7 +2,6 @@ package iths.theroom.controller;
 
 import iths.theroom.entity.RoomEntity;
 import iths.theroom.exception.BadRequestException;
-import iths.theroom.exception.RequestException;
 import iths.theroom.model.RoomModel;
 import iths.theroom.service.RoomService;
 import org.junit.Assert;
@@ -71,7 +70,7 @@ public class RoomControllerTest {
     }
 
     @Test
-    public void whenGetOneByName_ReturnRoomModelInResponseBodyAndStatusOK() throws RequestException {
+    public void whenGetOneByName_ReturnRoomModelInResponseBodyAndStatusOK() {
 
         String expectedRoomName = roomModel1.getRoomName();
 
@@ -89,7 +88,7 @@ public class RoomControllerTest {
     }
 
     @Test
-    public void whenGetOneByNameInvalidName_ReturnErrorInResponseBodyAndStatusBadRequest() throws RequestException {
+    public void whenGetOneByNameInvalidName_ReturnErrorInResponseBodyAndStatusBadRequest() {
 
         String expectedErrorDetails = "12345";
 
@@ -107,7 +106,7 @@ public class RoomControllerTest {
     }
 
     @Test
-    public void whenCreateRoom_ReturnRoomModelInResponseBodyAndStatusCreated() throws RequestException {
+    public void whenCreateRoom_ReturnRoomModelInResponseBodyAndStatusCreated() {
 
         String expectedRoomName = roomModel1.getRoomName();
 
