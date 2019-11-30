@@ -11,8 +11,5 @@ public interface MessageService {
     List<MessageEntity> getAllMessages();
     MessageEntity save(MessageForm form);
     void remove(String uuid);
-    List<MessageEntity> getAllMessagesFromUser(String userName);
-    List<MessageEntity> getLastMessagesFromUser();
-    List<MessageEntity> getAllMessagesFromUserInRoom();
-    List<MessageEntity> getLastMessagesFromUserInRoom();
+    List<MessageEntity> getAllMessagesFromUser(String userName, String roomName, String count);
 }

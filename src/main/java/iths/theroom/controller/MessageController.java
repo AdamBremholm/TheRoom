@@ -43,7 +43,8 @@ public class MessageController {
     }
 
     @GetMapping("/messages/search")
-    public List<MessageModel> getLastMessagesFromUserInRoom(@RequestParam(name ="username") String userName,@RequestParam(required = false, name ="roomname") String roomName, @RequestParam(required = false, name ="count") int count) {
-        return toModel(messageService.getAllMessages());
+    public List<MessageModel> getLastMessagesFromUserInRoom(@RequestParam(name ="username") String userName,@RequestParam(required = false, name ="roomname") String roomName, @RequestParam(required = false, name ="count") String count) {
+        return toModel(messageService.getAllMessagesFromUser(userName, roomName, count));
     }
+
 }
