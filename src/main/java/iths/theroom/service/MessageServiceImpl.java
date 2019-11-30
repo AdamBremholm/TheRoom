@@ -58,4 +58,24 @@ public class MessageServiceImpl implements MessageService {
         MessageEntity found = getMessageByUuid(uuid);
         messageRepository.delete(found);
     }
+
+    @Override
+    public List<MessageEntity> getAllMessagesFromUser() {
+        return null;
+    }
+
+    @Override
+    public List<MessageEntity> getLastMessagesFromUser() {
+        return null;
+    }
+
+    @Override
+    public List<MessageEntity> getAllMessagesFromUserInRoom() {
+        return null;
+    }
+
+    @Override
+    public List<MessageEntity> getLastMessagesFromUserInRoom() {
+        return null;
+    }
 }
