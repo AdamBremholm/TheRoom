@@ -42,21 +42,8 @@ public class MessageController {
         messageService.remove(uuid);
     }
 
-    @GetMapping("/messages")
-    public List<MessageModel> getAllMessagesFromUser(@PathParam("username") String userName) {
-        return toModel(messageService.getAllMessages());
-    }
-    @GetMapping("/messages")
-    public List<MessageModel> getLastMessagesFromUser(@PathParam("username") String userName,@PathParam("count") int count) {
-        return toModel(messageService.getAllMessages());
-    }
-
-    @GetMapping("/messages")
-    public List<MessageModel> getAllMessagesFromUserInRoom(@PathParam("username") String userName, @PathParam("roomname") String roomName) {
-        return toModel(messageService.getAllMessages());
-    }
-    @GetMapping("/messages")
-    public List<MessageModel> getLastMessagesFromUserInRoom(@PathParam("username") String userName,@PathParam("roomname") String roomName, @PathParam("count") int count) {
+    @GetMapping("/messages/search")
+    public List<MessageModel> getLastMessagesFromUserInRoom(@RequestParam(name ="username") String userName,@RequestParam(required = false, name ="roomname") String roomName, @RequestParam(required = false, name ="count") int count) {
         return toModel(messageService.getAllMessages());
     }
 }
