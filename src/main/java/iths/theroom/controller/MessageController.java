@@ -7,6 +7,8 @@ import iths.theroom.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.websocket.server.PathParam;
+
 import static iths.theroom.factory.MessageFactory.*;
 
 import java.util.List;
@@ -39,4 +41,10 @@ public class MessageController {
     public void deleteMessage(@PathVariable("uuid") String uuid) {
         messageService.remove(uuid);
     }
+
+    @GetMapping("/messages/search")
+    public List<MessageModel> getLastMessagesFromUserInRoom(@RequestParam(name ="username") String userName,@RequestParam(required = false, name ="roomname") String roomName, @RequestParam(required = false, name ="count") String count) {
+        return toModel(messageService.getAllMessagesFromUser(userName, roomName, count));
+    }
+
 }

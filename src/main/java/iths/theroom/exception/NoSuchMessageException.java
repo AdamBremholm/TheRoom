@@ -6,8 +6,20 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(HttpStatus.NOT_FOUND)
 public class NoSuchMessageException extends RuntimeException {
 
-    @Override
-    public synchronized Throwable fillInStackTrace() {
-        return this;
+
+    public NoSuchMessageException(String errorMessage, Throwable err) {
+        super(errorMessage, err);
+    }
+
+    public NoSuchMessageException(Throwable err) {
+        super(err);
+    }
+
+    public NoSuchMessageException(String errorMessage) {
+        super(errorMessage);
+    }
+
+    public NoSuchMessageException() {
+        super();
     }
 }
