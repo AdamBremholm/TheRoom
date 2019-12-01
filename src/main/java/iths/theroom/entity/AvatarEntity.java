@@ -2,6 +2,7 @@ package iths.theroom.entity;
 
 import javax.persistence.*;
 
+import static iths.theroom.config.DataBaseConfig.COLUMN_USER_ID;
 import static iths.theroom.config.DataBaseConfig.TABLE_AVATAR;
 
 @Entity
@@ -16,6 +17,10 @@ public class AvatarEntity {
     private int head;
     private int torso;
     private int legs;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = COLUMN_USER_ID)
+    private UserEntity userEntity;
 
     public AvatarEntity() {
     }
@@ -61,5 +66,13 @@ public class AvatarEntity {
 
     public void setLegs(int legs) {
         this.legs = legs;
+    }
+
+    public UserEntity getUserEntity() {
+        return userEntity;
+    }
+
+    public void setUserEntity(UserEntity userEntity) {
+        this.userEntity = userEntity;
     }
 }
