@@ -1,0 +1,45 @@
+TEST API
+
+POST JSON BODY
+localhost:8080/api/roles
+{
+    "role":"GLOBAL_ADMIN"
+}
+
+
+POST JSON BODY
+localhost:8080/api/users
+{
+    "userName":"svenn",
+		"roleList":["GLOBAL_ADMIN"]
+}
+
+
+POST JSON BODY
+localhost:8080/theroom/room/
+{
+	"roomName":"TheRoom"
+}
+
+POST JSON BODY
+localhost:8080/api/messages
+{
+	"type":"CHAT",
+	"content":"hello world",
+	"roomName":"TheRoom",
+	"userName":"svenn"
+}
+
+GET
+localhost:8080/theroom/room/TheRoom
+
+GET
+localhost:8080/theroom/room/s
+
+GET
+localhost:8080/api/users
+
+GET
+localhost:8080/api/roles
+GET
+localhost:8080/api/messages

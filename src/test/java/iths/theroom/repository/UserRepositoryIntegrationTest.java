@@ -3,10 +3,10 @@
 package iths.theroom.repository;
 
 import iths.theroom.entity.MessageEntity;
-import iths.theroom.entity.RoleEntity;
 import iths.theroom.entity.RoomEntity;
 import iths.theroom.entity.UserEntity;
 
+import iths.theroom.enums.Type;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,22 +33,18 @@ public class UserRepositoryIntegrationTest {
     @Autowired
     private UserRepository userRepository;
 
-    RoleEntity roleEntity;
     UserEntity userEntity;
     MessageEntity messageEntity;
     Set<MessageEntity> messageEntities = new HashSet<>();
-    Set<RoleEntity> roleEntities = new HashSet<>();
 
 
     @Before
     public void setUp() {
 
-        messageEntity = new MessageEntity(MessageEntity.Type.CHAT, "hello", new UserEntity("sven"), new RoomEntity("one"));
+        messageEntity = new MessageEntity(Type.CHAT, "hello", new UserEntity("sven"), new RoomEntity("one"));
         messageEntities.add(messageEntity);
-        roleEntity = new RoleEntity(RoleEntity.Role.USER);
-        roleEntities.add(roleEntity);
-        userEntity = new UserEntity("sven", "sve123", "sven@gmail.com"
-                , roleEntities, "sve123", "sven", "svensson", new HashSet<>());
+
+        userEntity = new UserEntity("sven", "sve123", "sven@gmail.com", "sve123", "sven", "svensson", new HashSet<>(), null);
 
 
     }
@@ -64,11 +60,6 @@ public class UserRepositoryIntegrationTest {
         assertThat(userRepository.findByUserName(userEntity.getUserName()).orElseThrow(NoSuchElementException::new)).isEqualTo(userEntity);
     }
 
-    @Test
-    public void getRoles() {
-        entityManager.persist(userEntity);
-        assertThat(userRepository.findById(userEntity.getId()).orElseThrow(NoSuchElementException::new).getRoles().contains(roleEntity));
-    }
 
     @Test
     public void getMessages() {
@@ -86,16 +77,7 @@ public class UserRepositoryIntegrationTest {
         assertThat(userRepository.findById(userEntity.getId()).orElseThrow(NoSuchElementException::new).getMessages().contains(messageEntity));
     }
 
-    @Test
-    public void updateRoles() {
-        RoleEntity roleEntity = new RoleEntity(RoleEntity.Role.GLOBAL_ADMIN);
-        roleEntities.clear();
-        roleEntities.add(roleEntity);
-        entityManager.persist(userEntity);
-        userEntity.setRoles(roleEntities);
-        entityManager.merge(userEntity);
-        assertThat(userRepository.findById(userEntity.getId()).orElseThrow(NoSuchElementException::new).getRoles().contains(roleEntity));
-    }
+
 
     @Test
     public void saveWithNewInfoUpdates() {

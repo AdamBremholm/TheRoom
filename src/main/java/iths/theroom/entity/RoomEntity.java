@@ -4,18 +4,19 @@ import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity(name="room")
+import static iths.theroom.config.DataBaseConfig.*;
+
+@Entity(name=TABLE_ROOM)
 public class RoomEntity {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name="ROOM_NAME", length=50, nullable=false, unique=true)
+    @Column(name=COLUMN_ROOM_NAME, length=50, nullable=false, unique=true)
     private String roomName;
 
     @OneToMany(mappedBy = "roomEntity")
-    @Column(name="ROOM_MESSAGES", unique=false)
     private Set<MessageEntity> messages;
 
     public RoomEntity(){
@@ -28,7 +29,7 @@ public class RoomEntity {
     }
 
     public String getRoomName() {
-        return roomName;
+        return this.roomName;
     }
 
     public void setRoomName(String roomName) {
@@ -36,7 +37,7 @@ public class RoomEntity {
     }
 
     public Set<MessageEntity> getMessages() {
-        return messages;
+        return this.messages;
     }
 
     public void setMessages(Set<MessageEntity> messages) {
@@ -44,12 +45,10 @@ public class RoomEntity {
     }
 
     public void addMessage(MessageEntity message){
-        //Called when posting a message
         this.messages.add(message);
     }
 
     public void removeMessage(MessageEntity message){
-       //Called when deleting a users message
         this.messages.remove(message);
     }
 }

@@ -4,22 +4,22 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.NOT_FOUND)
-public class NoSuchMessageException extends RuntimeException {
+public class NoSuchUserException extends RuntimeException {
 
 
-    public NoSuchMessageException(String errorMessage, Throwable err) {
+    public NoSuchUserException(String errorMessage, Throwable err) {
         super(errorMessage, err);
     }
 
-    public NoSuchMessageException(Throwable err) {
+    public NoSuchUserException(Throwable err) {
         super(err);
     }
 
-    public NoSuchMessageException(String errorMessage) {
+    public NoSuchUserException(String errorMessage) {
         super(errorMessage);
     }
 
-    public NoSuchMessageException() {
+    public NoSuchUserException() {
         super();
     }
 }

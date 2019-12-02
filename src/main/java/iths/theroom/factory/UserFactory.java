@@ -8,6 +8,9 @@ import iths.theroom.model.MessageModel;
 import iths.theroom.model.UserModel;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static iths.theroom.factory.MessageFactory.toModel;
 
 @Component
@@ -24,7 +27,7 @@ public class UserFactory {
         }
     }
 
-    public UserModel entityToModel(UserEntity userEntity){
+    public static UserModel toModel(UserEntity userEntity){
 
         UserModel userModel = new UserModel();
         userModel.setUserName(userEntity.getUserName());
@@ -33,13 +36,21 @@ public class UserFactory {
         userModel.setLastName(userEntity.getLastName());
 
         if(userEntity.getMessages() != null){
-
             for(MessageEntity message : userEntity.getMessages()){
-                MessageModel messageModel = toModel(message);
+                MessageModel messageModel = MessageFactory.toModel(message);
                 userModel.getMessages().add(messageModel);
             }
         }
 
         return userModel;
+    }
+
+    public static List<UserModel> toModel(List<UserEntity> users){
+        List<UserModel> userModels = new ArrayList<>();
+        if(users!=null){
+            users.forEach(u -> userModels.add(toModel(u)));
+        }
+        return userModels;
+
     }
 }

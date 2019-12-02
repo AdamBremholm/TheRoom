@@ -1,19 +1,15 @@
 package iths.theroom.model;
 
-import iths.theroom.entity.MessageEntity;
-import iths.theroom.entity.RoleEntity;
-import iths.theroom.entity.RoomEntity;
-
-
+import java.util.HashSet;
 import java.util.Set;
 
 public class RoomModel {
+
     private String roomName;
-    private Set<MessageEntity> messages;
+    private Set<MessageModel> messages;
 
-    public RoomModel(){}
-    public RoomModel(RoomEntity room, RoleEntity role){
-
+    public RoomModel(){
+        this.messages = new HashSet<>();
     }
 
     public String getRoomName() {
@@ -24,11 +20,14 @@ public class RoomModel {
         this.roomName = roomName;
     }
 
-    public Set<MessageEntity> getMessages() {
+    public Set<MessageModel> getMessages() {
         return messages;
     }
 
-    public void setMessages(Set<MessageEntity> messages) {
+    public void addMessage(MessageModel message) {
+        this.messages.add(message);
+    }
+    public void setMessages(Set<MessageModel> messages) {
         this.messages = messages;
     }
 }
