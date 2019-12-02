@@ -19,7 +19,7 @@ public class AvatarEntity {
     private int legs;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = COLUMN_USER_ID)
+    @JoinColumn(name = "id", referencedColumnName = "id")
     private UserEntity userEntity;
 
     public AvatarEntity() {

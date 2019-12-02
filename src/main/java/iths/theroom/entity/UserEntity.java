@@ -29,7 +29,8 @@ public class UserEntity {
     @OneToMany(mappedBy = "sender")
     private Set<MessageEntity> messages;
 
-    @OneToOne(mappedBy = "userEntity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToOne(mappedBy = "userEntity")
+    @JoinColumn(name = "id", referencedColumnName = "id")
     private AvatarEntity avatarEntity;
 
 
@@ -43,7 +44,7 @@ public class UserEntity {
         this.lastName = lastName;
         this.messages = Objects.requireNonNullElse(messages, new HashSet<>());
         this.roleList = Objects.requireNonNullElse(roleList, new ArrayList<>());
-        this.avatarEntity = Objects.requireNonNullElse(avatarEntity, new AvatarEntity());
+        this.avatarEntity = avatarEntity;
     }
 
     public UserEntity() {
