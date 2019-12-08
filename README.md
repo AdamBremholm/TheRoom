@@ -4,3 +4,14 @@
 * create database theroom;
 * create user 'springuser'@'%' identified by 'ThePassword';
 * grant all on db_example.* to 'springuser'@'%';
+
+## rabbitMQ:
+* install erlang 
+* install rabbitMQ
+* enable rabbitMQ plugin rabbitmq_stomp
+* optional: enable the control panel plugin 
+*
+* plugins are installed with rabbitmq-plugins in your sbin directory.
+* rabbitmq-plugins enable rabbitmq_stomp
+* rabbitmq-plugins enable rabbitmq_management
+
