@@ -2,6 +2,7 @@ package iths.theroom.controller;
 
 import iths.theroom.entity.RoomEntity;
 import iths.theroom.entity.UserEntity;
+import iths.theroom.exception.BadRequestException;
 import iths.theroom.exception.NoSuchUserException;
 import iths.theroom.exception.NotFoundException;
 import iths.theroom.factory.MessageFactory;
@@ -46,14 +47,24 @@ public class WebSocketChatController {
     }
 
     private void moveToServiceClassLater__InitRoomSession(MessageForm form){
-        userService.save(moveToServiceClassLater__CreateOrFetchUser(form));
-        roomService.save(moveToServiceClassLater__CreateOrFetchRoom(form));
-    }
+        try {
+            userService.save(moveToServiceClassLater__CreateOrFetchUser(form));
+        }
+        catch (Exception e){
+        }
+        try {
+            roomService.save(moveToServiceClassLater__CreateOrFetchRoom(form));
+        }
+        catch (BadRequestException e){
+
+        }
+        }
+
 
     private UserEntity moveToServiceClassLater__CreateOrFetchUser(MessageForm form){
         UserEntity user;
         try{
-          user = userService.getByUserName(form.getSender());
+          return userService.getByUserName(form.getSender());
         }
         catch(NoSuchUserException e){
             user = new UserEntity();
@@ -68,9 +79,9 @@ public class WebSocketChatController {
     private RoomEntity moveToServiceClassLater__CreateOrFetchRoom(MessageForm form){
         RoomEntity room;
         try{
-            room = roomService.getOneByNameE(form.getRoomName());
+            return roomService.getOneByNameE(form.getRoomName());
         }
-        catch(NotFoundException e){
+        catch(Exception e){
             room = new RoomEntity();
             room.setRoomName(form.getRoomName());
         }

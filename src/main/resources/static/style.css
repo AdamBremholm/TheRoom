@@ -6,6 +6,7 @@ box-sizing: border-box;
 html, body {
 	height: 100%;
 	overflow: hidden;
+	background-color: black;
 }
 body {
 	margin: 0;
@@ -15,7 +16,7 @@ body {
 	font-size: 1rem;
 	line-height: 1.58;
 	color: #333;
-	background-color: #f4f4f4;
+
 	height: 100%;
 }
 .clearfix:after {
@@ -33,6 +34,7 @@ input {
 h1, h2, h3, h4, h5, h6 {
 	margin-top: 20px;
 	margin-bottom: 20px;
+    color: white;
 }
 h1 {
 	font-size: 1.7em;
@@ -73,7 +75,7 @@ button.accent {
 	text-align: center;
 }
 .welcome-page-container {
-	background-color: grey;
+	background-color: #4A154B;
 	width: 100%;
 	max-width: 500px;
 	display: inline-block;
@@ -94,7 +96,7 @@ button.accent {
 	height: 100%;
 }
 .dialogue-container {
-	background-color: green;
+	background-color: #4A154B;
 	margin: 10px 0;
 	max-width: 700px;
 	margin-left: auto;
