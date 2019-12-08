@@ -7,7 +7,7 @@ public class MessageForm{
     private Type type;
     private String content;
     private String roomName;
-    private String userName;
+    private String sender;
     public MessageForm(){}
 
     public Type getType() {
@@ -34,11 +34,11 @@ public class MessageForm{
         this.roomName = roomName;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getSender() {
+        return sender;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setSender(String sender) {
+        this.sender = sender;
     }
 }

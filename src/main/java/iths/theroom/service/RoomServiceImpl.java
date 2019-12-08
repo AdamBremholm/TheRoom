@@ -47,6 +47,19 @@ public class RoomServiceImpl implements RoomService {
         return entityFactory.entityToModel(roomEntity);
     }
 
+
+    @Override
+    public RoomEntity getOneByNameE(String name) {
+
+        if(name == null){
+            throw new BadRequestException("Missing critical path parameter: 'name'");
+        }
+
+        RoomEntity roomEntity = checkIfRoomExists(name);
+
+        return roomEntity;
+    }
+
     @Override
     public RoomModel save(RoomEntity roomEntity) {
 

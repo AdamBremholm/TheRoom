@@ -47,7 +47,7 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public MessageEntity save(MessageForm form) {
-        UserEntity user = userRepository.findByUserName(form.getUserName()).orElseThrow(NoSuchUserException::new);
+        UserEntity user = userRepository.findByUserName(form.getSender()).orElseThrow(NoSuchUserException::new);
         RoomEntity room = roomRepository.getOneByRoomName(form.getRoomName());
         MessageEntity message = new MessageEntity(form.getType(), form.getContent(), user, room);
         messageRepository.save(message);
