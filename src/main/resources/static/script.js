@@ -19,6 +19,7 @@ function connect(event) {
     event.preventDefault();
 }
 function connectionSuccess() {
+    document.getElementById("roomTitle").innerHTML = room;
     stompClient.subscribe('/topic/javainuse', onMessageReceived);
     stompClient.send("/app/chat.newUser", {}, JSON.stringify({
         sender : name,
