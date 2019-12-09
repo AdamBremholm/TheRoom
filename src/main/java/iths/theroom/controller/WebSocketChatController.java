@@ -12,6 +12,7 @@ import iths.theroom.service.MessageService;
 import iths.theroom.service.RoomService;
 import iths.theroom.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -32,15 +33,15 @@ public class WebSocketChatController {
     RoomService roomService;
 
 
-    @MessageMapping("/chat.sendMessage")
-    @SendTo("/topic/javainuse")
-    public MessageModel sendMessage(@Payload MessageForm messageForm) {
+    @MessageMapping("/chat.sendMessage.{roomName}")
+    @SendTo("/topic/{roomName}")
+    public MessageModel sendMessage(@DestinationVariable String roomName, @Payload MessageForm messageForm) {
        return toModel(messageService.save(messageForm));
     }
 
-    @MessageMapping("/chat.newUser")
-    @SendTo("/topic/javainuse")
-    public MessageModel newUser(@Payload MessageForm webSocketChatMessage, SimpMessageHeaderAccessor headerAccessor) {
+    @MessageMapping("/chat.newUser.{roomName}")
+    @SendTo("/topic/{roomName}")
+    public MessageModel newUser(@DestinationVariable String roomName, @Payload MessageForm webSocketChatMessage, SimpMessageHeaderAccessor headerAccessor) {
         Objects.requireNonNull(headerAccessor.getSessionAttributes()).put("username", webSocketChatMessage.getSender());
         moveToServiceClassLater__InitRoomSession(webSocketChatMessage);
         return MessageFactory.toModel(webSocketChatMessage);

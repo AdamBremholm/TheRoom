@@ -20,8 +20,8 @@ function connect(event) {
 }
 function connectionSuccess() {
     document.getElementById("roomTitle").innerHTML = room;
-    stompClient.subscribe('/topic/javainuse', onMessageReceived);
-    stompClient.send("/app/chat.newUser", {}, JSON.stringify({
+    stompClient.subscribe('/topic/'+room, onMessageReceived);
+    stompClient.send("/app/chat.newUser."+room, {}, JSON.stringify({
         sender : name,
         type : 'newUser',
         roomName : room
@@ -36,7 +36,7 @@ function sendMessage(event) {
             type : 'CHAT',
             roomName : room
         };
-        stompClient.send("/app/chat.sendMessage", {}, JSON
+        stompClient.send("/app/chat.sendMessage."+room, {}, JSON
             .stringify(chatMessage));
         document.querySelector('#chatMessage').value = '';
     }
