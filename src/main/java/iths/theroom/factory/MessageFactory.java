@@ -4,8 +4,10 @@ import iths.theroom.entity.MessageEntity;
 import iths.theroom.entity.RoomEntity;
 import iths.theroom.entity.UserEntity;
 import iths.theroom.model.MessageModel;
+import iths.theroom.pojos.MessageForm;
 import org.springframework.stereotype.Component;
 
+import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -58,4 +60,13 @@ public class MessageFactory {
         return messageModels;
 
     }
+    public static MessageModel toModel(MessageForm messageForm){
+        MessageModel messageModel = new MessageModel();
+        messageModel.setContent(messageForm.getContent());
+        messageModel.setSender(messageForm.getSender());
+        messageModel.setType(messageForm.getType().name());
+        messageModel.setTime(Instant.now().toString());
+        return messageModel;
+    }
+
 }
