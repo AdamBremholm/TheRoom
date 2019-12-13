@@ -1,5 +1,6 @@
 package iths.theroom.service;
 
+import iths.theroom.entity.AvatarEntity;
 import iths.theroom.entity.MessageEntity;
 import iths.theroom.entity.RoomEntity;
 import iths.theroom.entity.UserEntity;
@@ -55,14 +56,14 @@ public class UserServiceImplIntegrationTest {
         messageEntity = new MessageEntity(Type.CHAT, "hello", new UserEntity("sven"), new RoomEntity("one"));
         messageEntities.add(messageEntity);
         userEntity1 = new UserEntity("sven", "sve123", "sven@gmail.com"
-                , "sve123", "sven", "svensson", new HashSet<>(), null);
+                , "sve123", "sven", "svensson", new HashSet<>(), null, new AvatarEntity());
 
         userEntity2 = new UserEntity("johan", "sve123", "johan@gmail.com"
-                , "sve124", "sven", "svensson", new HashSet<>(), null);
+                , "sve124", "sven", "svensson", new HashSet<>(), null, new AvatarEntity());
 
 
         userEntity3 = new UserEntity("johan", "sve123", "johan@gmail.com"
-                , "sve123", "sven", "svensson", new HashSet<>(), null);
+                , "sve123", "sven", "svensson", new HashSet<>(), null, new AvatarEntity());
         Mockito.when(userRepository.findByUserName(userEntity1.getUserName()))
                 .thenReturn(java.util.Optional.of(userEntity1));
 

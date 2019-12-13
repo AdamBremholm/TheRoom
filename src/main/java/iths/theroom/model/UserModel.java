@@ -14,6 +14,7 @@ public class UserModel implements Serializable {
 
     private Set<MessageModel> messages;
     private Set<String> roles;
+    private AvatarModel avatar;
 
     public UserModel() {
         this.messages = new HashSet<>();
@@ -62,5 +63,13 @@ public class UserModel implements Serializable {
 
     public void setRoles(Set<String> roles) {
         this.roles = roles;
+    }
+
+    public AvatarModel getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(AvatarModel avatar) {
+        this.avatar = avatar;
     }
 }

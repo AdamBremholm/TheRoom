@@ -47,7 +47,7 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public MessageEntity save(MessageForm form) {
-        UserEntity user = userRepository.findByUserName(form.getUserName()).orElseThrow(NoSuchUserException::new);
+        UserEntity user = userRepository.findByUserName(form.getSender()).orElseThrow(NoSuchUserException::new);
         RoomEntity room = roomRepository.getOneByRoomName(form.getRoomName());
         MessageEntity message = new MessageEntity(form.getType(), form.getContent(), user, room);
         messageRepository.save(message);
@@ -62,7 +62,7 @@ public class MessageServiceImpl implements MessageService {
         messageRepository.delete(found);
     }
 
-    public List<MessageEntity> __filterByMessagesUsersName(String userName) {
+    private List<MessageEntity> filterByMessagesUsersName(String userName) {
         List<MessageEntity> messagesByUser = new ArrayList<>();
 
         for(MessageEntity messageEntity: messageRepository.findAll()){
@@ -73,7 +73,7 @@ public class MessageServiceImpl implements MessageService {
         return messagesByUser;
     }
 
-    public List<MessageEntity> __filterByMessagesRoom(List<MessageEntity> messages, String roomName) {
+    private List<MessageEntity> filterByMessagesRoom(List<MessageEntity> messages, String roomName) {
         List<MessageEntity> messagesFilteredByRoomName = new ArrayList<>();
 
         for (MessageEntity messageEntity : messages) {
@@ -84,7 +84,7 @@ public class MessageServiceImpl implements MessageService {
         return messagesFilteredByRoomName;
     }
 
-    public List<MessageEntity> __filterMessagesByCount(List<MessageEntity> messages, int count) {
+    private List<MessageEntity> filterMessagesByCount(List<MessageEntity> messages, int count) {
         List<MessageEntity> messagesByUserLimited = new ArrayList<>();
         int counter = 0;
 
@@ -100,14 +100,14 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public List<MessageEntity> getAllMessagesFromUser(String userName, String roomName, String count) {
-        List<MessageEntity> messages = __filterByMessagesUsersName(userName);
+        List<MessageEntity> messages = filterByMessagesUsersName(userName);
 
         if (messages.isEmpty()) {
             throw new NoSuchUserException("No user found with that username");
         }
         if (roomName != null) {
             try {
-                messages = __filterByMessagesRoom(messages, roomName);
+                messages = filterByMessagesRoom(messages, roomName);
             } catch (Exception e) {
                 throw new NotFoundException("Room not found");
             }
@@ -118,7 +118,7 @@ public class MessageServiceImpl implements MessageService {
                 if (messageCount > messages.size()) {
                     throw new NotFoundException("Not enough messages exists for that criteria");
                 }
-                messages = __filterMessagesByCount(messages, messageCount);
+                messages = filterMessagesByCount(messages, messageCount);
             } catch (NumberFormatException e) {
                 throw new BadRequestException("Count must be a digit");
             }

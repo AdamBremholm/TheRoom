@@ -29,9 +29,13 @@ public class UserEntity {
     @OneToMany(mappedBy = "sender")
     private Set<MessageEntity> messages;
 
+    @OneToOne(mappedBy = "userEntity")
+    @JoinColumn(name = "id", referencedColumnName = "id")
+    private AvatarEntity avatarEntity;
+
 
     public UserEntity(String userName, String password, String email,
-                      String passwordConfirm, String firstName, String lastName, Set<MessageEntity> messages, List<String> roleList) {
+                      String passwordConfirm, String firstName, String lastName, Set<MessageEntity> messages, List<String> roleList, AvatarEntity avatarEntity) {
         this.userName = userName;
         this.password = password;
         this.email = email;
@@ -40,14 +44,15 @@ public class UserEntity {
         this.lastName = lastName;
         this.messages = Objects.requireNonNullElse(messages, new HashSet<>());
         this.roleList = Objects.requireNonNullElse(roleList, new ArrayList<>());
+        this.avatarEntity = avatarEntity;
     }
 
     public UserEntity() {
-        this(null, null, null, null, null, null, null, null);
+        this(null, null, null, null, null, null, null, null, null);
     }
 
     public UserEntity(String userName) {
-        this(userName, null, null, null, null, null, null, null);
+        this(userName, null, null, null, null, null, null, null, null);
     }
 
     public Long getId() {
@@ -120,5 +125,13 @@ public class UserEntity {
 
     public void setRoleList(List<String> roleList) {
         this.roleList = roleList;
+    }
+
+    public AvatarEntity getAvatarEntity() {
+        return avatarEntity;
+    }
+
+    public void setAvatarEntity(AvatarEntity avatarEntity) {
+        this.avatarEntity = avatarEntity;
     }
 }

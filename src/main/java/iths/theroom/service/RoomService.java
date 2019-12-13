@@ -15,5 +15,7 @@ public interface RoomService {
 
     RoomModel updateRoom(String name, RoomEntity roomEntity);
 
+    RoomEntity getOneByNameE(String name);
+
     RoomModel deleteRoom(String name);
 }

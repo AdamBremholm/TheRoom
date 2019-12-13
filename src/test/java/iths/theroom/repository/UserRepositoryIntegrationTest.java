@@ -2,6 +2,7 @@
 
 package iths.theroom.repository;
 
+import iths.theroom.entity.AvatarEntity;
 import iths.theroom.entity.MessageEntity;
 import iths.theroom.entity.RoomEntity;
 import iths.theroom.entity.UserEntity;
@@ -44,7 +45,7 @@ public class UserRepositoryIntegrationTest {
         messageEntity = new MessageEntity(Type.CHAT, "hello", new UserEntity("sven"), new RoomEntity("one"));
         messageEntities.add(messageEntity);
 
-        userEntity = new UserEntity("sven", "sve123", "sven@gmail.com", "sve123", "sven", "svensson", new HashSet<>(), null);
+        userEntity = new UserEntity("sven", "sve123", "sven@gmail.com", "sve123", "sven", "svensson", new HashSet<>(), null, new AvatarEntity());
 
 
     }
