@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static iths.theroom.factory.MessageFactory.toModel;
 
@@ -37,30 +38,58 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public MessageEntity getMessageByUuid(String uuid) {
-        return messageRepository.findByUuid(uuid).orElseThrow(NoSuchMessageException::new);
+    public MessageModel getMessageByUuid(String uuid) {
+        return toModel(messageRepository.findByUuid(uuid).orElseThrow(NoSuchMessageException::new));
     }
 
     @Override
-    public List<MessageEntity> getAllMessages() {
-        return messageRepository.findAll();
+    public List<MessageModel> getAllMessages() {
+        return toModel(messageRepository.findAll());
     }
 
     @Override
-    public MessageEntity save(MessageForm form) {
+    public MessageModel save(MessageForm form) {
         UserEntity user = userRepository.findByUserName(form.getSender()).orElseThrow(NoSuchUserException::new);
         RoomEntity room = roomRepository.getOneByRoomName(form.getRoomName());
         MessageEntity message = new MessageEntity(form.getType(), form.getContent(), user, room);
-        messageRepository.save(message);
         room.addMessage(message);
         roomRepository.save(room);
-        return message;
+        return toModel(messageRepository.save(message));
     }
 
     @Override
     public void remove(String uuid) {
-        MessageEntity found = getMessageByUuid(uuid);
-        messageRepository.delete(found);
+        Optional<MessageEntity> found = messageRepository.findByUuid(uuid);
+        found.ifPresent(messageRepository::delete);
+    }
+
+    @Override
+    public List<MessageModel> getAllMessagesFromUser(String userName, String roomName, String count) {
+        List<MessageEntity> messages = filterByMessagesUsersName(userName);
+
+        if (messages.isEmpty()) {
+            throw new NotFoundException("No user found with that username");
+        }
+        if (roomName != null) {
+            try {
+                messages = filterByMessagesRoom(messages, roomName);
+            } catch (Exception e) {
+                throw new NotFoundException("Room not found");
+            }
+        }
+        if (count != null) {
+            try {
+                int messageCount = Integer.parseInt(count);
+                if (messageCount > messages.size()) {
+                    throw new NotFoundException("Not enough messages exists for that criteria");
+                }
+                messages = filterMessagesByCount(messages, messageCount);
+            } catch (NumberFormatException e) {
+                throw new BadRequestException("Count must be a digit");
+            }
+        }
+
+        return toModel(messages);
     }
 
     private List<MessageEntity> filterByMessagesUsersName(String userName) {
@@ -99,31 +128,5 @@ public class MessageServiceImpl implements MessageService {
         return messagesByUserLimited;
     }
 
-    @Override
-    public List<MessageEntity> getAllMessagesFromUser(String userName, String roomName, String count) {
-        List<MessageEntity> messages = filterByMessagesUsersName(userName);
 
-        if (messages.isEmpty()) {
-            throw new NoSuchUserException("No user found with that username");
-        }
-        if (roomName != null) {
-            try {
-                messages = filterByMessagesRoom(messages, roomName);
-            } catch (Exception e) {
-                throw new NotFoundException("Room not found");
-            }
-        }
-        if (count != null) {
-            try {
-                int messageCount = Integer.parseInt(count);
-                if (messageCount > messages.size()) {
-                    throw new NotFoundException("Not enough messages exists for that criteria");
-                }
-                messages = filterMessagesByCount(messages, messageCount);
-            } catch (NumberFormatException e) {
-                throw new BadRequestException("Count must be a digit");
-            }
-        }
-        return messages;
-    }
 }
