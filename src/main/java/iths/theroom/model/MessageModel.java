@@ -8,23 +8,9 @@ public class MessageModel {
     private String sender;
     private String time;
     private String room;
-    private long upVotes;
-    private long downVotes;
+    private int rating;
 
-
-    public MessageModel(String type, String content, String sender, String time, String room, long upVotes, long downVotes) {
-        this.type = type;
-        this.content = content;
-        this.sender = sender;
-        this.time = time;
-        this.room = room;
-        this.upVotes = upVotes;
-        this.downVotes = downVotes;
-    }
-
-    public MessageModel() {
-    }
-
+    public MessageModel() {}
 
     public String getUuid() {
         return uuid;
@@ -74,21 +60,11 @@ public class MessageModel {
         this.time = time;
     }
 
-    public long getUpVotes() {
-        return upVotes;
+    public int getRating() {
+        return rating;
     }
 
-    public void setUpVotes(long upVotes) {
-        this.upVotes = upVotes;
+    public void setRating(int rating) {
+        this.rating = rating;
     }
-
-    public long getDownVotes() {
-        return downVotes;
-    }
-
-    public void setDownVotes(long downVotes) {
-        this.downVotes = downVotes;
-    }
-
-
 }
