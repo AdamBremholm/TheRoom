@@ -5,6 +5,7 @@ import iths.theroom.entity.UserEntity;
 import iths.theroom.exception.BadRequestException;
 import iths.theroom.exception.NoSuchUserException;
 import iths.theroom.exception.NotFoundException;
+import iths.theroom.model.MessageModel;
 import iths.theroom.pojos.MessageForm;
 import iths.theroom.repository.MessageRepository;
 import iths.theroom.entity.MessageEntity;
@@ -18,21 +19,21 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
+import static iths.theroom.factory.MessageFactory.toModel;
+
 @Service
 @Transactional
 public class MessageServiceImpl implements MessageService {
 
-    @Autowired
-    private MessageRepository messageRepository;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private RoomRepository roomRepository;
+    private final MessageRepository messageRepository;
+    private final UserRepository userRepository;
+    private final RoomRepository roomRepository;
 
-
-    @Override
-    public MessageEntity getMessageById(Long id) {
-       return messageRepository.findById(id).orElseThrow(NoSuchMessageException::new);
+    @Autowired
+    public MessageServiceImpl(MessageRepository messageRepository, UserRepository userRepository, RoomRepository roomRepository) {
+        this.messageRepository = messageRepository;
+        this.userRepository = userRepository;
+        this.roomRepository = roomRepository;
     }
 
     @Override
