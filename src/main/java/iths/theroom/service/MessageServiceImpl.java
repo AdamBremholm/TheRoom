@@ -1,10 +1,12 @@
 package iths.theroom.service;
 
+import iths.theroom.entity.MessageRatingEntity;
 import iths.theroom.entity.RoomEntity;
 import iths.theroom.entity.UserEntity;
 import iths.theroom.exception.BadRequestException;
 import iths.theroom.exception.NoSuchUserException;
 import iths.theroom.exception.NotFoundException;
+import iths.theroom.factory.MessageFactory;
 import iths.theroom.model.MessageModel;
 import iths.theroom.pojos.MessageForm;
 import iths.theroom.repository.MessageRepository;
@@ -12,7 +14,9 @@ import iths.theroom.entity.MessageEntity;
 import iths.theroom.exception.NoSuchMessageException;
 import iths.theroom.repository.RoomRepository;
 import iths.theroom.repository.UserRepository;
+import org.aspectj.weaver.ast.Not;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,7 +57,7 @@ public class MessageServiceImpl implements MessageService {
     public MessageModel save(MessageForm form) {
         UserEntity user = userRepository.findByUserName(form.getSender()).orElseThrow(NoSuchUserException::new);
         RoomEntity room = roomRepository.getOneByRoomName(form.getRoomName());
-        MessageEntity message = new MessageEntity(form.getType(), form.getContent(), user, room);
+        MessageEntity message = new MessageEntity(form.getType(), form.getContent(), user, room, new MessageRatingEntity());
         room.addMessage(message);
         roomRepository.save(room);
         return toModel(messageRepository.save(message));
@@ -92,6 +96,31 @@ public class MessageServiceImpl implements MessageService {
         }
 
         return toModel(messages);
+    }
+
+    @Override
+    public int decreaseMessageRating(String uuid) {
+
+        Optional<MessageEntity> messageFound = messageRepository.findByUuid(uuid);
+        MessageEntity messageEntity = messageFound.orElseThrow(NoSuchMessageException::new);
+
+        messageEntity.getMessageRatingEntity().decreaseRating();
+        messageRepository.save(messageEntity);
+
+        return messageEntity.getMessageRatingEntity().getRating();
+
+    }
+
+    @Override
+    public int increaseMessageRating(String uuid) {
+        Optional<MessageEntity> messageFound = messageRepository.findByUuid(uuid);
+        MessageEntity messageEntity = messageFound.orElseThrow(NoSuchMessageException::new);
+
+        messageEntity.getMessageRatingEntity().increaseRating();
+        messageRepository.save(messageEntity);
+
+        return messageEntity.getMessageRatingEntity().getRating();
+
     }
 
     private List<MessageEntity> filterByMessagesUsersName(String userName) {
