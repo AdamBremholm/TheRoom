@@ -20,8 +20,6 @@ public class MessageEntity {
     private Type type;
     private String content;
     private Instant time;
-    private long upVotes;
-    private long downVotes;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch=FetchType.LAZY)
     @JoinColumn(name=COLUMN_USER_ID)
@@ -31,31 +29,29 @@ public class MessageEntity {
     @JoinColumn(name=COLUMN_ROOM_ID)
     private RoomEntity roomEntity;
 
+    @OneToOne(mappedBy = "messageEntity")
+    @JoinColumn(name = "id", referencedColumnName = "id")
+    private MessageRatingEntity messageRatingEntity;
+
     public MessageEntity() {
         this.sender = new UserEntity("guest");
         this.roomEntity = new RoomEntity("unspecified");
+        this.messageRatingEntity = new MessageRatingEntity(0);
         this.time = Instant.now();
     }
 
-    public MessageEntity(Type type, String content, UserEntity sender, RoomEntity roomEntity, Instant time, long upVotes, long downVotes) {
+    public MessageEntity(Type type, String content, UserEntity sender, RoomEntity roomEntity, Instant time) {
         this.type = Objects.requireNonNullElse(type, Type.UNDEFINED);
         this.content = Objects.requireNonNullElse(content, "");
         this.sender = Objects.requireNonNullElse(sender, new UserEntity("guest"));
         this.roomEntity = Objects.requireNonNullElse(roomEntity, new RoomEntity("unspecified"));
         this.time = Objects.requireNonNullElse(time, Instant.now());
-        this.upVotes = upVotes;
-        this.downVotes = downVotes;
-    }
-
-    public MessageEntity(Type type, String content, UserEntity sender, RoomEntity roomEntity, Instant time) {
-       this(type, content, sender, roomEntity, time, 0L, 0L);
     }
 
     public MessageEntity(Type type, String content, UserEntity sender, RoomEntity roomEntity) {
-        this(type, content, sender, roomEntity, Instant.now(), 0L, 0L);
+        this(type, content, sender, roomEntity, Instant.now());
 
     }
-
 
     public Long getId() {
         return id;
@@ -104,24 +100,6 @@ public class MessageEntity {
         this.time = time;
     }
 
-    public long getUpVotes() {
-        return upVotes;
-    }
-
-    public void setUpVotes(long upVotes) {
-        this.upVotes = upVotes;
-    }
-
-    public long getDownVotes() {
-        return downVotes;
-    }
-
-    public void setDownVotes(long downVotes) {
-        this.downVotes = downVotes;
-    }
-
-
-
     public RoomEntity getRoomEntity() {
         return roomEntity;
     }
@@ -129,6 +107,14 @@ public class MessageEntity {
     public void setRoomEntity(RoomEntity roomEntity) {
         this.roomEntity = roomEntity;
 
+    }
+
+    public MessageRatingEntity getMessageRatingEntity() {
+        return messageRatingEntity;
+    }
+
+    public void setMessageRatingEntity(MessageRatingEntity messageRatingEntity) {
+        this.messageRatingEntity = messageRatingEntity;
     }
 
     @PrePersist
@@ -148,8 +134,6 @@ public class MessageEntity {
                 ", sender=" + sender +
                 ", roomEntity=" + roomEntity +
                 ", time=" + time +
-                ", upVotes=" + upVotes +
-                ", downVotes=" + downVotes +
                 '}';
     }
 }
