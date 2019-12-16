@@ -9,6 +9,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class MessageFactory {
@@ -22,7 +23,10 @@ public class MessageFactory {
         messageModel.setRoom(messageEntity.getRoomEntity().getRoomName());
         messageModel.setTime(messageEntity.getTime().truncatedTo(ChronoUnit.MINUTES).toString());
         messageModel.setType(messageEntity.getType().name());
-        messageModel.setRating(messageEntity.getMessageRatingEntity().getRating());
+
+        Optional.ofNullable(messageEntity.getMessageRatingEntity()).ifPresent(messageRatingEntity -> {
+            messageModel.setRating(messageRatingEntity.getRating());
+        });
 
         return messageModel;
     }
