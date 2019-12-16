@@ -107,6 +107,18 @@ button.accent {
 	max-height: 600px;
 	position: relative;
 }
+.ratingGrid{
+	font-size: 10px;
+}
+.col-custom{
+	padding-left: 0;
+	padding-right:0;
+	text-align: center;
+}
+
+.incDecButton:hover{
+	cursor: pointer;
+}
 #dialogue-page ul {
 	list-style-type: none;
 	background-color: #FFF;
