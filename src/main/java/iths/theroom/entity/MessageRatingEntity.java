@@ -14,15 +14,10 @@ public class MessageRatingEntity {
 
     private int rating;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id", referencedColumnName = "id")
+    @OneToOne(mappedBy = "messageRatingEntity")
     private MessageEntity messageEntity;
 
     public MessageRatingEntity(){}
-
-    public MessageRatingEntity(int rating){
-        this.rating = rating;
-    }
 
     public int getRating() {
         return rating;

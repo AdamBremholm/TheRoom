@@ -29,27 +29,28 @@ public class MessageEntity {
     @JoinColumn(name=COLUMN_ROOM_ID)
     private RoomEntity roomEntity;
 
-    @OneToOne(mappedBy = "messageEntity")
-    @JoinColumn(name = "id", referencedColumnName = "id")
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "rating_id", referencedColumnName = "id")
     private MessageRatingEntity messageRatingEntity;
 
     public MessageEntity() {
         this.sender = new UserEntity("guest");
         this.roomEntity = new RoomEntity("unspecified");
-        this.messageRatingEntity = new MessageRatingEntity(0);
+        this.messageRatingEntity = new MessageRatingEntity();
         this.time = Instant.now();
     }
 
-    public MessageEntity(Type type, String content, UserEntity sender, RoomEntity roomEntity, Instant time) {
+    public MessageEntity(Type type, String content, UserEntity sender, RoomEntity roomEntity, Instant time, MessageRatingEntity rating) {
         this.type = Objects.requireNonNullElse(type, Type.UNDEFINED);
         this.content = Objects.requireNonNullElse(content, "");
         this.sender = Objects.requireNonNullElse(sender, new UserEntity("guest"));
         this.roomEntity = Objects.requireNonNullElse(roomEntity, new RoomEntity("unspecified"));
         this.time = Objects.requireNonNullElse(time, Instant.now());
+        this.messageRatingEntity = Objects.requireNonNullElse(rating, new MessageRatingEntity());
     }
 
-    public MessageEntity(Type type, String content, UserEntity sender, RoomEntity roomEntity) {
-        this(type, content, sender, roomEntity, Instant.now());
+    public MessageEntity(Type type, String content, UserEntity sender, RoomEntity roomEntity, MessageRatingEntity rating) {
+        this(type, content, sender, roomEntity, Instant.now(), rating);
 
     }
 
