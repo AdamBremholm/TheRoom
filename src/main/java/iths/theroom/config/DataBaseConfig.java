@@ -11,6 +11,7 @@ public final class DataBaseConfig {
     public static final String TABLE_ROOM = "room";
     public static final String TABLE_ROLE = "role";
     public static final String TABLE_AVATAR = "avatar";
+    public static final String TABLE_MESSAGE_RATING = "message_rating";
     public static final String COLUMN_ROOM_NAME = "room_name";
     public static final String COLUMN_ROOM_MESSAGES = "room_messages";
 
