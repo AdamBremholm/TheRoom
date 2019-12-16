@@ -53,7 +53,7 @@ public class UserServiceImplIntegrationTest {
     @Before
     public void setUp() {
 
-        messageEntity = new MessageEntity(Type.CHAT, "hello", new UserEntity("sven"), new RoomEntity("one"));
+        messageEntity = new MessageEntity();
         messageEntities.add(messageEntity);
         userEntity1 = new UserEntity("sven", "sve123", "sven@gmail.com"
                 , "sve123", "sven", "svensson", new HashSet<>(), null, new AvatarEntity());

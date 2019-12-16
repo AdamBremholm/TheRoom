@@ -29,27 +29,28 @@ public class MessageRepositoryIntegrationTest {
 
     @Test
     public void saveRead() {
-        MessageEntity message = new MessageEntity(Type.CHAT, "hello", new UserEntity("sven"), new RoomEntity("one"));
+        MessageEntity message = new MessageEntity();
         entityManager.persist(message);
         assertThat(messageRepository.findById(message.getId()).orElseThrow(NoSuchElementException::new)).isEqualTo(message);
     }
     @Test
     public void getByUuid() {
-        MessageEntity message = new MessageEntity(Type.CHAT, "hello", new UserEntity("sven"), new RoomEntity("one"));
+        MessageEntity message = new MessageEntity();
         entityManager.persist(message);
         assertThat(messageRepository.findByUuid(message.getUuid()).orElseThrow(NoSuchElementException::new)).isEqualTo(message);
     }
 
     @Test
     public void getRoom() {
-        MessageEntity message = new MessageEntity(Type.CHAT, "hello", new UserEntity("sven"), new RoomEntity("one"));
+        MessageEntity message = new MessageEntity();
         entityManager.persist(message);
         assertThat(messageRepository.findById(message.getId()).orElseThrow(NoSuchElementException::new).getRoomEntity().getRoomName()).isEqualTo("one");
     }
 
     @Test
     public void getSender() {
-        MessageEntity message = new MessageEntity(Type.CHAT, "hello", new UserEntity("sven"), new RoomEntity("one"));
+        MessageEntity message = new MessageEntity();
+        message.setSender(new UserEntity("sven"));
         entityManager.persist(message);
         assertThat(messageRepository.findById(message.getId()).orElseThrow(NoSuchElementException::new).getSender().getUserName()).isEqualTo("sven");
     }
@@ -57,7 +58,7 @@ public class MessageRepositoryIntegrationTest {
 
     @Test
     public void updateRoom() {
-        MessageEntity message = new MessageEntity(Type.CHAT, "hello", new UserEntity("sven"), new RoomEntity("one"));
+        MessageEntity message = new MessageEntity();
         entityManager.persist(message);
         message.setRoomEntity(new RoomEntity("two"));
         entityManager.merge(message);
@@ -66,7 +67,7 @@ public class MessageRepositoryIntegrationTest {
 
     @Test
     public void updateSender() {
-        MessageEntity message = new MessageEntity(Type.CHAT, "hello", new UserEntity("sven"), new RoomEntity("one"));
+        MessageEntity message = new MessageEntity();
         entityManager.persist(message);
         message.setSender(new UserEntity("johan"));
         entityManager.merge(message);
@@ -76,7 +77,8 @@ public class MessageRepositoryIntegrationTest {
 
     @Test
     public void getUserEntity() {
-        MessageEntity message = new MessageEntity(Type.CHAT, "hello", new UserEntity("sven"), new RoomEntity("one"));
+        MessageEntity message = new MessageEntity();
+        message.setSender(new UserEntity("sven"));
         entityManager.persist(message);
         assertThat(messageRepository.findById(message.getId()).orElseThrow(NoSuchElementException::new).getSender().getUserName()).isEqualTo("sven");
     }
@@ -84,7 +86,7 @@ public class MessageRepositoryIntegrationTest {
 
     @Test
     public void saveWithNewInfoUpdates() {
-        MessageEntity message = new MessageEntity(Type.CHAT, "hello", new UserEntity("sven"), new RoomEntity("one"));
+        MessageEntity message = new MessageEntity();
         entityManager.persist(message);
         MessageEntity foundMessage = messageRepository.findById(message.getId()).orElseThrow(NoSuchElementException::new);
         foundMessage.setContent("bye");
@@ -94,7 +96,7 @@ public class MessageRepositoryIntegrationTest {
 
     @Test
     public void remove() {
-        MessageEntity message = new MessageEntity(Type.CHAT, "hello", new UserEntity("sven"), new RoomEntity("one"));
+        MessageEntity message = new MessageEntity();
         entityManager.persist(message);
         MessageEntity foundMessage = messageRepository.findById(message.getId()).orElseThrow(NoSuchElementException::new);
         messageRepository.delete(foundMessage);

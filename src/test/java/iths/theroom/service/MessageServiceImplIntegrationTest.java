@@ -22,7 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 public class MessageServiceImplIntegrationTest {
-    
+
     @InjectMocks
     private MessageService messageService = new MessageServiceImpl();
 
@@ -31,7 +31,7 @@ public class MessageServiceImplIntegrationTest {
 
     @Before
     public void setUp() {
-        MessageEntity message = new MessageEntity(Type.CHAT, "hello", new UserEntity("sven"), new RoomEntity("one"));
+        MessageEntity message = new MessageEntity();
         message.setUuid("123abc");
 
         Mockito.when(messageRepository.findByUuid(message.getUuid()))
