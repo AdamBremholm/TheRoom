@@ -25,18 +25,22 @@ import static iths.theroom.factory.MessageFactory.toModel;
 @Controller
 public class WebSocketChatController {
 
+    private final MessageService messageService;
+    private final UserService userService;
+    private final RoomService roomService;
+
     @Autowired
-    MessageService messageService;
-    @Autowired
-    UserService userService;
-    @Autowired
-    RoomService roomService;
+    public WebSocketChatController(MessageService messageService, UserService userService, RoomService roomService) {
+        this.messageService = messageService;
+        this.userService = userService;
+        this.roomService = roomService;
+    }
 
 
     @MessageMapping("/chat.sendMessage.{roomName}")
     @SendTo("/topic/{roomName}")
     public MessageModel sendMessage(@DestinationVariable String roomName, @Payload MessageForm messageForm) {
-       return toModel(messageService.save(messageForm));
+       return messageService.save(messageForm);
     }
 
     @MessageMapping("/chat.newUser.{roomName}")
@@ -59,7 +63,7 @@ public class WebSocketChatController {
         catch (BadRequestException e){
 
         }
-        }
+    }
 
 
     private UserEntity moveToServiceClassLater__CreateOrFetchUser(MessageForm form){
