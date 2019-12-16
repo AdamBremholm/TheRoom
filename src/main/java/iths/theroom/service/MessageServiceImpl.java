@@ -26,9 +26,11 @@ import static iths.theroom.factory.MessageFactory.toModel;
 @Transactional
 public class MessageServiceImpl implements MessageService {
 
-    private final MessageRepository messageRepository;
-    private final UserRepository userRepository;
-    private final RoomRepository roomRepository;
+    private MessageRepository messageRepository;
+    private UserRepository userRepository;
+    private RoomRepository roomRepository;
+
+    public MessageServiceImpl(){}
 
     @Autowired
     public MessageServiceImpl(MessageRepository messageRepository, UserRepository userRepository, RoomRepository roomRepository) {
