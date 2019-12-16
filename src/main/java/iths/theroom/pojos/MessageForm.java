@@ -8,6 +8,8 @@ public class MessageForm{
     private String content;
     private String roomName;
     private String sender;
+    private int rating;
+
     public MessageForm(){}
 
     public Type getType() {
@@ -40,5 +42,13 @@ public class MessageForm{
 
     public void setSender(String sender) {
         this.sender = sender;
+    }
+
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
     }
 }
