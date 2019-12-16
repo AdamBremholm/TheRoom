@@ -34,7 +34,8 @@ function sendMessage(event) {
             sender : name,
             content : document.querySelector('#chatMessage').value,
             type : 'CHAT',
-            roomName : room
+            roomName : room,
+            rating : document.querySelector('#chatMessage').rating
         };
         stompClient.send("/app/chat.sendMessage."+room, {}, JSON
             .stringify(chatMessage));
@@ -48,12 +49,20 @@ function sendMessage(event) {
 function onMessageReceived(payload) {
     var message = JSON.parse(payload.body);
     var messageElement = document.createElement('li');
+    var textElement = document.createElement('p');
+    var messageText;
     if (message.type === 'newUser') {
         messageElement.classList.add('event-data');
         message.content = message.sender + ' has joined the chat';
+        messageText = document.createTextNode(message.content);
+        textElement.appendChild(messageText);
+        messageElement.appendChild(textElement);
     } else if (message.type === 'Leave') {
         messageElement.classList.add('event-data');
         message.content = message.sender.userName + 'has left the chat';
+        messageText = document.createTextNode(message.content);
+        textElement.appendChild(messageText);
+        messageElement.appendChild(textElement);
     } else {
         messageElement.classList.add('message-data');
         var element = document.createElement('i');
@@ -65,16 +74,101 @@ function onMessageReceived(payload) {
         var localTime = new Date(message.time );
         var timeString = localTime.toString().split(' ').slice(0, 5).join(' ');
         var timeNode = document.createTextNode(" - " + timeString);
-
+        messageText = document.createTextNode(message.content);
+        textElement.appendChild(messageText);
         usernameElement.appendChild(usernameText);
         messageElement.appendChild(usernameElement);
-        usernameElement.appendChild(timeNode)
+        usernameElement.appendChild(timeNode);
+
+        var ratingGrid = document.createElement('div');
+        ratingGrid.className = "container ratingGrid";
+
+        var ratingGridRow = document.createElement('div');
+        ratingGridRow.className = "row justify-content-end";
+
+        var ratingGridCol1 = document.createElement('div');
+        ratingGridCol1.className = "col-10";
+        var ratingGridCol2 = document.createElement('div');
+        ratingGridCol2.className = "col col-custom";
+        var ratingGridCol3 = document.createElement('div');
+        ratingGridCol3.className = "col col-custom";
+        var ratingGridCol4 = document.createElement('div');
+        ratingGridCol4.className = "col col-custom";
+
+        ratingGrid.appendChild(ratingGridRow);
+        ratingGridRow.append(ratingGridCol1, ratingGridCol2, ratingGridCol3,ratingGridCol4);
+
+        var decrRating = document.createElement('div');
+        decrRating.className = "incDecButton";
+        decrRating.innerHTML = '-';
+        decrRating.addEventListener('click', function (evt) {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    var ratingText = document.getElementById("rating"+message.uuid);
+                    var rating = this.responseText;
+                    ratingText.innerHTML = rating;
+
+                    if(rating > 0){
+                        ratingText.style.color = "green";
+                    }
+                    else if(rating < 0){
+                        ratingText.style.color = "red";
+                    }
+                    else{
+                        ratingText.style.color = "black";
+                    }
+                }
+            };
+            xhttp.open("PUT", "/api/messages/decRating." + message.uuid, true);
+            xhttp.send();
+        });
+
+        ratingGridCol2.appendChild(decrRating);
+
+        var rating = document.createElement('div');
+        rating.innerHTML = message.rating;
+        rating.id = 'rating'+message.uuid;
+
+        ratingGridCol3.appendChild(rating);
+
+        var incrRating = document.createElement('div');
+        incrRating.className = "incDecButton";
+        incrRating.innerHTML = '+';
+        incrRating.addEventListener('click', function (evt) {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    var ratingText = document.getElementById("rating"+message.uuid);
+                    var rating = this.responseText;
+                    ratingText.innerHTML = rating;
+
+                    if(rating > 0){
+                        ratingText.style.color = "green";
+                    }
+                    else if(rating < 0){
+                        ratingText.style.color = "red";
+                    }
+                    else{
+                        ratingText.style.color = "black";
+                    }
+                }
+            };
+            xhttp.open("PUT", "/api/messages/incRating." + message.uuid, true);
+            xhttp.send();
+        });
+
+        ratingGridCol4.appendChild(incrRating);
+
+        messageElement.appendChild(textElement);
+        messageElement.appendChild(ratingGrid);
     }
-    var textElement = document.createElement('p');
-    var messageText = document.createTextNode(message.content);
-    textElement.appendChild(messageText);
-    messageElement.appendChild(textElement);
+
     document.querySelector('#messageList').appendChild(messageElement);
     document.querySelector('#messageList').scrollTop = document
         .querySelector('#messageList').scrollHeight;
+
+    document.querySelector('#decrease'+message.uuid)
 }
+
+
