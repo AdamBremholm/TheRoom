@@ -45,6 +45,7 @@ public class MessageFactory {
         messageModel.setSender(messageForm.getSender());
         messageModel.setType(messageForm.getType().name());
         messageModel.setTime(Instant.now().toString());
+        messageModel.setRating(messageForm.getRating());
         return messageModel;
     }
 
