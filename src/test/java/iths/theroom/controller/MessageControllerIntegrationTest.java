@@ -1,12 +1,13 @@
 package iths.theroom.controller;
 
-import iths.theroom.entity.MessageEntity;
-import iths.theroom.entity.RoomEntity;
-import iths.theroom.entity.UserEntity;
-import iths.theroom.enums.Type;
+import iths.theroom.model.MessageModel;
 import iths.theroom.service.MessageService;
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -14,16 +15,15 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-
 
 import java.util.Collections;
 import java.util.List;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.mockito.BDDMockito.given;
-
-import static org.hamcrest.CoreMatchers.is;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -38,15 +38,22 @@ public class MessageControllerIntegrationTest {
     @MockBean
     private MessageService service;
 
+    private MessageModel message;
+
+    @Before
+    public void setup(){
+        message = new MessageModel();
+        message.setSender("sven");
+        message.setContent("hello");
+        message.setRoom("one");
+    }
 
     @Test
     @WithMockUser(username="user")
     public void givenMessages_whenGetMessages_thenReturnJsonArray()
             throws Exception {
 
-        MessageEntity message = new MessageEntity(Type.CHAT, "hello", new UserEntity("sven"), new RoomEntity("one"));
-
-        List<MessageEntity> allMessages = Collections.singletonList(message);
+        List<MessageModel> allMessages = Collections.singletonList(message);
 
         given(service.getAllMessages()).willReturn(allMessages);
 
@@ -63,8 +70,7 @@ public class MessageControllerIntegrationTest {
     public void addMessage()
             throws Exception {
 
-        MessageEntity message = new MessageEntity(Type.CHAT, "hello", new UserEntity("sven"), new RoomEntity("one"));
-        List<MessageEntity> allMessages = Collections.singletonList(message);
+        List<MessageModel> allMessages = Collections.singletonList(message);
 
         given(service.getAllMessages()).willReturn(allMessages);
 

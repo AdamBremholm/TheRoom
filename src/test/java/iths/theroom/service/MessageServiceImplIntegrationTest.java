@@ -4,10 +4,13 @@ import iths.theroom.entity.MessageEntity;
 import iths.theroom.entity.RoomEntity;
 import iths.theroom.entity.UserEntity;
 import iths.theroom.enums.Type;
+import iths.theroom.model.MessageModel;
 import iths.theroom.repository.MessageRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -19,20 +22,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 public class MessageServiceImplIntegrationTest {
+    
+    @InjectMocks
+    private MessageService messageService = new MessageServiceImpl();
 
-    @TestConfiguration
-    static class MessageServiceImplTestContextConfiguration {
-
-        @Bean
-        public MessageService messageService() {
-            return new MessageServiceImpl();
-        }
-    }
-
-    @Autowired
-    private MessageService messageService;
-
-    @MockBean
+    @Mock
     private MessageRepository messageRepository;
 
     @Before
@@ -48,7 +42,7 @@ public class MessageServiceImplIntegrationTest {
     @Test
     public void whenValidUuid_thenMessageModelShouldBeReturned() {
         String content = "hello";
-        MessageEntity found = messageService.getMessageByUuid("123abc");
+        MessageModel found = messageService.getMessageByUuid("123abc");
 
         assertThat(found.getContent())
                 .isEqualTo(content);
