@@ -34,12 +34,8 @@ public class UserEntity {
     private AvatarEntity avatarEntity;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.PERSIST}, fetch=FetchType.LAZY)
-    @JoinColumn(name="excluded_rooms")
+    @JoinColumn(name="id", referencedColumnName = "id")
     private Set<RoomEntity> excludedRooms;
-
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.PERSIST}, fetch=FetchType.LAZY)
-    @JoinColumn(name="included_rooms")
-    private Set<RoomEntity> includedRooms;
 
     public UserEntity(String userName, String password, String email,
                       String passwordConfirm, String firstName, String lastName, Set<MessageEntity> messages, List<String> roleList, AvatarEntity avatarEntity) {
@@ -52,6 +48,7 @@ public class UserEntity {
         this.messages = Objects.requireNonNullElse(messages, new HashSet<>());
         this.roleList = Objects.requireNonNullElse(roleList, new ArrayList<>());
         this.avatarEntity = avatarEntity;
+        this.excludedRooms = new HashSet<>();
     }
 
     public UserEntity() {
@@ -140,5 +137,9 @@ public class UserEntity {
 
     public void setAvatarEntity(AvatarEntity avatarEntity) {
         this.avatarEntity = avatarEntity;
+    }
+
+    public void blackListInRoom(RoomEntity room){
+        this.excludedRooms.add(room);
     }
 }

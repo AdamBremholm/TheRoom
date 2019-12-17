@@ -19,8 +19,6 @@ public class RoomEntity {
     @OneToMany(mappedBy = "roomEntity")
     private Set<MessageEntity> messages;
 
-    @ManyToMany(mappedBy = "includedRooms")
-    private Set<UserEntity> members;
 
     @ManyToMany(mappedBy = "excludedRooms")
     private Set<UserEntity> bannedUsers;
@@ -32,6 +30,7 @@ public class RoomEntity {
     public RoomEntity(String roomName){
         this.roomName = roomName;
         this.messages = new HashSet<>();
+        this.bannedUsers = new HashSet<>();
     }
 
     public String getRoomName() {
@@ -58,11 +57,12 @@ public class RoomEntity {
         this.messages.remove(message);
     }
 
-    public Set<UserEntity> getMembers() { return members; }
-
-    public void setMembers(Set<UserEntity> members) { this.members = members; }
-
     public Set<UserEntity> getBannedUsers() { return bannedUsers; }
 
     public void setBannedUsers(Set<UserEntity> bannedUsers) { this.bannedUsers = bannedUsers; }
+
+    public void banUser(UserEntity user){
+        user.blackListInRoom(this);
+        this.bannedUsers.add(user);
+    }
 }
