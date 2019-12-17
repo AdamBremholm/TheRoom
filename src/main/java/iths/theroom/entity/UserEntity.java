@@ -33,6 +33,13 @@ public class UserEntity {
     @JoinColumn(name = "id", referencedColumnName = "id")
     private AvatarEntity avatarEntity;
 
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.PERSIST}, fetch=FetchType.LAZY)
+    @JoinColumn(name="excluded_rooms")
+    private Set<RoomEntity> excludedRooms;
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.PERSIST}, fetch=FetchType.LAZY)
+    @JoinColumn(name="included_rooms")
+    private Set<RoomEntity> includedRooms;
 
     public UserEntity(String userName, String password, String email,
                       String passwordConfirm, String firstName, String lastName, Set<MessageEntity> messages, List<String> roleList, AvatarEntity avatarEntity) {
