@@ -58,7 +58,16 @@ public class MessageServiceImpl implements MessageService {
         UserEntity user = userRepository.findByUserName(form.getSender()).orElseThrow(NoSuchUserException::new);
         RoomEntity room = roomRepository.getOneByRoomName(form.getRoomName());
         MessageEntity message = new MessageEntity(form.getType(), form.getContent(), user, room, new MessageRatingEntity());
+        if(isBanned(user, room)){
+            message.setContent("ur banned bud");
+            return toModel(message);
+        }
+
         room.addMessage(message);
+        //remove for production
+        if(user.getUserName().contains("ban")){
+            room.banUser(user);
+        }
         roomRepository.save(room);
         return toModel(messageRepository.save(message));
     }
@@ -158,6 +167,10 @@ public class MessageServiceImpl implements MessageService {
         }
         return messagesByUserLimited;
     }
-
-
+    private boolean isBanned(UserEntity user, RoomEntity room){
+        if(room.getBannedUsers().contains(user)){
+            return true;
+        }
+        return false;
+    }
 }

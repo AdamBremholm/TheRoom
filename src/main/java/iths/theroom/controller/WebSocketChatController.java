@@ -40,7 +40,10 @@ public class WebSocketChatController {
     @MessageMapping("/chat.sendMessage.{roomName}")
     @SendTo("/topic/{roomName}")
     public MessageModel sendMessage(@DestinationVariable String roomName, @Payload MessageForm messageForm) {
-       return messageService.save(messageForm);
+
+
+
+        return messageService.save(messageForm);
     }
 
     @MessageMapping("/chat.newUser.{roomName}")
