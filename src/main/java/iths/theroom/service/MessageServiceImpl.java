@@ -56,19 +56,20 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public MessageModel save(MessageForm form) {
         UserEntity user = userRepository.findByUserName(form.getSender()).orElseThrow(NoSuchUserException::new);
-        RoomEntity room = roomRepository.getOneByRoomName(form.getRoomName());
-        MessageEntity message = new MessageEntity(form.getType(), form.getContent(), user, room, new MessageRatingEntity());
-        if(isBanned(user, room)){
+        Optional<RoomEntity> room = roomRepository.getOneByRoomName(form.getRoomName());
+        room.orElseThrow(() ->  new BadRequestException("no such room exists"));
+        MessageEntity message = new MessageEntity(form.getType(), form.getContent(), user, room.get(), new MessageRatingEntity());
+        if(isBanned(user, room.get())){
             message.setContent("ur banned bud");
             return toModel(message);
         }
 
-        room.addMessage(message);
+        room.get().addMessage(message);
         //remove for production
         if(user.getUserName().contains("ban")){
-            room.banUser(user);
+            room.get().banUser(user);
         }
-        roomRepository.save(room);
+        roomRepository.save(room.get());
         return toModel(messageRepository.save(message));
     }
 

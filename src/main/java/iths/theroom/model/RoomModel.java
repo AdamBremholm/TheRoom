@@ -6,7 +6,9 @@ import java.util.Set;
 public class RoomModel {
 
     private String roomName;
+    private String backgroundColor;
     private Set<MessageModel> messages;
+
 
     public RoomModel(){
         this.messages = new HashSet<>();
@@ -29,5 +31,13 @@ public class RoomModel {
     }
     public void setMessages(Set<MessageModel> messages) {
         this.messages = messages;
+    }
+
+    public String getBackgroundColor() {
+        return backgroundColor;
+    }
+
+    public void setBackgroundColor(String backgroundColor) {
+        this.backgroundColor = backgroundColor;
     }
 }

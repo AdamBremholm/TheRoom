@@ -8,6 +8,7 @@ public class MessageModel {
     private String sender;
     private String time;
     private String room;
+    private String roomBackgroundColor;
     private int rating;
 
     public MessageModel() {}
@@ -66,5 +67,13 @@ public class MessageModel {
 
     public void setRating(int rating) {
         this.rating = rating;
+    }
+
+    public String getRoomBackgroundColor() {
+        return roomBackgroundColor;
+    }
+
+    public void setRoomBackgroundColor(String roomBackgroundColor) {
+        this.roomBackgroundColor = roomBackgroundColor;
     }
 }

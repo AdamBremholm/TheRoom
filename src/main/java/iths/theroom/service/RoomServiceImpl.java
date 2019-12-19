@@ -6,6 +6,7 @@ import iths.theroom.exception.NotFoundException;
 import iths.theroom.factory.EntityFactory;
 import iths.theroom.factory.RoomFactory;
 import iths.theroom.model.RoomModel;
+import iths.theroom.pojos.MessageForm;
 import iths.theroom.repository.RoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -64,9 +66,15 @@ public class RoomServiceImpl implements RoomService {
     public RoomModel save(RoomEntity roomEntity) {
 
         validate(roomEntity);
+        Optional<RoomEntity> optionalRoomEntity = roomRepository.getOneByRoomName(roomEntity.getRoomName());
+        RoomEntity savedRoomEntity = null;
+        if(optionalRoomEntity.isEmpty()) {
+            savedRoomEntity = roomRepository.saveAndFlush(roomEntity);
+            return entityFactory.entityToModel(savedRoomEntity);
+        } else {
+            return entityFactory.entityToModel(optionalRoomEntity.get());
+        }
 
-        RoomEntity savedRoomEntity = roomRepository.saveAndFlush(roomEntity);
-        return entityFactory.entityToModel(savedRoomEntity);
     }
 
     @Override
@@ -75,10 +83,19 @@ public class RoomServiceImpl implements RoomService {
         RoomEntity roomEntityToUpdate = checkIfRoomExists(name);
 
         roomEntityToUpdate.setRoomName(roomEntity.getRoomName());
+        roomEntityToUpdate.setBackgroundColor(roomEntity.getBackgroundColor());
 
         RoomEntity updatedRoomEntity = roomRepository.saveAndFlush(roomEntityToUpdate);
         return entityFactory.entityToModel(updatedRoomEntity);
 
+    }
+
+    @Override
+    public RoomModel updateRoom(MessageForm messageForm){
+        RoomEntity roomEntity = new RoomEntity();
+        roomEntity.setRoomName(messageForm.getRoomName());
+        roomEntity.setBackgroundColor(messageForm.getRoomBackgroundColor());
+        return updateRoom(roomEntity.getRoomName(), roomEntity);
     }
 
     @Override
@@ -98,15 +115,16 @@ public class RoomServiceImpl implements RoomService {
 
     private RoomEntity checkIfRoomExists(String name) {
 
-        RoomEntity roomEntityFound = roomRepository.getOneByRoomName(name);
+        Optional<RoomEntity> roomEntityFound = roomRepository.getOneByRoomName(name);
 
-        if(roomEntityFound != null){
-            return roomEntityFound;
+        if(roomEntityFound.isPresent()){
+            return roomEntityFound.get();
 
         } else {
             throw new NotFoundException("Room with name '" + name + "' not found.");
         }
     }
+
 
     private void validate(RoomEntity roomEntity) throws BadRequestException {
 
@@ -114,8 +132,5 @@ public class RoomServiceImpl implements RoomService {
             throw new BadRequestException("Missing critical field: roomName");
         }
 
-        if(roomRepository.exists(Example.of(roomEntity))) {
-            throw new BadRequestException("Room with name '" + roomEntity.getRoomName() + "' already exists.");
-        }
     }
 }

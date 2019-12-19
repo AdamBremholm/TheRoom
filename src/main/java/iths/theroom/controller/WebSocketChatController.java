@@ -7,6 +7,7 @@ import iths.theroom.exception.NoSuchUserException;
 import iths.theroom.exception.NotFoundException;
 import iths.theroom.factory.MessageFactory;
 import iths.theroom.model.MessageModel;
+import iths.theroom.model.RoomModel;
 import iths.theroom.pojos.MessageForm;
 import iths.theroom.service.MessageService;
 import iths.theroom.service.RoomService;
@@ -40,9 +41,9 @@ public class WebSocketChatController {
     @MessageMapping("/chat.sendMessage.{roomName}")
     @SendTo("/topic/{roomName}")
     public MessageModel sendMessage(@DestinationVariable String roomName, @Payload MessageForm messageForm) {
-
-
-
+        if(messageForm.getRoomBackgroundColor()!=null) {
+           roomService.updateRoom(messageForm);
+        }
         return messageService.save(messageForm);
     }
 
@@ -61,7 +62,8 @@ public class WebSocketChatController {
         catch (Exception e){
         }
         try {
-            roomService.save(moveToServiceClassLater__CreateOrFetchRoom(form));
+           RoomModel roomModel = roomService.save(moveToServiceClassLater__CreateOrFetchRoom(form));
+           form.setRoomBackgroundColor(roomModel.getBackgroundColor());
         }
         catch (BadRequestException e){
 

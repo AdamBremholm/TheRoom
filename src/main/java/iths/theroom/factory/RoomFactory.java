@@ -22,6 +22,7 @@ public class RoomFactory implements EntityFactory<RoomModel, RoomEntity> {
     public RoomModel entityToModel(RoomEntity roomEntity) {
         RoomModel roomModel = new RoomModel();
         roomModel.setRoomName(roomEntity.getRoomName());
+        roomModel.setBackgroundColor(roomEntity.getBackgroundColor());
 
         if(roomEntity.getMessages() != null){
             for(MessageEntity message : roomEntity.getMessages()){
