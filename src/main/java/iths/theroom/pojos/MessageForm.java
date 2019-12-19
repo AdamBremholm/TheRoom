@@ -8,6 +8,7 @@ public class MessageForm{
     private String content;
     private String roomName;
     private String sender;
+    private String roomBackgroundColor;
     private int rating;
 
     public MessageForm(){}
@@ -50,5 +51,13 @@ public class MessageForm{
 
     public void setRating(int rating) {
         this.rating = rating;
+    }
+
+    public String getRoomBackgroundColor() {
+        return roomBackgroundColor;
+    }
+
+    public void setRoomBackgroundColor(String roomBackgroundColor) {
+        this.roomBackgroundColor = roomBackgroundColor;
     }
 }

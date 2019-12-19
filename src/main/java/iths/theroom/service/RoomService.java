@@ -2,6 +2,7 @@ package iths.theroom.service;
 
 import iths.theroom.entity.RoomEntity;
 import iths.theroom.model.RoomModel;
+import iths.theroom.pojos.MessageForm;
 
 import java.util.List;
 
@@ -18,4 +19,6 @@ public interface RoomService {
     RoomEntity getOneByNameE(String name);
 
     RoomModel deleteRoom(String name);
+
+    RoomModel updateRoom(MessageForm messageForm);
 }

@@ -4,6 +4,15 @@ document.querySelector('#dialogueForm').addEventListener('submit', sendMessage, 
 var stompClient = null;
 var name = null;
 var room = null;
+var roomBackgroundColor = null;
+var roomBackgroundColorChange = false;
+
+document.querySelector('#html5colorpicker').addEventListener('change', function() {
+    roomBackgroundColor = document.querySelector('#html5colorpicker').value.trim();
+    document.getElementById('dialogue-page').style.backgroundColor = roomBackgroundColor;
+    roomBackgroundColorChange = true;
+});
+
 
 function connect(event) {
     name = document.querySelector('#name').value.trim();
@@ -24,7 +33,7 @@ function connectionSuccess() {
     stompClient.send("/app/chat.newUser."+room, {}, JSON.stringify({
         sender : name,
         type : 'newUser',
-        roomName : room
+        roomName : room,
     }))
 }
 function sendMessage(event) {
@@ -35,7 +44,8 @@ function sendMessage(event) {
             content : document.querySelector('#chatMessage').value,
             type : 'CHAT',
             roomName : room,
-            rating : document.querySelector('#chatMessage').rating
+            rating : document.querySelector('#chatMessage').rating,
+            roomBackgroundColor :  roomBackgroundColorChange ? roomBackgroundColor : null
         };
         stompClient.send("/app/chat.sendMessage."+room, {}, JSON
             .stringify(chatMessage));
@@ -43,7 +53,6 @@ function sendMessage(event) {
     }
     event.preventDefault();
 }
-
 
 
 function onMessageReceived(payload) {
@@ -57,6 +66,10 @@ function onMessageReceived(payload) {
         messageText = document.createTextNode(message.content);
         textElement.appendChild(messageText);
         messageElement.appendChild(textElement);
+        backgroundColorString = message.roomBackgroundColor;
+        if(backgroundColorString!=null) {
+            document.getElementById('dialogue-page').style.backgroundColor = backgroundColorString;
+        }
     } else if (message.type === 'Leave') {
         messageElement.classList.add('event-data');
         message.content = message.sender.userName + 'has left the chat';
@@ -74,6 +87,11 @@ function onMessageReceived(payload) {
         var localTime = new Date(message.time );
         var timeString = localTime.toString().split(' ').slice(0, 5).join(' ');
         var timeNode = document.createTextNode(" - " + timeString);
+        var backgroundColorString = null;
+        if(message.roomBackgroundColor!=null) {
+            backgroundColorString = message.roomBackgroundColor;
+            document.getElementById('dialogue-page').style.backgroundColor = backgroundColorString;
+        }
         messageText = document.createTextNode(message.content);
         textElement.appendChild(messageText);
         usernameElement.appendChild(usernameText);

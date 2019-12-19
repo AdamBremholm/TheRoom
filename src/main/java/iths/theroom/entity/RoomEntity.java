@@ -15,6 +15,7 @@ public class RoomEntity {
 
     @Column(name=COLUMN_ROOM_NAME, length=50, nullable=false, unique=true)
     private String roomName;
+    private String backgroundColor;
 
     @OneToMany(mappedBy = "roomEntity")
     private Set<MessageEntity> messages;
@@ -29,6 +30,13 @@ public class RoomEntity {
 
     public RoomEntity(String roomName){
         this.roomName = roomName;
+        this.messages = new HashSet<>();
+        this.bannedUsers = new HashSet<>();
+    }
+
+    public RoomEntity(String roomName, String backgroundColor){
+        this.roomName = roomName;
+        this.backgroundColor = backgroundColor;
         this.messages = new HashSet<>();
         this.bannedUsers = new HashSet<>();
     }
@@ -60,6 +68,14 @@ public class RoomEntity {
     public Set<UserEntity> getBannedUsers() { return bannedUsers; }
 
     public void setBannedUsers(Set<UserEntity> bannedUsers) { this.bannedUsers = bannedUsers; }
+
+    public String getBackgroundColor() {
+        return backgroundColor;
+    }
+
+    public void setBackgroundColor(String color) {
+        this.backgroundColor = color;
+    }
 
     public void banUser(UserEntity user){
         user.blackListInRoom(this);
