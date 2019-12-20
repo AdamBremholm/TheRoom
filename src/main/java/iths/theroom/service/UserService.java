@@ -3,10 +3,13 @@ package iths.theroom.service;
 import iths.theroom.entity.UserEntity;
 import iths.theroom.exception.BadRequestException;
 import iths.theroom.exception.ConflictException;
+import iths.theroom.exception.NotFoundException;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
 
-public interface UserService {
+public interface UserService extends UserDetailsService {
 
     UserEntity getUserById(Long id);
 
@@ -23,4 +26,6 @@ public interface UserService {
     void checkForDuplicates(UserEntity userEntity) throws ConflictException;
 
     public void encodePassword(UserEntity userEntity);
+
+    public UserDetails loadUserByUsername(String userName) throws NotFoundException;
 }

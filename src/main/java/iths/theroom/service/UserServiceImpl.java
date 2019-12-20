@@ -4,12 +4,17 @@ import iths.theroom.entity.UserEntity;
 import iths.theroom.exception.BadRequestException;
 import iths.theroom.exception.ConflictException;
 import iths.theroom.exception.NoSuchUserException;
+import iths.theroom.exception.NotFoundException;
 import iths.theroom.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -90,6 +95,13 @@ public class UserServiceImpl implements UserService {
     }
 
 
-
-
+    @Override
+    public UserDetails loadUserByUsername(String userName) throws NotFoundException {
+        Optional<UserEntity> optUserEntity = userRepository.findByUserName(userName);
+        if (optUserEntity.isEmpty()) {
+            throw new NotFoundException("User not found with username: " + userName);
+        }
+        return new org.springframework.security.core.userdetails.User(optUserEntity.get().getUserName(), optUserEntity.get().getPassword(),
+                new ArrayList<>());
+    }
 }
