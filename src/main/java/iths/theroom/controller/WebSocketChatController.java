@@ -2,9 +2,9 @@ package iths.theroom.controller;
 
 import iths.theroom.entity.RoomEntity;
 import iths.theroom.entity.UserEntity;
+import iths.theroom.enums.Type;
 import iths.theroom.exception.BadRequestException;
 import iths.theroom.exception.NoSuchUserException;
-import iths.theroom.exception.NotFoundException;
 import iths.theroom.factory.MessageFactory;
 import iths.theroom.model.MessageModel;
 import iths.theroom.model.RoomModel;
@@ -20,8 +20,6 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
 import java.util.Objects;
-
-import static iths.theroom.factory.MessageFactory.toModel;
 
 @Controller
 public class WebSocketChatController {
@@ -41,7 +39,7 @@ public class WebSocketChatController {
     @MessageMapping("/chat.sendMessage.{roomName}")
     @SendTo("/topic/{roomName}")
     public MessageModel sendMessage(@DestinationVariable String roomName, @Payload MessageForm messageForm) {
-        if(messageForm.getRoomBackgroundColor()!=null) {
+        if(messageForm.getType()== Type.BG_CHANGE) {
            roomService.updateRoom(messageForm);
         }
         return messageService.save(messageForm);

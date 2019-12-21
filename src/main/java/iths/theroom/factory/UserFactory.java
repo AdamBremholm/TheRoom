@@ -11,8 +11,6 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
-import static iths.theroom.factory.MessageFactory.toModel;
-
 @Component
 public class UserFactory {
 

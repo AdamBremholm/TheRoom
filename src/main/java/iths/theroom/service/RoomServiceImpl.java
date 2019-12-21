@@ -9,7 +9,6 @@ import iths.theroom.model.RoomModel;
 import iths.theroom.pojos.MessageForm;
 import iths.theroom.repository.RoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

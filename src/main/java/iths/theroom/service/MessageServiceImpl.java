@@ -6,7 +6,6 @@ import iths.theroom.entity.UserEntity;
 import iths.theroom.exception.BadRequestException;
 import iths.theroom.exception.NoSuchUserException;
 import iths.theroom.exception.NotFoundException;
-import iths.theroom.factory.MessageFactory;
 import iths.theroom.model.MessageModel;
 import iths.theroom.pojos.MessageForm;
 import iths.theroom.repository.MessageRepository;
@@ -14,9 +13,7 @@ import iths.theroom.entity.MessageEntity;
 import iths.theroom.exception.NoSuchMessageException;
 import iths.theroom.repository.RoomRepository;
 import iths.theroom.repository.UserRepository;
-import org.aspectj.weaver.ast.Not;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -169,9 +166,6 @@ public class MessageServiceImpl implements MessageService {
         return messagesByUserLimited;
     }
     private boolean isBanned(UserEntity user, RoomEntity room){
-        if(room.getBannedUsers().contains(user)){
-            return true;
-        }
-        return false;
+        return room.getBannedUsers().contains(user);
     }
 }

@@ -4,7 +4,6 @@ import iths.theroom.entity.AvatarEntity;
 import iths.theroom.model.AvatarModel;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface AvatarService {
 
