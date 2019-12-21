@@ -2,7 +2,6 @@ package iths.theroom.entity;
 
 import javax.persistence.*;
 
-import static iths.theroom.config.DataBaseConfig.COLUMN_USER_ID;
 import static iths.theroom.config.DataBaseConfig.TABLE_AVATAR;
 
 @Entity

@@ -2,9 +2,7 @@ package iths.theroom.service;
 
 import iths.theroom.entity.AvatarEntity;
 import iths.theroom.entity.MessageEntity;
-import iths.theroom.entity.RoomEntity;
 import iths.theroom.entity.UserEntity;
-import iths.theroom.enums.Type;
 import iths.theroom.exception.BadRequestException;
 import iths.theroom.exception.ConflictException;
 import iths.theroom.repository.UserRepository;
@@ -20,8 +18,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.HashSet;
 import java.util.Set;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 
 @RunWith(SpringRunner.class)

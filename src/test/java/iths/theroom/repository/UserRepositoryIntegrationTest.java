@@ -4,10 +4,8 @@ package iths.theroom.repository;
 
 import iths.theroom.entity.AvatarEntity;
 import iths.theroom.entity.MessageEntity;
-import iths.theroom.entity.RoomEntity;
 import iths.theroom.entity.UserEntity;
 
-import iths.theroom.enums.Type;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

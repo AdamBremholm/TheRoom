@@ -25,7 +25,7 @@ public interface UserService extends UserDetailsService {
 
     void checkForDuplicates(UserEntity userEntity) throws ConflictException;
 
-    public void encodePassword(UserEntity userEntity);
+    void encodePassword(UserEntity userEntity);
 
-    public UserDetails loadUserByUsername(String userName) throws NotFoundException;
+    UserDetails loadUserByUsername(String userName) throws NotFoundException;
 }

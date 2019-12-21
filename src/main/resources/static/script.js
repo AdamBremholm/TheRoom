@@ -4,15 +4,8 @@ document.querySelector('#dialogueForm').addEventListener('submit', sendMessage, 
 var stompClient = null;
 var name = null;
 var room = null;
-var roomBackgroundColor = null;
-var roomBackgroundColorChange = false;
 
-document.querySelector('#html5colorpicker').addEventListener('change', function() {
-    roomBackgroundColor = document.querySelector('#html5colorpicker').value.trim();
-    document.getElementById('dialogue-page').style.backgroundColor = roomBackgroundColor;
-    roomBackgroundColorChange = true;
-});
-
+document.querySelector('#html5colorpicker').addEventListener('change', sendMessage, true);
 
 function connect(event) {
     name = document.querySelector('#name').value.trim();
@@ -37,15 +30,25 @@ function connectionSuccess() {
     }))
 }
 function sendMessage(event) {
-    var messageContent = document.querySelector('#chatMessage').value.trim();
-    if (messageContent && stompClient) {
+    let type = null;
+    let bgColor = null;
+    let messageContent = null;
+    console.log(event.target.id);
+    if(event.target.id==='html5colorpicker') {
+        type = "BG_CHANGE";
+        bgColor = document.querySelector('#html5colorpicker').value.trim();
+    } else if (event.target.id==='dialogueForm') {
+        type = "CHAT";
+        messageContent = document.querySelector('#chatMessage').value.trim();
+    }
+    if (stompClient) {
         var chatMessage = {
             sender : name,
-            content : document.querySelector('#chatMessage').value,
-            type : 'CHAT',
+            content : messageContent,
+            type : type,
             roomName : room,
             rating : document.querySelector('#chatMessage').rating,
-            roomBackgroundColor :  roomBackgroundColorChange ? roomBackgroundColor : null
+            roomBackgroundColor :  bgColor
         };
         stompClient.send("/app/chat.sendMessage."+room, {}, JSON
             .stringify(chatMessage));
@@ -69,6 +72,7 @@ function onMessageReceived(payload) {
         backgroundColorString = message.roomBackgroundColor;
         if(backgroundColorString!=null) {
             document.getElementById('dialogue-page').style.backgroundColor = backgroundColorString;
+            document.getElementById('html5colorpicker').value = backgroundColorString;
         }
     } else if (message.type === 'Leave') {
         messageElement.classList.add('event-data');
@@ -91,6 +95,7 @@ function onMessageReceived(payload) {
         if(message.roomBackgroundColor!=null) {
             backgroundColorString = message.roomBackgroundColor;
             document.getElementById('dialogue-page').style.backgroundColor = backgroundColorString;
+            document.getElementById('html5colorpicker').value = backgroundColorString;
         }
         messageText = document.createTextNode(message.content);
         textElement.appendChild(messageText);

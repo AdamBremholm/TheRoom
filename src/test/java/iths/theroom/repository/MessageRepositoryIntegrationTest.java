@@ -4,7 +4,6 @@ package iths.theroom.repository;
 import iths.theroom.entity.MessageEntity;
 import iths.theroom.entity.RoomEntity;
 import iths.theroom.entity.UserEntity;
-import iths.theroom.enums.Type;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
