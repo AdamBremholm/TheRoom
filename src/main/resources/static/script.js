@@ -1,18 +1,99 @@
 'use strict';
-document.querySelector('#welcomeForm').addEventListener('submit', connect, true);
+document.querySelector('#loginForm').addEventListener('submit', handleFirstForm, true);
+document.querySelector('#registerForm').addEventListener('submit', register, true);
 document.querySelector('#dialogueForm').addEventListener('submit', sendMessage, true);
+
 var stompClient = null;
 var name = null;
 var room = null;
+let token = null;
+let errorMessage = null;
+let errorCode = null;
 
 document.querySelector('#html5colorpicker').addEventListener('change', sendMessage, true);
+
+function handleFirstForm(event) {
+    event.preventDefault();
+    name = document.querySelector('#name').value.trim();
+    console.log(event.target.value)
+    if(event.target.value==='login')
+        login(event)
+    else
+        switchToRegisterForm(event)
+}
+
+
+function switchToRegisterForm(event){
+    document.querySelector('#login-page').classList.add('hidden');
+    document.querySelector('#register-page').classList.remove('hidden');
+    document.querySelector('#register-name').value = name
+}
+
+function switchToLoginForm(event){
+    document.querySelector('#login-page').classList.remove('hidden');
+    document.querySelector('#register-page').classList.add('hidden');
+    document.querySelector('#name').value = name
+}
+
+function register(event){
+    name = document.querySelector('#register-name').value.trim();
+    let firstName = document.querySelector('#register-firstName').value.trim();
+    let lastName = document.querySelector('#register-firstName').value.trim();
+    let password = document.querySelector('#register-password').value.trim();
+    let passwordConfirm = document.querySelector('#register-password-confirm').value.trim();
+    let email = document.querySelector('#register-email').value.trim();
+    event.preventDefault();
+    if(name && password && passwordConfirm) {
+        axios.post('/api/users', {
+            userName: name,
+            firstName: firstName,
+            lastName: lastName,
+            password: password,
+            passwordConfirm : passwordConfirm,
+            email: email
+        })
+            .then(function (response) {
+                console.log(response.data);
+                document.querySelector('#register-display-message').textContent = "User Created";
+                setTimeout(function(){  switchToLoginForm(event); }, 1000);
+            })
+            .catch(function (error) {
+                console.log(error.response.data.message);
+                document.querySelector('#register-display-message').textContent = error.response.data.message;
+            });
+    }
+
+}
+
+
+function login(event){
+   let password = document.querySelector('#password').value.trim();
+    event.preventDefault();
+    if(name && password) {
+        axios.post('/authenticate', {
+            username: name,
+            password: password
+        })
+            .then(function (response) {
+                console.log(response.data.token);
+                token = response.token;
+                connect(event);
+            })
+            .catch(function (error) {
+                console.log(error.response.data.message);
+                document.querySelector('#login-display-message').textContent = error.response.data.message;
+            });
+    }
+
+}
+
 
 function connect(event) {
     name = document.querySelector('#name').value.trim();
     room = document.querySelector('#room').value.trim();
 
     if (name) {
-        document.querySelector('#welcome-page').classList.add('hidden');
+        document.querySelector('#login-page').classList.add('hidden');
         document.querySelector('#dialogue-page').classList.remove('hidden');
         var socket = new SockJS('/websocketApp');
         stompClient = Stomp.over(socket);

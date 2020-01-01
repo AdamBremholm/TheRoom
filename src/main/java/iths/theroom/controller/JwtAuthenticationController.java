@@ -30,6 +30,7 @@ public class JwtAuthenticationController {
 
 	@RequestMapping(value = "/authenticate", method = RequestMethod.POST)
 	public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
+		System.out.println("username:" + authenticationRequest.getUsername() + "password:" + authenticationRequest.getPassword());
 
 		authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
 
@@ -40,7 +41,7 @@ public class JwtAuthenticationController {
 
 		return ResponseEntity.ok(new JwtResponse(token));
 	}
-	
+
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	public ResponseEntity<?> saveUser(@RequestBody UserEntity userEntity) throws Exception {
 		return ResponseEntity.ok(userService.save(userEntity));
