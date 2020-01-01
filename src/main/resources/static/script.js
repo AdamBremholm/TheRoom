@@ -1,18 +1,69 @@
 'use strict';
-document.querySelector('#welcomeForm').addEventListener('submit', connect, true);
+document.querySelector('#loginForm').addEventListener('submit', handleFirstForm, true);
 document.querySelector('#dialogueForm').addEventListener('submit', sendMessage, true);
+
 var stompClient = null;
 var name = null;
 var room = null;
+let password = null;
+let token = null;
+let errorMessage = null;
+let errorCode = null;
 
 document.querySelector('#html5colorpicker').addEventListener('change', sendMessage, true);
+
+function handleFirstForm(event) {
+    name = document.querySelector('#name').value.trim();
+    if(event.target.id==='login-button')
+        login(event)
+    else
+        switcherToRegisterForm(event)
+}
+
+function switcherToRegisterForm(event){
+    document.querySelector('#login-page').classList.add('hidden');
+    document.querySelector('#register-page').classList.remove('hidden');
+    document.querySelector('#register-name').value = name
+}
+
+
+function login(event){
+    password = document.querySelector('#password').value.trim();
+    event.preventDefault();
+    if(name && password) {
+        axios.post('/authenticate', {
+            username: name,
+            password: password
+        })
+            .then(function (response) {
+                console.log(response);
+                token = response;
+                connect(event);
+            })
+            .catch(function (error) {
+                console.log(error.response.data.message);
+                document.querySelector('#error-message').textContent = error.response.data.message;
+            });
+    }
+
+}
+
+function showPanel(fieldName) {
+    var fieldNameElement = document.getElementById(fieldName);
+    while(fieldNameElement.childNodes.length >= 1) {
+        fieldNameElement.removeChild(fieldNameElement.firstChild);
+    }
+    fieldNameElement.appendChild(fieldNameElement.ownerDocument.createTextNode(fieldName));
+}
+
+
 
 function connect(event) {
     name = document.querySelector('#name').value.trim();
     room = document.querySelector('#room').value.trim();
 
     if (name) {
-        document.querySelector('#welcome-page').classList.add('hidden');
+        document.querySelector('#login-page').classList.add('hidden');
         document.querySelector('#dialogue-page').classList.remove('hidden');
         var socket = new SockJS('/websocketApp');
         stompClient = Stomp.over(socket);
