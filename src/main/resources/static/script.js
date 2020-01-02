@@ -7,8 +7,6 @@ var stompClient = null;
 var name = null;
 var room = null;
 let token = null;
-let errorMessage = null;
-let errorCode = null;
 
 document.querySelector('#html5colorpicker').addEventListener('change', sendMessage, true);
 
@@ -76,7 +74,7 @@ function login(event){
         })
             .then(function (response) {
                 console.log(response.data.token);
-                token = response.token;
+                token = response.data.token;
                 connect(event);
             })
             .catch(function (error) {
@@ -97,7 +95,10 @@ function connect(event) {
         document.querySelector('#dialogue-page').classList.remove('hidden');
         var socket = new SockJS('/websocketApp');
         stompClient = Stomp.over(socket);
-        stompClient.connect({}, connectionSuccess);
+        stompClient.connect({Authorization:"Bearer "+token}, function () {
+            connectionSuccess();
+        });
+       // stompClient.connect({}, connectionSuccess);
     }
     event.preventDefault();
 }
