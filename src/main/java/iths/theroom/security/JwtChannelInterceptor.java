@@ -52,7 +52,8 @@ public class JwtChannelInterceptor implements ChannelInterceptor {
                     throw new UnauthorizedException("");
                 } catch (ExpiredJwtException e) {
                     throw new UnauthorizedException("Token has expired");
-
+                } catch (Exception e) {
+                    throw new UnauthorizedException("Token not valid");
                 }
             } else {
                 logger.warn("JWT Token does not begin with Bearer String");
@@ -60,20 +61,25 @@ public class JwtChannelInterceptor implements ChannelInterceptor {
 
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
-                UserDetails userDetails = userService.loadUserByUsername(username);
+                try {
+                    UserDetails userDetails = userService.loadUserByUsername(username);
+                    final boolean valid = jwtTokenUtil.validateToken(jwtToken, userDetails);
 
-                if (jwtTokenUtil.validateToken(jwtToken, userDetails)) {
+                    if (valid) {
 
-                    UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
-                            userDetails, null, userDetails.getAuthorities());
-                    SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
-                    Authentication user = SecurityContextHolder.getContext().getAuthentication();
-                    accessor.setUser(user);
+                        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
+                                userDetails, null, userDetails.getAuthorities());
+                        SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+                        Authentication user = SecurityContextHolder.getContext().getAuthentication();
+                        accessor.setUser(user);
+                    }
+                    else {
+                        throw new UnauthorizedException("Token not valid");
+                    }
+                } catch (Exception e){
+                    throw new UnauthorizedException("Unable to validate token");
                 }
 
-                else {
-                    throw new UnauthorizedException("Token not valid");
-                }
             }
 
             else {
