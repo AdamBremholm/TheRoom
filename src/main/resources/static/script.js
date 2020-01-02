@@ -13,7 +13,6 @@ document.querySelector('#html5colorpicker').addEventListener('change', sendMessa
 function handleFirstForm(event) {
     event.preventDefault();
     name = document.querySelector('#name').value.trim();
-    console.log(event.target.value)
     if(event.target.value==='login')
         login(event)
     else
@@ -73,7 +72,6 @@ function login(event){
             password: password
         })
             .then(function (response) {
-                console.log(response.data.token);
                 token = response.data.token;
                 connect(event);
             })
@@ -91,31 +89,34 @@ function connect(event) {
     room = document.querySelector('#room').value.trim();
 
     if (name) {
-        document.querySelector('#login-page').classList.add('hidden');
-        document.querySelector('#dialogue-page').classList.remove('hidden');
         var socket = new SockJS('/websocketApp');
         stompClient = Stomp.over(socket);
-        stompClient.connect({Authorization:"Bearer "+token}, function () {
-            connectionSuccess();
-        });
-       // stompClient.connect({}, connectionSuccess);
+            stompClient.connect({Authorization: "Bearer " + token}, function () {
+                connectionSuccess();
+                document.querySelector('#login-page').classList.add('hidden');
+                document.querySelector('#dialogue-page').classList.remove('hidden');
+                token="";
+            }, function (message) {
+                if(message.toString().includes("Unauthorized")){
+                    document.querySelector('#login-display-message').textContent = "Unauthorized"
+                }
+            });
     }
     event.preventDefault();
 }
 function connectionSuccess() {
     document.getElementById("roomTitle").innerHTML = room;
-    stompClient.subscribe('/topic/'+room, onMessageReceived);
-    stompClient.send("/app/chat.newUser."+room, {}, JSON.stringify({
-        sender : name,
-        type : 'newUser',
-        roomName : room,
-    }))
+        stompClient.subscribe('/topic/' + room, onMessageReceived);
+        stompClient.send("/app/chat.newUser." + room, {}, JSON.stringify({
+            sender: name,
+            type: 'newUser',
+            roomName: room,
+        }))
 }
 function sendMessage(event) {
     let type = null;
     let bgColor = null;
     let messageContent = null;
-    console.log(event.target.id);
     if(event.target.id==='html5colorpicker') {
         type = "BG_CHANGE";
         bgColor = document.querySelector('#html5colorpicker').value.trim();

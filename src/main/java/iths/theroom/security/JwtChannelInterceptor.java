@@ -1,10 +1,12 @@
 package iths.theroom.security;
 
 import io.jsonwebtoken.ExpiredJwtException;
+import iths.theroom.exception.UnauthorizedException;
 import iths.theroom.service.UserService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.simp.stomp.StompCommand;
@@ -41,43 +43,41 @@ public class JwtChannelInterceptor implements ChannelInterceptor {
         if (StompCommand.CONNECT.equals(accessor.getCommand())) {
             String requestTokenHeader = Objects.requireNonNull(accessor.getNativeHeader("Authorization")).get(0);
 
-            System.out.println("Authorization header: ");
-
-            System.out.println(requestTokenHeader);
             if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
 
                 jwtToken = requestTokenHeader.substring(7);
-                System.out.println(jwtToken);
                 try {
                     username = jwtTokenUtil.getUsernameFromToken(jwtToken);
                 } catch (IllegalArgumentException e) {
-                    e.printStackTrace();
+                    throw new UnauthorizedException("");
                 } catch (ExpiredJwtException e) {
-                    System.out.println("JWT Token has expired");
+                    throw new UnauthorizedException("Token has expired");
+
                 }
             } else {
                 logger.warn("JWT Token does not begin with Bearer String");
             }
 
-            // Once we get the token validate it.
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
                 UserDetails userDetails = userService.loadUserByUsername(username);
 
-                // if token is valid configure Spring Security to manually set
-                // authentication
                 if (jwtTokenUtil.validateToken(jwtToken, userDetails)) {
 
-                    System.out.println("Authenticated!!");
                     UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
                             userDetails, null, userDetails.getAuthorities());
-                    // After setting the Authentication in the context, we specify
-                    // that the current user is authenticated. So it passes the
-                    // Spring Security Configurations successfully.
                     SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
                     Authentication user = SecurityContextHolder.getContext().getAuthentication();
                     accessor.setUser(user);
                 }
+
+                else {
+                    throw new UnauthorizedException("Token not valid");
+                }
+            }
+
+            else {
+                throw new UnauthorizedException("No User found");
             }
 
         }

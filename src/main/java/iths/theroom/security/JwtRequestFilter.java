@@ -16,6 +16,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static iths.theroom.config.GlobalVariables.UNFILTERED_URLS;
+
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
 
@@ -28,6 +30,12 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
 			throws ServletException, IOException {
+
+		String path = request.getRequestURI();
+		if (UNFILTERED_URLS.contains(path) || path.contains("/websocketApp/")) {
+			chain.doFilter(request, response);
+			return;
+		}
 
 		final String requestTokenHeader = request.getHeader("Authorization");
 
