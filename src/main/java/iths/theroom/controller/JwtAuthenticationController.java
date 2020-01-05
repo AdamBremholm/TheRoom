@@ -2,9 +2,6 @@ package iths.theroom.controller;
 
 
 import iths.theroom.entity.UserEntity;
-import iths.theroom.model.JwtRequest;
-import iths.theroom.model.JwtResponse;
-import iths.theroom.security.JwtTokenUtil;
 import iths.theroom.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

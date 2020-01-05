@@ -26,6 +26,7 @@ public class UserEntity {
 
     private String roles = "";
     private String permissions = "";
+    private int active;
 
     @OneToMany(mappedBy = "sender")
     private Set<MessageEntity> messages;
@@ -51,6 +52,7 @@ public class UserEntity {
         this.excludedRooms = new HashSet<>();
         this.roles = roles;
         this.permissions = permissions;
+        this.active = 1;
     }
 
     public UserEntity() {
@@ -152,6 +154,10 @@ public class UserEntity {
 
     public void setPermissions(String permissions) {
         this.permissions = permissions;
+    }
+
+    public int getActive() {
+        return active;
     }
 
     public List<String> getRolesAsList(){
