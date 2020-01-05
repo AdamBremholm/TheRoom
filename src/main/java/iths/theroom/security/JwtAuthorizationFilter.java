@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import iths.theroom.entity.UserEntity;
 import iths.theroom.exception.NoSuchUserException;
 import iths.theroom.repository.UserRepository;
+import iths.theroom.service.UserService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,11 +22,11 @@ import java.util.Optional;
 import static com.auth0.jwt.algorithms.Algorithm.HMAC512;
 
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
-    private UserRepository userRepository;
+    private UserService userService;
 
-    public JwtAuthorizationFilter(AuthenticationManager authenticationManager, UserRepository userRepository) {
+    public JwtAuthorizationFilter(AuthenticationManager authenticationManager, UserService userService) {
         super(authenticationManager);
-        this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     @Override
@@ -47,28 +48,26 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         chain.doFilter(request, response);
     }
 
+
     private Authentication getUsernamePasswordAuthentication(HttpServletRequest request) {
         String token = request.getHeader(JwtProperties.HEADER_STRING)
                 .replace(JwtProperties.TOKEN_PREFIX,"");
 
-        if (token != null) {
-            // parse the token and validate it
-            String userName = JWT.require(HMAC512(JwtProperties.SECRET.getBytes()))
-                    .build()
-                    .verify(token)
-                    .getSubject();
+        // parse the token and validate it
+        String userName = JWT.require(HMAC512(JwtProperties.SECRET.getBytes()))
+                .build()
+                .verify(token)
+                .getSubject();
 
-            // Search in the DB if we find the user by token subject (username)
-            // If so, then grab user details and create spring auth token using username, pass, authorities/roles
-            if (userName != null) {
-                Optional<UserEntity> user = userRepository.findByUserName(userName);
-                user.orElseThrow(NoSuchUserException::new);
-                UserPrincipal principal = new UserPrincipal(user.get());
-                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userName, null, principal.getAuthorities());
-                return auth;
-            }
-            return null;
+        // Search in the DB if we find the user by token subject (username)
+        // If so, then grab user details and create spring auth token using username, pass, authorities/roles
+        if (userName != null) {
+            UserEntity user = userService.getByUserName(userName);
+            UserPrincipal principal = new UserPrincipal(user);
+            UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userName, null, principal.getAuthorities());
+            return auth;
         }
         return null;
     }
+
 }

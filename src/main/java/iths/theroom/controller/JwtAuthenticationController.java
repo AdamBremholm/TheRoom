@@ -2,6 +2,8 @@ package iths.theroom.controller;
 
 
 import iths.theroom.entity.UserEntity;
+import iths.theroom.model.JwtRequest;
+import iths.theroom.model.JwtResponse;
 import iths.theroom.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +21,6 @@ public class JwtAuthenticationController {
 	@Autowired
 	private AuthenticationManager authenticationManager;
 
-	@Autowired
-	private JwtTokenUtil jwtTokenUtil;
 
 	@Autowired
 	private UserService userService;
