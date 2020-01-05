@@ -53,8 +53,8 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    @Override
-    public void validateUserEntity(UserEntity userEntity) throws BadRequestException {
+
+    private void validateUserEntity(UserEntity userEntity) throws BadRequestException {
         Optional<UserEntity> optionalUserEntity = Optional.ofNullable(userEntity);
         optionalUserEntity.map(UserEntity::getUserName)
                 .filter(Predicate.not(String::isBlank)).orElseThrow(() -> new BadRequestException("username must be provided"));
@@ -68,8 +68,8 @@ public class UserServiceImpl implements UserService {
         encodePassword(optionalUserEntity.get());
     }
 
-    @Override
-    public void validatePassword(UserEntity userEntity) throws BadRequestException {
+
+    private void validatePassword(UserEntity userEntity) throws BadRequestException {
         if(userEntity!=null) {
             if (!userEntity.getPassword().equals(userEntity.getPasswordConfirm()))
                 throw new BadRequestException("passwords does not match");
@@ -78,8 +78,8 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    @Override
-    public void checkForDuplicates(UserEntity userEntity) throws ConflictException {
+
+    private void checkForDuplicates(UserEntity userEntity) throws ConflictException {
         Optional<UserEntity> foundUserByUserName = userRepository.findByUserName(userEntity.getUserName());
         if(foundUserByUserName.isPresent())
             throw new ConflictException("username: "+userEntity.getUserName() +" is already taken");
@@ -88,8 +88,8 @@ public class UserServiceImpl implements UserService {
             throw new ConflictException("email: "+userEntity.getEmail() +" is already taken");
     }
 
-    @Override
-    public void encodePassword(UserEntity userEntity){
+
+    private void encodePassword(UserEntity userEntity){
         userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
     }
 
