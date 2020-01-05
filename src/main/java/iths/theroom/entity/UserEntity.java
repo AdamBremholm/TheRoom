@@ -20,11 +20,24 @@ public class UserEntity {
     private String email;
     @Transient
     private String passwordConfirm;
-    @Transient
-    private List<String> roleList;
 
     private String firstName;
     private String lastName;
+
+    private boolean enabled;
+    private boolean tokenExpired;
+
+    @Transient
+    private List<String> roleList;
+
+    @ManyToMany
+    @JoinTable(
+            name = "users_roles",
+            joinColumns = @JoinColumn(
+                    name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(
+                    name = "role_id", referencedColumnName = "id"))
+    private Collection<RoleEntity> roles;
 
     @OneToMany(mappedBy = "sender")
     private Set<MessageEntity> messages;
@@ -38,7 +51,7 @@ public class UserEntity {
     private Set<RoomEntity> excludedRooms;
 
     public UserEntity(String userName, String password, String email,
-                      String passwordConfirm, String firstName, String lastName, Set<MessageEntity> messages, List<String> roleList, AvatarEntity avatarEntity) {
+                      String passwordConfirm, String firstName, String lastName, Set<MessageEntity> messages, List<String> roleList, Collection<RoleEntity> roles, AvatarEntity avatarEntity) {
         this.userName = userName;
         this.password = password;
         this.email = email;
@@ -47,16 +60,17 @@ public class UserEntity {
         this.lastName = lastName;
         this.messages = Objects.requireNonNullElse(messages, new HashSet<>());
         this.roleList = Objects.requireNonNullElse(roleList, new ArrayList<>());
+        this.roles = Objects.requireNonNullElse(roles, new ArrayList<>());
         this.avatarEntity = avatarEntity;
         this.excludedRooms = new HashSet<>();
     }
 
     public UserEntity() {
-        this(null, null, null, null, null, null, null, null, null);
+        this(null, null, null, null, null, null, null, null, null, null);
     }
 
     public UserEntity(String userName) {
-        this(userName, null, null, null, null, null, null, null, null);
+        this(userName, null, null, null, null, null, null, null, null, null);
     }
 
     public Long getId() {
@@ -141,5 +155,29 @@ public class UserEntity {
 
     public void blackListInRoom(RoomEntity room){
         this.excludedRooms.add(room);
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public boolean isTokenExpired() {
+        return tokenExpired;
+    }
+
+    public void setTokenExpired(boolean tokenExpired) {
+        this.tokenExpired = tokenExpired;
+    }
+
+    public Collection<RoleEntity> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Collection<RoleEntity> roles) {
+        this.roles = roles;
     }
 }

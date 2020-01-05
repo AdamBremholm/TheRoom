@@ -19,13 +19,6 @@ public interface UserService extends UserDetailsService {
 
     List<UserEntity> getAll();
 
-    void validatePassword(UserEntity userEntity) throws BadRequestException;
-
-    void validateUserEntity(UserEntity userEntity) throws BadRequestException;
-
-    void checkForDuplicates(UserEntity userEntity) throws ConflictException;
-
-    void encodePassword(UserEntity userEntity);
 
     UserDetails loadUserByUsername(String userName) throws NotFoundException;
 }
