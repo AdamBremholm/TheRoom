@@ -32,6 +32,9 @@ public class UserFactory {
         userModel.setEmail(userEntity.getEmail());
         userModel.setFirstName(userEntity.getFirstName());
         userModel.setLastName(userEntity.getLastName());
+        userModel.setRoles(userEntity.getRoles());
+        userModel.setPermissions(userEntity.getPermissions());
+
 
         if(userEntity.getMessages() != null){
             for(MessageEntity message : userEntity.getMessages()){

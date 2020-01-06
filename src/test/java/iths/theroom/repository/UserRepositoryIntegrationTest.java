@@ -43,7 +43,7 @@ public class UserRepositoryIntegrationTest {
         messageEntity = new MessageEntity();
         messageEntities.add(messageEntity);
 
-        userEntity = new UserEntity("sven", "sve123", "sven@gmail.com", "sve123", "sven", "svensson", new HashSet<>(), null, new AvatarEntity());
+        userEntity = new UserEntity("sven", "sve123", "sven@gmail.com", "sve123", "sven", "svensson", new HashSet<>(), new AvatarEntity(), "USER", "");
 
 
     }

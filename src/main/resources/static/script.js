@@ -47,7 +47,10 @@ function register(event){
             lastName: lastName,
             password: password,
             passwordConfirm : passwordConfirm,
-            email: email
+            email: email,
+            roles: "USER",
+            permissions: ""
+
         })
             .then(function (response) {
                 console.log(response.data);
@@ -67,7 +70,7 @@ function login(event){
    let password = document.querySelector('#password').value.trim();
     event.preventDefault();
     if(name && password) {
-        axios.post('/authenticate', {
+        axios.post('/login', {
             username: name,
             password: password
         })

@@ -1,12 +1,11 @@
+
 package iths.theroom.security;
 
-import io.jsonwebtoken.ExpiredJwtException;
+import com.auth0.jwt.JWT;
+import iths.theroom.entity.UserEntity;
 import iths.theroom.exception.UnauthorizedException;
 import iths.theroom.service.UserService;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.simp.stomp.StompCommand;
@@ -16,11 +15,13 @@ import org.springframework.messaging.support.MessageHeaderAccessor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 
-import java.util.Objects;
+import java.util.List;
+
+
+import static com.auth0.jwt.algorithms.Algorithm.HMAC512;
 
 @Component
 public class JwtChannelInterceptor implements ChannelInterceptor {
@@ -29,67 +30,65 @@ public class JwtChannelInterceptor implements ChannelInterceptor {
     @Autowired
     UserService userService;
 
-    @Autowired
-    JwtTokenUtil jwtTokenUtil;
 
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
-        String username = null;
-        String jwtToken = null;
-        final Log logger = LogFactory.getLog(this.getClass());
 
         StompHeaderAccessor accessor =
                 MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
+        if (accessor == null){
+            throw new UnauthorizedException("No accessor found");
+        }
         if (StompCommand.CONNECT.equals(accessor.getCommand())) {
-            String requestTokenHeader = Objects.requireNonNull(accessor.getNativeHeader("Authorization")).get(0);
 
-            if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
+            String header = null;
+            String jwtToken = null;
 
-                jwtToken = requestTokenHeader.substring(7);
-                try {
-                    username = jwtTokenUtil.getUsernameFromToken(jwtToken);
-                } catch (IllegalArgumentException e) {
-                    throw new UnauthorizedException("");
-                } catch (ExpiredJwtException e) {
-                    throw new UnauthorizedException("Token has expired");
-                } catch (Exception e) {
-                    throw new UnauthorizedException("Token not valid");
-                }
-            } else {
-                logger.warn("JWT Token does not begin with Bearer String");
+            List<String> nativeHeaders = accessor.getNativeHeader(JwtProperties.HEADER_STRING);
+
+            if(nativeHeaders!= null && !nativeHeaders.isEmpty()) {
+                header = nativeHeaders.get(0);
+                if (header != null && header.startsWith(JwtProperties.TOKEN_PREFIX))
+                    jwtToken = header.substring(7);
+                 else
+                    throw new UnauthorizedException("No correctly formatted Authorization header");
             }
-
-            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-
-                try {
-                    UserDetails userDetails = userService.loadUserByUsername(username);
-                    final boolean valid = jwtTokenUtil.validateToken(jwtToken, userDetails);
-
-                    if (valid) {
-
-                        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
-                                userDetails, null, userDetails.getAuthorities());
-                        SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
-                        Authentication user = SecurityContextHolder.getContext().getAuthentication();
-                        accessor.setUser(user);
-                    }
-                    else {
-                        throw new UnauthorizedException("Token not valid");
-                    }
-                } catch (Exception e){
-                    throw new UnauthorizedException("Unable to validate token");
-                }
-
-            }
-
             else {
-                throw new UnauthorizedException("No User found");
+                throw new UnauthorizedException("No correctly formatted Authorization header");
+            }
+
+
+            // If header is present, try grab user principal from database and perform authorization
+            try {
+                Authentication authentication = getUsernamePasswordAuthentication(jwtToken);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+                accessor.setUser(authentication);
+            } catch (Exception e){
+                throw new UnauthorizedException("Could not validate token");
             }
 
         }
         return message;
     }
 
+    private Authentication getUsernamePasswordAuthentication(String token) {
+
+        if (token != null) {
+            String userName = JWT.require(HMAC512(JwtProperties.SECRET.getBytes()))
+                    .build()
+                    .verify(token)
+                    .getSubject();
+            if (userName != null) {
+                UserEntity user = userService.getByUserName(userName);
+                UserPrincipal principal = new UserPrincipal(user);
+                return new UsernamePasswordAuthenticationToken(userName, null, principal.getAuthorities());
+            }
+            return null;
+        }
+        return null;
+    }
+
 
 
 }
+

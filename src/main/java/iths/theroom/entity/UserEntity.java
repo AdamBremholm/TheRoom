@@ -20,11 +20,13 @@ public class UserEntity {
     private String email;
     @Transient
     private String passwordConfirm;
-    @Transient
-    private List<String> roleList;
 
     private String firstName;
     private String lastName;
+
+    private String roles;
+    private String permissions;
+    private int active;
 
     @OneToMany(mappedBy = "sender")
     private Set<MessageEntity> messages;
@@ -38,7 +40,7 @@ public class UserEntity {
     private Set<RoomEntity> excludedRooms;
 
     public UserEntity(String userName, String password, String email,
-                      String passwordConfirm, String firstName, String lastName, Set<MessageEntity> messages, List<String> roleList, AvatarEntity avatarEntity) {
+                      String passwordConfirm, String firstName, String lastName, Set<MessageEntity> messages, AvatarEntity avatarEntity, String roles, String permissions) {
         this.userName = userName;
         this.password = password;
         this.email = email;
@@ -46,17 +48,19 @@ public class UserEntity {
         this.firstName = firstName;
         this.lastName = lastName;
         this.messages = Objects.requireNonNullElse(messages, new HashSet<>());
-        this.roleList = Objects.requireNonNullElse(roleList, new ArrayList<>());
         this.avatarEntity = avatarEntity;
         this.excludedRooms = new HashSet<>();
+        this.roles = Objects.requireNonNullElse(roles, "");;
+        this.permissions = Objects.requireNonNullElse(permissions, "");
+        this.active = 1;
     }
 
     public UserEntity() {
-        this(null, null, null, null, null, null, null, null, null);
+        this(null, null, null, null, null, null, null, null, null, null);
     }
 
     public UserEntity(String userName) {
-        this(userName, null, null, null, null, null, null, null, null);
+        this(userName, null, null, null, null, null, null, null, null, null);
     }
 
     public Long getId() {
@@ -123,13 +127,6 @@ public class UserEntity {
         this.messages = messages;
     }
 
-    public List<String> getRoleList() {
-        return roleList;
-    }
-
-    public void setRoleList(List<String> roleList) {
-        this.roleList = roleList;
-    }
 
     public AvatarEntity getAvatarEntity() {
         return avatarEntity;
@@ -141,5 +138,39 @@ public class UserEntity {
 
     public void blackListInRoom(RoomEntity room){
         this.excludedRooms.add(room);
+    }
+
+    public String getRoles() {
+        return roles;
+    }
+
+    public void setRoles(String roles) {
+        this.roles = roles;
+    }
+
+    public String getPermissions() {
+        return permissions;
+    }
+
+    public void setPermissions(String permissions) {
+        this.permissions = permissions;
+    }
+
+    public int getActive() {
+        return active;
+    }
+
+    public List<String> getRolesAsList(){
+        if(this.roles.length() > 0){
+            return Arrays.asList(this.roles.split(","));
+        }
+        return new ArrayList<>();
+    }
+
+    public List<String> getPermissionsAsList(){
+        if(this.permissions.length() > 0){
+            return Arrays.asList(this.permissions.split(","));
+        }
+        return new ArrayList<>();
     }
 }

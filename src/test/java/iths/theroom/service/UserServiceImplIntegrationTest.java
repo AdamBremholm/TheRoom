@@ -52,14 +52,14 @@ public class UserServiceImplIntegrationTest {
         messageEntity = new MessageEntity();
         messageEntities.add(messageEntity);
         userEntity1 = new UserEntity("sven", "sve123", "sven@gmail.com"
-                , "sve123", "sven", "svensson", new HashSet<>(), null, new AvatarEntity());
+                , "sve123", "sven", "svensson", new HashSet<>(), new AvatarEntity(),"USER", "");
 
         userEntity2 = new UserEntity("johan", "sve123", "johan@gmail.com"
-                , "sve124", "sven", "svensson", new HashSet<>(), null, new AvatarEntity());
+                , "sve124", "sven", "svensson", new HashSet<>(), new AvatarEntity(),"USER", "");
 
 
         userEntity3 = new UserEntity("johan", "sve123", "johan@gmail.com"
-                , "sve123", "sven", "svensson", new HashSet<>(), null, new AvatarEntity());
+                , "sve123", "sven", "svensson", new HashSet<>(), new AvatarEntity(), "ADMIN, USER", "");
         Mockito.when(userRepository.findByUserName(userEntity1.getUserName()))
                 .thenReturn(java.util.Optional.of(userEntity1));
 
