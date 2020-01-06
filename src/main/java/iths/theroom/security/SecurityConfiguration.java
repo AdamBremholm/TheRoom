@@ -2,6 +2,7 @@ package iths.theroom.security;
 
 import iths.theroom.repository.UserRepository;
 import iths.theroom.service.UserPrincipalDetailsService;
+import iths.theroom.service.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -18,11 +19,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private UserPrincipalDetailsService userPrincipalDetailsService;
-    private UserRepository userRepository;
+    private UserService userService;
 
-    public SecurityConfiguration(UserPrincipalDetailsService userPrincipalDetailsService, UserRepository userRepository) {
+    public SecurityConfiguration(UserPrincipalDetailsService userPrincipalDetailsService, UserService userService) {
         this.userPrincipalDetailsService = userPrincipalDetailsService;
-        this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     @Override
@@ -39,10 +40,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 // add jwt filters (1. authentication, 2. authorization)
                 .addFilter(new JwtAuthenticationFilter(authenticationManager()))
-                .addFilter(new JwtAuthorizationFilter(authenticationManager(),  this.userRepository))
+                .addFilter(new JwtAuthorizationFilter(authenticationManager(),  this.userService))
                 .authorizeRequests()
                 // configure access rules
-                .antMatchers(HttpMethod.POST, "/authenticate").permitAll()
+                .antMatchers(HttpMethod.POST, "/login").permitAll()
                 .antMatchers(HttpMethod.POST, "/register").permitAll()
                 .antMatchers(HttpMethod.POST,"/api/users").permitAll()
                 .antMatchers("/", "/index.html", "/script.js", "/style.css", "/favicon.ico").permitAll()

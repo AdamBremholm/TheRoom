@@ -67,7 +67,7 @@ function login(event){
    let password = document.querySelector('#password').value.trim();
     event.preventDefault();
     if(name && password) {
-        axios.post('/authenticate', {
+        axios.post('/login', {
             username: name,
             password: password
         })
