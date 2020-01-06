@@ -96,12 +96,12 @@ function connect(event) {
         stompClient = Stomp.over(socket);
             stompClient.connect({Authorization: "Bearer " + token}, function () {
                 connectionSuccess();
-                document.querySelector('#login-page').classList.add('hidden');
-                document.querySelector('#dialogue-page').classList.remove('hidden');
                 token="";
             }, function (message) {
                 if(message.toString().includes("Unauthorized")){
                     document.querySelector('#login-display-message').textContent = "Unauthorized"
+                } else if(message.toString().includes("AccessDeniedException")){
+                    document.querySelector('#login-display-message').textContent = "Access to this room is denied"
                 }
             });
     }
@@ -109,7 +109,7 @@ function connect(event) {
 }
 function connectionSuccess() {
     document.getElementById("roomTitle").innerHTML = room;
-        stompClient.subscribe('/topic/' + room, onMessageReceived);
+        stompClient.subscribe('/topic/' + room,  onMessageReceivedSubscription);
         stompClient.send("/app/chat.newUser." + room, {}, JSON.stringify({
             sender: name,
             type: 'newUser',
@@ -143,8 +143,16 @@ function sendMessage(event) {
     event.preventDefault();
 }
 
+function onMessageReceivedSubscription(payload){
+        document.querySelector('#login-page').classList.add('hidden');
+        document.querySelector('#dialogue-page').classList.remove('hidden');
+        onMessageReceived(payload)
+
+}
+
 
 function onMessageReceived(payload) {
+
     var message = JSON.parse(payload.body);
     var messageElement = document.createElement('li');
     var textElement = document.createElement('p');
