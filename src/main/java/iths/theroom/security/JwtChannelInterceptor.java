@@ -36,6 +36,9 @@ public class JwtChannelInterceptor implements ChannelInterceptor {
 
         StompHeaderAccessor accessor =
                 MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
+        if (accessor == null){
+            throw new UnauthorizedException("No accessor found");
+        }
         if (StompCommand.CONNECT.equals(accessor.getCommand())) {
 
             String header = null;
@@ -43,18 +46,26 @@ public class JwtChannelInterceptor implements ChannelInterceptor {
 
             List<String> nativeHeaders = accessor.getNativeHeader(JwtProperties.HEADER_STRING);
 
-            if(nativeHeaders!= null && !nativeHeaders.isEmpty())
+            if(nativeHeaders!= null && !nativeHeaders.isEmpty()) {
                 header = nativeHeaders.get(0);
-
-            if (header == null || !header.startsWith(JwtProperties.TOKEN_PREFIX)) {
+                if (header != null && header.startsWith(JwtProperties.TOKEN_PREFIX))
+                    jwtToken = header.substring(7);
+                 else
+                    throw new UnauthorizedException("No correctly formatted Authorization header");
+            }
+            else {
                 throw new UnauthorizedException("No correctly formatted Authorization header");
             }
-            jwtToken = header.substring(7);
+
 
             // If header is present, try grab user principal from database and perform authorization
-            Authentication authentication = getUsernamePasswordAuthentication(jwtToken);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-            accessor.setUser(authentication);
+            try {
+                Authentication authentication = getUsernamePasswordAuthentication(jwtToken);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+                accessor.setUser(authentication);
+            } catch (Exception e){
+                throw new UnauthorizedException("Could not validate token");
+            }
 
         }
         return message;
@@ -67,7 +78,6 @@ public class JwtChannelInterceptor implements ChannelInterceptor {
                     .build()
                     .verify(token)
                     .getSubject();
-
             if (userName != null) {
                 UserEntity user = userService.getByUserName(userName);
                 UserPrincipal principal = new UserPrincipal(user);

@@ -1,6 +1,5 @@
 package iths.theroom.security;
 
-import iths.theroom.repository.UserRepository;
 import iths.theroom.service.UserPrincipalDetailsService;
 import iths.theroom.service.UserService;
 import org.springframework.context.annotation.Bean;
@@ -17,11 +16,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     private UserPrincipalDetailsService userPrincipalDetailsService;
     private UserService userService;
 
-    public SecurityConfiguration(UserPrincipalDetailsService userPrincipalDetailsService, UserService userService) {
+    public WebSecurityConfiguration(UserPrincipalDetailsService userPrincipalDetailsService, UserService userService) {
         this.userPrincipalDetailsService = userPrincipalDetailsService;
         this.userService = userService;
     }
@@ -46,9 +45,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/login").permitAll()
                 .antMatchers(HttpMethod.POST, "/register").permitAll()
                 .antMatchers(HttpMethod.POST,"/api/users").permitAll()
-                .antMatchers("/", "/index.html", "/script.js", "/style.css", "/favicon.ico").permitAll()
+                .antMatchers("/", "/index.html", "/script.js", "/style.css", "/favicon.ico", "/websocketApp/**").permitAll()
                 .antMatchers("/api/messages/*").hasRole("MANAGER")
-                .antMatchers("/api/rooms/").hasRole("ADMIN")
                 .anyRequest().authenticated();
     }
 

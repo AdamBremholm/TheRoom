@@ -24,8 +24,8 @@ public class UserEntity {
     private String firstName;
     private String lastName;
 
-    private String roles = "";
-    private String permissions = "";
+    private String roles;
+    private String permissions;
     private int active;
 
     @OneToMany(mappedBy = "sender")
@@ -40,7 +40,7 @@ public class UserEntity {
     private Set<RoomEntity> excludedRooms;
 
     public UserEntity(String userName, String password, String email,
-                      String passwordConfirm, String firstName, String lastName, Set<MessageEntity> messages, List<String> roleList, AvatarEntity avatarEntity, String roles, String permissions) {
+                      String passwordConfirm, String firstName, String lastName, Set<MessageEntity> messages, AvatarEntity avatarEntity, String roles, String permissions) {
         this.userName = userName;
         this.password = password;
         this.email = email;
@@ -50,17 +50,17 @@ public class UserEntity {
         this.messages = Objects.requireNonNullElse(messages, new HashSet<>());
         this.avatarEntity = avatarEntity;
         this.excludedRooms = new HashSet<>();
-        this.roles = roles;
-        this.permissions = permissions;
+        this.roles = Objects.requireNonNullElse(roles, "");;
+        this.permissions = Objects.requireNonNullElse(permissions, "");
         this.active = 1;
     }
 
     public UserEntity() {
-        this(null, null, null, null, null, null, null, null, null, null, null);
+        this(null, null, null, null, null, null, null, null, null, null);
     }
 
     public UserEntity(String userName) {
-        this(userName, null, null, null, null, null, null, null, null, null, null);
+        this(userName, null, null, null, null, null, null, null, null, null);
     }
 
     public Long getId() {

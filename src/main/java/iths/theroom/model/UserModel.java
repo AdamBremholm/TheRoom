@@ -13,12 +13,12 @@ public class UserModel implements Serializable {
     private String lastName;
 
     private Set<MessageModel> messages;
-    private Set<String> roles;
     private AvatarModel avatar;
+    private String roles;
+    private String permissions;
 
     public UserModel() {
         this.messages = new HashSet<>();
-        this.roles = new HashSet<>();
     }
 
     public String getUserName() {
@@ -57,19 +57,27 @@ public class UserModel implements Serializable {
         return messages;
     }
 
-    public Set<String> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<String> roles) {
-        this.roles = roles;
-    }
-
     public AvatarModel getAvatar() {
         return avatar;
     }
 
     public void setAvatar(AvatarModel avatar) {
         this.avatar = avatar;
+    }
+
+    public String getRoles() {
+        return roles;
+    }
+
+    public void setRoles(String roles) {
+        this.roles = roles;
+    }
+
+    public String getPermissions() {
+        return permissions;
+    }
+
+    public void setPermissions(String permissions) {
+        this.permissions = permissions;
     }
 }

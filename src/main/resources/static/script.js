@@ -47,7 +47,10 @@ function register(event){
             lastName: lastName,
             password: password,
             passwordConfirm : passwordConfirm,
-            email: email
+            email: email,
+            roles: "USER",
+            permissions: ""
+
         })
             .then(function (response) {
                 console.log(response.data);
