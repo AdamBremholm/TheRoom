@@ -39,6 +39,11 @@ public class UserEntity {
     @JoinColumn(name="id", referencedColumnName = "id")
     private Set<RoomEntity> excludedRooms;
 
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.PERSIST}, fetch=FetchType.LAZY)
+    @JoinColumn(name = "profile_id", referencedColumnName = "id")
+    private ProfileEntity profile;
+
+
     public UserEntity(String userName, String password, String email,
                       String passwordConfirm, String firstName, String lastName, Set<MessageEntity> messages, AvatarEntity avatarEntity, String roles, String permissions) {
         this.userName = userName;
