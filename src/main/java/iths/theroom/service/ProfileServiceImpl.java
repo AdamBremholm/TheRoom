@@ -1,9 +1,21 @@
 package iths.theroom.service;
 
 import iths.theroom.model.ProfileModel;
+import iths.theroom.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Service
+@Transactional
 public class ProfileServiceImpl implements ProfileService {
 
+    private final UserRepository userRepository;
+
+    @Autowired
+    public ProfileServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     public ProfileModel getProfile(String email) {

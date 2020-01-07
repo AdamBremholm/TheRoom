@@ -19,7 +19,7 @@ public class ProfileController {
 
     @GetMapping(path="/")
     public ResponseEntity getAll() {
-
+        profileService.getProfiles();
         return ResponseEntity.ok(null);
     }
 
