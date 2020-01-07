@@ -58,6 +58,7 @@ public class UserEntity {
         this.roles = Objects.requireNonNullElse(roles, "");;
         this.permissions = Objects.requireNonNullElse(permissions, "");
         this.active = 1;
+        this.profile = new ProfileEntity();
     }
 
     public UserEntity() {
