@@ -11,6 +11,11 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     @Override
+    public ProfileModel getProfiles() {
+        return null;
+    }
+
+    @Override
     public ProfileModel setAboutMe(String email, String aboutMe) {
         return null;
     }

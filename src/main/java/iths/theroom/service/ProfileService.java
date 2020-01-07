@@ -4,6 +4,7 @@ import iths.theroom.model.ProfileModel;
 
 public interface ProfileService {
         ProfileModel getProfile(String email);
+        ProfileModel getProfiles();
         ProfileModel setAboutMe(String email, String aboutMe);
         ProfileModel setGender(String email, String gender);
         ProfileModel setAge(String email, int age);
