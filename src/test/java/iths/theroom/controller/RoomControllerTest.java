@@ -90,19 +90,17 @@ public class RoomControllerTest {
     @Test
     public void whenGetOneByNameInvalidName_ReturnErrorInResponseBodyAndStatusBadRequest() {
 
-        String expectedErrorDetails = "12345";
+        String expectedErrorDetails = "12345abc";
 
         Mockito.when(roomService.getOneByName(null)).thenThrow(new BadRequestException(expectedErrorDetails));
 
-        ResponseEntity result = roomController.getOneByName(null);
+        try{
+            roomController.getOneByName(null);
+        } catch (BadRequestException e){
 
-        String actualErrorDetails = (String) result.getBody();
-        Assert.assertNotNull(actualErrorDetails);
+            assertTrue(e.getMessage().contains(expectedErrorDetails));
+        }
 
-        int actualStatus = result.getStatusCode().value();
-
-        Assert.assertTrue(actualErrorDetails.contains(expectedErrorDetails));
-        assertEquals(STATUS_BAD_REQUEST, actualStatus);
     }
 
     @Test
