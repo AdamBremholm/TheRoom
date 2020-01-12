@@ -12,13 +12,15 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
 
-public class RoomControllerTest {
+@ActiveProfiles("test")
+public class RoomControllerIntegrationTest {
 
     @Mock
     RoomService roomService;
@@ -87,7 +89,7 @@ public class RoomControllerTest {
         assertEquals(STATUS_OK, actualStatus);
     }
 
-    @Test
+    @Test(expected = BadRequestException.class)
     public void whenGetOneByNameInvalidName_ReturnErrorInResponseBodyAndStatusBadRequest() {
 
         String expectedErrorDetails = "12345";

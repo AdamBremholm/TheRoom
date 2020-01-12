@@ -31,7 +31,7 @@ public class UserEntity {
     @OneToMany(mappedBy = "sender")
     private Set<MessageEntity> messages;
 
-    @OneToOne(mappedBy = "userEntity")
+    @OneToOne(mappedBy = "userEntity", cascade = {CascadeType.PERSIST, CascadeType.PERSIST})
     @JoinColumn(name = "id", referencedColumnName = "id")
     private AvatarEntity avatarEntity;
 
