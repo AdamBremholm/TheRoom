@@ -16,6 +16,7 @@ public class UserModel implements Serializable {
     private AvatarModel avatar;
     private String roles;
     private String permissions;
+    private ProfileModel profileModel;
 
     public UserModel() {
         this.messages = new HashSet<>();
@@ -80,4 +81,8 @@ public class UserModel implements Serializable {
     public void setPermissions(String permissions) {
         this.permissions = permissions;
     }
+
+    public ProfileModel getProfileModel() { return profileModel; }
+
+    public void setProfileModel(ProfileModel profileModel) { this.profileModel = profileModel; }
 }

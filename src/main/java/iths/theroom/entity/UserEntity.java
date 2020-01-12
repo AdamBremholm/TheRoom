@@ -179,4 +179,9 @@ public class UserEntity {
         }
         return new ArrayList<>();
     }
+
+    public ProfileEntity getProfile() { return profile; }
+
+    public void setProfile(ProfileEntity profile) { this.profile = profile; }
+
 }

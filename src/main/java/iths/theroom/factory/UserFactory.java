@@ -7,7 +7,6 @@ import iths.theroom.entity.UserEntity;
 import iths.theroom.model.MessageModel;
 import iths.theroom.model.UserModel;
 import org.springframework.stereotype.Component;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +33,7 @@ public class UserFactory {
         userModel.setLastName(userEntity.getLastName());
         userModel.setRoles(userEntity.getRoles());
         userModel.setPermissions(userEntity.getPermissions());
+        userModel.setProfileModel(ProfileFactory.toModel(userEntity.getProfile()));
 
 
         if(userEntity.getMessages() != null){
