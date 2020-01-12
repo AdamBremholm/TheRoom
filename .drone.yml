@@ -1,0 +1,16 @@
+kind: pipeline
+type: docker
+name: default
+
+steps:
+  - name: theroom
+    image: 3.6.3-jdk-13
+    commands:
+      - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+      - mvn test -B
+      - mvn package -DskipTests=true
+    trigger:
+      branch:
+        - develop
+        - master
+        - f-ci
