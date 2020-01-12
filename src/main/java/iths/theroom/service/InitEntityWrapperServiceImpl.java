@@ -7,14 +7,16 @@ import iths.theroom.exception.NoSuchUserException;
 import iths.theroom.model.RoomModel;
 import iths.theroom.pojos.MessageForm;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class InitEntityWrapperServiceImpl implements InitEntityWrapperService {
 
     private final UserService userService;
     private final RoomService roomService;
 
     @Autowired
-    public InitEntityWrapperServiceImpl(MessageService messageService, UserService userService, RoomService roomService) {
+    public InitEntityWrapperServiceImpl(UserService userService, RoomService roomService) {
         this.userService = userService;
         this.roomService = roomService;
     }
@@ -25,16 +27,15 @@ public class InitEntityWrapperServiceImpl implements InitEntityWrapperService {
             userService.save(createOrFetchUser(form));
         }
         catch (Exception e){
+
         }
         try {
             RoomModel roomModel = roomService.save(createOrFetchRoom(form));
             form.setRoomBackgroundColor(roomModel.getBackgroundColor());
         }
         catch (BadRequestException e){
-
         }
     }
-
 
     private UserEntity createOrFetchUser(MessageForm form) {
         UserEntity user;
@@ -51,7 +52,6 @@ public class InitEntityWrapperServiceImpl implements InitEntityWrapperService {
         return user;
     }
 
-
     private RoomEntity createOrFetchRoom(MessageForm form) {
         RoomEntity room;
         try{
@@ -64,4 +64,4 @@ public class InitEntityWrapperServiceImpl implements InitEntityWrapperService {
         return room;
     }
     }
-
+    

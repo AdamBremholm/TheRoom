@@ -30,7 +30,7 @@ public class WebSocketChatController {
     private final InitEntityWrapperService initEntityWrapperService;
 
     @Autowired
-    public WebSocketChatController(MessageService messageService, UserService userService, RoomService roomService, InitEntityWrapperService initEntityWrapperService) {
+    public WebSocketChatController(MessageService messageService, RoomService roomService, InitEntityWrapperService initEntityWrapperService) {
         this.messageService = messageService;
         this.roomService = roomService;
         this.initEntityWrapperService = initEntityWrapperService;
