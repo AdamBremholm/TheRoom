@@ -79,8 +79,8 @@ function login(event){
                 connect(event);
             })
             .catch(function (error) {
-                console.log(error.response.data.message);
-                document.querySelector('#login-display-message').textContent = error.response.data.message;
+                console.log(error);
+                document.querySelector('#login-display-message').textContent = "403"
             });
     }
 
