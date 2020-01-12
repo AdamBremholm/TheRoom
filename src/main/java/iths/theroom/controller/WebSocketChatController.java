@@ -9,6 +9,7 @@ import iths.theroom.factory.MessageFactory;
 import iths.theroom.model.MessageModel;
 import iths.theroom.model.RoomModel;
 import iths.theroom.pojos.MessageForm;
+import iths.theroom.service.InitEntityWrapperService;
 import iths.theroom.service.MessageService;
 import iths.theroom.service.RoomService;
 import iths.theroom.service.UserService;
@@ -25,16 +26,15 @@ import java.util.Objects;
 public class WebSocketChatController {
 
     private final MessageService messageService;
-    private final UserService userService;
     private final RoomService roomService;
+    private final InitEntityWrapperService initEntityWrapperService;
 
     @Autowired
-    public WebSocketChatController(MessageService messageService, UserService userService, RoomService roomService) {
+    public WebSocketChatController(MessageService messageService, UserService userService, RoomService roomService, InitEntityWrapperService initEntityWrapperService) {
         this.messageService = messageService;
-        this.userService = userService;
         this.roomService = roomService;
+        this.initEntityWrapperService = initEntityWrapperService;
     }
-
 
     @MessageMapping("/chat.sendMessage.{roomName}")
     @SendTo("/topic/{roomName}")
@@ -49,50 +49,7 @@ public class WebSocketChatController {
     @SendTo("/topic/{roomName}")
     public MessageModel newUser(@DestinationVariable String roomName, @Payload MessageForm webSocketChatMessage, SimpMessageHeaderAccessor headerAccessor) {
         Objects.requireNonNull(headerAccessor.getSessionAttributes()).put("username", webSocketChatMessage.getSender());
-        moveToServiceClassLater__InitRoomSession(webSocketChatMessage);
+        initEntityWrapperService.initRoomSession(webSocketChatMessage);
         return MessageFactory.toModel(webSocketChatMessage);
-    }
-
-    private void moveToServiceClassLater__InitRoomSession(MessageForm form){
-        try {
-            userService.save(moveToServiceClassLater__CreateOrFetchUser(form));
-        }
-        catch (Exception e){
-        }
-        try {
-           RoomModel roomModel = roomService.save(moveToServiceClassLater__CreateOrFetchRoom(form));
-           form.setRoomBackgroundColor(roomModel.getBackgroundColor());
-        }
-        catch (BadRequestException e){
-
-        }
-    }
-
-
-    private UserEntity moveToServiceClassLater__CreateOrFetchUser(MessageForm form){
-        UserEntity user;
-        try{
-          return userService.getByUserName(form.getSender());
-        }
-        catch(NoSuchUserException e){
-            user = new UserEntity();
-            user.setUserName(form.getSender());
-            user.setPassword(form.getSender());
-            user.setPasswordConfirm(form.getSender());
-            user.setEmail(form.getSender());
-        }
-    return user;
-    }
-
-    private RoomEntity moveToServiceClassLater__CreateOrFetchRoom(MessageForm form){
-        RoomEntity room;
-        try{
-            return roomService.getOneByNameE(form.getRoomName());
-        }
-        catch(Exception e){
-            room = new RoomEntity();
-            room.setRoomName(form.getRoomName());
-        }
-        return room;
     }
 }
