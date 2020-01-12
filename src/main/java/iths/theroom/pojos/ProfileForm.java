@@ -1,28 +1,34 @@
-package iths.theroom.entity;
+package iths.theroom.pojos;
 
-import javax.persistence.*;
-
-
-@Entity(name= "profile")
-public class ProfileEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class ProfileForm {
+    private String password;
+    private String username;
     private String gender;
     private String country;
     private int age;
     private String aboutMe;
     private String starSign;
-    private long visitors;
 
-public ProfileEntity(){
+    public ProfileForm(){
 
     }
 
-    @OneToOne(mappedBy = "profile")
-    private UserEntity profileOwner;
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
     public String getGender() {
         return gender;
@@ -56,14 +62,6 @@ public ProfileEntity(){
         this.aboutMe = aboutMe;
     }
 
-    public UserEntity getProfileOwner() {
-        return profileOwner;
-    }
-
-    public void setProfileOwner(UserEntity profileOwner) {
-        this.profileOwner = profileOwner;
-    }
-
     public String getStarSign() {
         return starSign;
     }
@@ -72,11 +70,4 @@ public ProfileEntity(){
         this.starSign = starSign;
     }
 
-    public long getVisitors() {
-        return visitors;
-    }
-
-    public void setVisitors(long visitors) {
-        this.visitors = visitors;
-    }
 }
