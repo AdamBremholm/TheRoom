@@ -26,7 +26,9 @@ public class MessageServiceImplIntegrationTest {
     @Before
     public void setUp() {
         MessageEntity message = new MessageEntity();
+        String content = "hello";
         message.setUuid("123abc");
+        message.setContent(content);
 
         Mockito.when(messageRepository.findByUuid(message.getUuid()))
                 .thenReturn(java.util.Optional.of(message));

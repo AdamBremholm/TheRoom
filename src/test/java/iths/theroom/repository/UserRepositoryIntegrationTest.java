@@ -56,7 +56,7 @@ public class UserRepositoryIntegrationTest {
     @Test
     public void getByUuid() {
         entityManager.persist(userEntity);
-        assertThat(userRepository.findByUserName(userEntity.getUserName()).orElseThrow(NoSuchElementException::new)).isEqualTo(userEntity);
+        assertThat(userRepository.findByUserName(userEntity.getUserName()).orElseThrow(NoSuchElementException::new).getUserName()).isEqualTo(userEntity.getUserName());
     }
 
 
