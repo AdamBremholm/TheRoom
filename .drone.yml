@@ -21,8 +21,6 @@ steps:
       api_key:
         from_secret: github_token
       files: /drone/src/target/*
-    when:
-      event: tag
 
   - name: notify
     image: plugins/slack-blame
