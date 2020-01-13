@@ -60,7 +60,6 @@ public class RoomControllerIntegrationTest {
         assertNotNull(result);
         int actualListSize = result.size();
         assertEquals(expectedListSize, actualListSize);
-
     }
 
     @Test
@@ -102,6 +101,21 @@ public class RoomControllerIntegrationTest {
         Mockito.when(roomService.updateRoom("", roomEntity)).thenReturn(roomModel1);
 
         RoomModel result = roomController.updateRoom(roomEntity, "");
+
+        Assert.assertNotNull(result);
+        String actualRoomName = result.getRoomName();
+
+        Assert.assertEquals(expectedRoomName, actualRoomName);
+    }
+
+    @Test
+    public void whenDeleteRoom_ReturnRoomModel(){
+
+        String expectedRoomName = roomModel2.getRoomName();
+
+        Mockito.when(roomService.deleteRoom("")).thenReturn(roomModel2);
+
+        RoomModel result = roomController.deleteRoom("");
 
         Assert.assertNotNull(result);
         String actualRoomName = result.getRoomName();
