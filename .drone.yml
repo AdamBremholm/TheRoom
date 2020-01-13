@@ -29,6 +29,6 @@ steps:
       token: $SLACK_TOKEN
       channel: general
       success_template: |
-        The build is fixed! Thanks @{{slack.name}}
+        The build is fixed! Thanks @{{user.name}}
       failure_template: |
-        The build is broken! Blame {{slack.name}}
+        The build is broken! Blame {{user.name}}
