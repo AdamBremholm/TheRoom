@@ -1,6 +1,7 @@
 package iths.theroom.service;
 
 import iths.theroom.entity.RoomEntity;
+import iths.theroom.exception.BadRequestException;
 import iths.theroom.factory.RoomFactory;
 import iths.theroom.model.RoomModel;
 import iths.theroom.repository.RoomRepository;
@@ -87,5 +88,11 @@ public class RoomServiceImplTest {
         String actualRoomName = result.getRoomName();
 
         assertEquals(expectedRoomName, actualRoomName);
+    }
+
+    @Test(expected = BadRequestException.class)
+    public void whenGetOneByName_IfNameIsNullThrowBadRequestException(){
+
+        roomService.getOneByName(null);
     }
 }
