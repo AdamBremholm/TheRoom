@@ -22,13 +22,15 @@ steps:
 
   - name: notify
     image: plugins/slack-blame
+    commands:
+      - echo $TOKEN
     environment:
-      SLACK_TOKEN:
-        from_secret: SLACK_TOKEN
+      TOKEN:
+        from_secret: slack-token
     settings:
-      token: $SLACK_TOKEN
+      token: $TOKEN
       channel: general
       success_template: |
-        The build is fixed! Thanks
+        The build is fixed! Thanks @{{slack.name}}
       failure_template: |
-        The build is broken! Blame
+        The build is broken! Blame {{slack.name}}
