@@ -29,6 +29,6 @@ steps:
       token: $SLACK_TOKEN
       channel: general
       success_template: |
-        The build is fixed! Thanks @{{user.name}}
+        The build is fixed! Thanks
       failure_template: |
-        The build is broken! Blame {{user.name}}
+        The build is broken! Blame
