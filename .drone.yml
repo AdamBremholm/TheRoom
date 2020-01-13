@@ -3,7 +3,7 @@ type: docker
 name: default
 
 steps:
-  - name: install
+  - name: build
     image: maven:3.6.3-jdk-11
     commands:
       - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
@@ -13,7 +13,7 @@ steps:
         - master
         - f-ci-jar-download-steps
 
-  - name: test
+  - name: build1
       image: maven:3.6.3-jdk-11
       commands:
         - mvn test -B
@@ -23,7 +23,7 @@ steps:
           - master
           - f-ci-jar-download-steps
 
-  - name: package
+  - name: build2
       image: maven:3.6.3-jdk-11
       commands:
         - mvn package -DskipTests=true
