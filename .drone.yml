@@ -3,14 +3,43 @@ type: docker
 name: default
 
 steps:
-  - name: theroom
+  - name: install
     image: maven:3.6.3-jdk-11
     commands:
       - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
-      - mvn test -B
-      - mvn package -DskipTests=true
     trigger:
       branch:
         - develop
         - master
-        - f-ci
+        - f-ci-jar-download-steps
+  - name: test
+      image: maven:3.6.3-jdk-11
+      commands:
+        - mvn test -B
+      trigger:
+        branch:
+          - develop
+          - master
+          - f-ci-jar-download-steps
+  - name: package
+      image: maven:3.6.3-jdk-11
+      commands:
+        - mvn package -DskipTests=true
+      trigger:
+        branch:
+          - develop
+          - master
+          - f-ci-jar-download-steps
+  - name: download
+    image: plugins/download
+    settings:
+      source: https://github.com/drone/drone-cli/releases/download/v0.8.5/drone_linux_amd64.tar.gz
+  - name: notify
+      image: plugins/slack-blame
+      settings:
+        token: SLACK_TOKEN
+        channel: general
+        success_template: |
+          The build is fixed! Thanks @{{slack.name}}
+        failure_template: |
+          The build is broken! Blame {{slack.name}}
