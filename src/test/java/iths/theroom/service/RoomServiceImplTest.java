@@ -128,4 +128,20 @@ public class RoomServiceImplTest {
         when(roomRepository.getOneByRoomName("")).thenReturn(Optional.empty());
         roomService.getOneEntityByName("");
     }
+
+    @Test
+    public void whenSave_IfRoomExistsOnlyReturnRoomModel(){
+
+        String expectedRoomName = roomModel1.getRoomName();
+        when(roomRepository.getOneByRoomName(roomEntity1.getRoomName())).thenReturn(Optional.of(roomEntity1));
+        when(roomFactory.entityToModel(roomEntity1)).thenReturn(roomModel1);
+
+        RoomModel result = roomService.save(roomEntity1);
+        assertNotNull(result);
+        verify(roomRepository, times(0)).saveAndFlush(roomEntity1);
+
+        String actualRoomName = result.getRoomName();
+        assertEquals(expectedRoomName, actualRoomName);
+    }
+
 }
