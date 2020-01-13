@@ -29,7 +29,7 @@ steps:
     settings:
       token:
         from_secret: slack-token
-      channel: general
+      channel: drone
       success_template: |
         The build is fixed! Thanks @{{user.name}}
       failure_template: |
