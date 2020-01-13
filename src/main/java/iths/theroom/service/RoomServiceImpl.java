@@ -3,7 +3,6 @@ package iths.theroom.service;
 import iths.theroom.entity.RoomEntity;
 import iths.theroom.exception.BadRequestException;
 import iths.theroom.exception.NotFoundException;
-import iths.theroom.factory.EntityFactory;
 import iths.theroom.factory.RoomFactory;
 import iths.theroom.model.RoomModel;
 import iths.theroom.pojos.MessageForm;
@@ -19,7 +18,7 @@ import java.util.Optional;
 @Transactional
 public class RoomServiceImpl implements RoomService {
 
-    private final EntityFactory<RoomModel, RoomEntity> entityFactory;
+    private final RoomFactory entityFactory;
     private final RoomRepository roomRepository;
 
     @Autowired

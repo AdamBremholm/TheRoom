@@ -4,20 +4,13 @@ import iths.theroom.entity.MessageEntity;
 import iths.theroom.entity.RoomEntity;
 import iths.theroom.model.MessageModel;
 import iths.theroom.model.RoomModel;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("Duplicates")
 @Component
-public class RoomFactory implements EntityFactory<RoomModel, RoomEntity> {
-
-    private final MessageFactory messageFactory;
-
-    @Autowired
-    public RoomFactory(MessageFactory messageFactory) {
-        this.messageFactory = messageFactory;
-    }
+public class RoomFactory {
 
     public RoomModel entityToModel(RoomEntity roomEntity) {
         RoomModel roomModel = new RoomModel();
