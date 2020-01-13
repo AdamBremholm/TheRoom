@@ -89,7 +89,7 @@ public class RoomControllerIntegrationTest {
         assertEquals(STATUS_OK, actualStatus);
     }
 
-    @Test(expected = BadRequestException.class)
+    @Test
     public void whenGetOneByNameInvalidName_ReturnErrorInResponseBodyAndStatusBadRequest() {
 
         String expectedErrorDetails = "12345abc";
@@ -99,7 +99,6 @@ public class RoomControllerIntegrationTest {
         try{
             roomController.getOneByName(null);
         } catch (BadRequestException e){
-
             assertTrue(e.getMessage().contains(expectedErrorDetails));
         }
 
