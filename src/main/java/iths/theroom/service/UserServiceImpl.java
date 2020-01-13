@@ -1,18 +1,20 @@
 package iths.theroom.service;
 
 import iths.theroom.entity.UserEntity;
-import iths.theroom.exception.BadRequestException;
-import iths.theroom.exception.ConflictException;
-import iths.theroom.exception.NoSuchUserException;
-import iths.theroom.exception.NotFoundException;
+import iths.theroom.exception.*;
 import iths.theroom.repository.UserRepository;
+import iths.theroom.security.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -102,5 +104,26 @@ public class UserServiceImpl implements UserService {
         }
         return new org.springframework.security.core.userdetails.User(optUserEntity.get().getUserName(), optUserEntity.get().getPassword(),
                 new ArrayList<>());
+    }
+
+    @Override
+    public boolean isUserWhoItClaimsToBe(String username, HttpServletRequest req) {
+
+        String requestingUserName = req.getUserPrincipal().getName();
+        if(requestingUserName.equals(username)){
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public UserEntity updateUser(UserEntity userEntity) {
+        try {
+            userRepository.save(userEntity);
+        }
+        catch(Exception e){
+            throw new ConflictException("Internal server error");
+        }
+        return getByUserName(userEntity.getUserName());
     }
 }

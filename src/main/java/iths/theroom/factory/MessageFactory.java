@@ -22,7 +22,9 @@ public class MessageFactory {
         messageModel.setSender(messageEntity.getSender().getUserName());
         messageModel.setRoom(messageEntity.getRoomEntity().getRoomName());
         messageModel.setTime(messageEntity.getTime().truncatedTo(ChronoUnit.MINUTES).toString());
-        messageModel.setType(messageEntity.getType().name());
+        if(messageEntity.getType()!=null) {
+            messageModel.setType(messageEntity.getType().name());
+        }
         messageModel.setRoomBackgroundColor(messageEntity.getRoomEntity().getBackgroundColor());
 
         Optional.ofNullable(messageEntity.getMessageRatingEntity()).ifPresent(messageRatingEntity -> {

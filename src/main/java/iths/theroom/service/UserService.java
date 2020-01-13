@@ -7,6 +7,7 @@ import iths.theroom.exception.NotFoundException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 public interface UserService extends UserDetailsService {
@@ -19,6 +20,9 @@ public interface UserService extends UserDetailsService {
 
     List<UserEntity> getAll();
 
-
     UserDetails loadUserByUsername(String userName) throws NotFoundException;
+
+    boolean isUserWhoItClaimsToBe(String username, HttpServletRequest req);
+
+    UserEntity updateUser(UserEntity userEntity);
 }

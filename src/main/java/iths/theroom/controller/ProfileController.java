@@ -1,10 +1,12 @@
 package iths.theroom.controller;
 
-import iths.theroom.entity.ProfileEntity;
+import iths.theroom.model.ProfileModel;
+import iths.theroom.pojos.ProfileForm;
 import iths.theroom.service.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping(path="/theroom/profile")
@@ -17,21 +19,10 @@ public class ProfileController {
         this.profileService = profileService;
     }
 
-    @GetMapping(path="/")
-    public ResponseEntity getAll() {
-        profileService.getProfiles();
-        return ResponseEntity.ok(null);
-    }
 
-    @GetMapping(path="/{email}")
-    public ResponseEntity getOneByEmail(@PathVariable("email") String email) {
-
-        return ResponseEntity.ok(null);
-    }
-
-    @PutMapping(path = "/{email}")
-    public ResponseEntity updateProfile(@RequestBody ProfileEntity profileEntity, @PathVariable("email") String email) {
-        return ResponseEntity.ok(null);
+    @PostMapping("/profile")
+    public ProfileModel addMessage(HttpServletRequest req, @RequestBody ProfileForm form) {
+        return profileService.save(form, req);
     }
 
     }
