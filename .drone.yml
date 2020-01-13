@@ -4,7 +4,7 @@ name: default
 
 steps:
   - name: theroom
-    image: 3.6.3-jdk-13
+    image: maven:3.6.3-jdk-11
     commands:
       - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
       - mvn test -B
