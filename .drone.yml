@@ -21,11 +21,11 @@ steps:
       source: https://github.com/drone/drone-cli/releases/download/v0.8.5/drone_linux_amd64.tar.gz
 
   - name: notify
-      image: plugins/slack-blame
-      settings:
-        token: SLACK_TOKEN
-        channel: general
-        success_template: |
-          The build is fixed! Thanks @{{slack.name}}
-        failure_template: |
-          The build is broken! Blame {{slack.name}}
+    image: plugins/slack-blame
+    settings:
+      token: SLACK_TOKEN
+      channel: general
+      success_template: |
+        The build is fixed! Thanks @{{slack.name}}
+      failure_template: |
+        The build is broken! Blame {{slack.name}}
