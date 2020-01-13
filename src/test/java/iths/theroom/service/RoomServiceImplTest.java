@@ -115,4 +115,10 @@ public class RoomServiceImplTest {
         String actualRoomName = result.getRoomName();
         assertEquals(expectedRoomName, actualRoomName);
     }
+
+    @Test(expected = BadRequestException.class)
+    public void whenGetOneEntityByName_IfNameIsNullThrowBadRequestException(){
+
+        roomService.getOneEntityByName(null);
+    }
 }
