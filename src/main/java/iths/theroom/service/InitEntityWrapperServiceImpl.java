@@ -55,7 +55,7 @@ public class InitEntityWrapperServiceImpl implements InitEntityWrapperService {
     private RoomEntity createOrFetchRoom(MessageForm form) {
         RoomEntity room;
         try{
-            return roomService.getOneByNameE(form.getRoomName());
+            return roomService.getOneEntityByName(form.getRoomName());
         }
         catch(Exception e){
             room = new RoomEntity();
@@ -64,4 +64,3 @@ public class InitEntityWrapperServiceImpl implements InitEntityWrapperService {
         return room;
     }
     }
-    

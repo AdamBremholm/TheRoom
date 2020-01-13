@@ -35,7 +35,7 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public RoomModel getOneByName(String name) {
+    public RoomModel getOneModelByName(String name) {
 
         if(name == null){
             throw new BadRequestException("Missing critical path parameter: 'name'");
@@ -47,7 +47,7 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public RoomEntity getOneByNameE(String name) {
+    public RoomEntity getOneEntityByName(String name) {
 
         if(name == null){
             throw new BadRequestException("Missing critical path parameter: 'name'");
