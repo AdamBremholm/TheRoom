@@ -22,8 +22,6 @@ steps:
 
   - name: notify
     image: plugins/slack-blame
-    commands:
-      - echo $TOKEN
     environment:
       TOKEN:
         from_secret: slack-token
