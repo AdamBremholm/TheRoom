@@ -18,12 +18,12 @@ import java.util.Optional;
 @Transactional
 public class RoomServiceImpl implements RoomService {
 
-    private final RoomFactory entityFactory;
+    private final RoomFactory roomFactory;
     private final RoomRepository roomRepository;
 
     @Autowired
-    public RoomServiceImpl(RoomFactory entityFactory, RoomRepository roomRepository) {
-        this.entityFactory = entityFactory;
+    public RoomServiceImpl(RoomFactory roomFactory, RoomRepository roomRepository) {
+        this.roomFactory = roomFactory;
         this.roomRepository = roomRepository;
     }
 
@@ -31,8 +31,7 @@ public class RoomServiceImpl implements RoomService {
     public List<RoomModel> getAllRooms() {
 
         List<RoomEntity> roomEntities = roomRepository.findAll();
-        return entityFactory.entityToModel(roomEntities);
-
+        return roomFactory.entityToModel(roomEntities);
     }
 
     @Override
@@ -44,9 +43,8 @@ public class RoomServiceImpl implements RoomService {
 
         RoomEntity roomEntity = checkIfRoomExists(name);
 
-        return entityFactory.entityToModel(roomEntity);
+        return roomFactory.entityToModel(roomEntity);
     }
-
 
     @Override
     public RoomEntity getOneByNameE(String name) {
@@ -55,9 +53,7 @@ public class RoomServiceImpl implements RoomService {
             throw new BadRequestException("Missing critical path parameter: 'name'");
         }
 
-        RoomEntity roomEntity = checkIfRoomExists(name);
-
-        return roomEntity;
+        return checkIfRoomExists(name);
     }
 
     @Override
@@ -65,14 +61,13 @@ public class RoomServiceImpl implements RoomService {
 
         validate(roomEntity);
         Optional<RoomEntity> optionalRoomEntity = roomRepository.getOneByRoomName(roomEntity.getRoomName());
-        RoomEntity savedRoomEntity = null;
+        RoomEntity savedRoomEntity;
         if(optionalRoomEntity.isEmpty()) {
             savedRoomEntity = roomRepository.saveAndFlush(roomEntity);
-            return entityFactory.entityToModel(savedRoomEntity);
+            return roomFactory.entityToModel(savedRoomEntity);
         } else {
-            return entityFactory.entityToModel(optionalRoomEntity.get());
+            return roomFactory.entityToModel(optionalRoomEntity.get());
         }
-
     }
 
     @Override
@@ -84,8 +79,7 @@ public class RoomServiceImpl implements RoomService {
         roomEntityToUpdate.setBackgroundColor(roomEntity.getBackgroundColor());
 
         RoomEntity updatedRoomEntity = roomRepository.saveAndFlush(roomEntityToUpdate);
-        return entityFactory.entityToModel(updatedRoomEntity);
-
+        return roomFactory.entityToModel(updatedRoomEntity);
     }
 
     @Override
@@ -108,7 +102,7 @@ public class RoomServiceImpl implements RoomService {
             throw new BadRequestException(e.getMessage());
         }
 
-        return entityFactory.entityToModel(roomToDelete);
+        return roomFactory.entityToModel(roomToDelete);
     }
 
     private RoomEntity checkIfRoomExists(String name) {
@@ -123,12 +117,10 @@ public class RoomServiceImpl implements RoomService {
         }
     }
 
-
     private void validate(RoomEntity roomEntity) throws BadRequestException {
 
         if(roomEntity.getRoomName() == null) {
             throw new BadRequestException("Missing critical field: roomName");
         }
-
     }
 }
