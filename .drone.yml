@@ -15,10 +15,14 @@ steps:
         - master
         - f-ci-jar-download-steps
 
-  - name: download
-    image: plugins/download
+  - name: publish
+    image: plugins/github-release
     settings:
-      source: https://github.com/drone/drone-cli/releases/download/v0.8.5/drone_linux_amd64.tar.gz
+      api_key:
+        from_secret: github_token
+      files: /drone/src/target/*
+    when:
+      event: tag
 
   - name: notify
     image: plugins/slack-blame
@@ -27,6 +31,6 @@ steps:
         from_secret: slack-token
       channel: general
       success_template: |
-        The build is fixed! Thanks @{{slack.name}}
+        The build is fixed! Thanks @{{user.name}}
       failure_template: |
-        The build is broken! Blame {{slack.name}}
+        The build is broken! Blame {{user.name}}
