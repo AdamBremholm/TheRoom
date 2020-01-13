@@ -22,11 +22,9 @@ steps:
 
   - name: notify
     image: plugins/slack-blame
-    environment:
-      TOKEN:
-        from_secret: slack-token
     settings:
-      token: $TOKEN
+      token:
+        from_secret: slack-token
       channel: general
       success_template: |
         The build is fixed! Thanks @{{slack.name}}
