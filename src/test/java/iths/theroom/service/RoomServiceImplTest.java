@@ -144,4 +144,20 @@ public class RoomServiceImplTest {
         assertEquals(expectedRoomName, actualRoomName);
     }
 
+    @Test
+    public void whenSave_IfRoomDoesntExistSaveAndReturnRoomModel(){
+
+        String expectedRoomName = roomModel1.getRoomName();
+        when(roomRepository.getOneByRoomName(roomEntity1.getRoomName())).thenReturn(Optional.empty());
+        when(roomRepository.saveAndFlush(roomEntity1)).thenReturn(roomEntity1);
+        when(roomFactory.entityToModel(roomEntity1)).thenReturn(roomModel1);
+
+        RoomModel result = roomService.save(roomEntity1);
+        assertNotNull(result);
+        verify(roomRepository, times(1)).saveAndFlush(roomEntity1);
+
+        String actualRoomName = result.getRoomName();
+        assertEquals(expectedRoomName, actualRoomName);
+    }
+
 }
