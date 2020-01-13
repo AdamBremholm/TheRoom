@@ -121,4 +121,11 @@ public class RoomServiceImplTest {
 
         roomService.getOneEntityByName(null);
     }
+
+    @Test(expected = NotFoundException.class)
+    public void whenGetOneEntityByName_IfRoomDoesntExistThrowNotFoundException(){
+
+        when(roomRepository.getOneByRoomName("")).thenReturn(Optional.empty());
+        roomService.getOneEntityByName("");
+    }
 }
