@@ -60,15 +60,12 @@ public class RoomControllerIntegrationTest {
 
         Mockito.when(roomService.getAllRooms()).thenReturn(roomModels);
 
-        ResponseEntity result = roomController.getAll();
+        List<RoomModel> result = roomController.getAll();
 
-        List resultList = (List) result.getBody();
-        assertNotNull(resultList);
-        int actualListSize = resultList.size();
-        int actualStatus = result.getStatusCode().value();
-
+        assertNotNull(result);
+        int actualListSize = result.size();
         assertEquals(expectedListSize, actualListSize);
-        assertEquals(STATUS_OK, actualStatus);
+
     }
 
     @Test
@@ -78,15 +75,12 @@ public class RoomControllerIntegrationTest {
 
         Mockito.when(roomService.getOneByName("")).thenReturn(roomModel1);
 
-        ResponseEntity result = roomController.getOneByName("");
+        RoomModel result = roomController.getOneByName("");
 
-        RoomModel resultModel = (RoomModel) result.getBody();
-        Assert.assertNotNull(resultModel);
-        String actualRoomName = resultModel.getRoomName();
-        int actualStatus = result.getStatusCode().value();
+        Assert.assertNotNull(result);
+        String actualRoomName = result.getRoomName();
 
         Assert.assertEquals(expectedRoomName, actualRoomName);
-        assertEquals(STATUS_OK, actualStatus);
     }
 
     @Test
@@ -111,15 +105,12 @@ public class RoomControllerIntegrationTest {
 
         Mockito.when(roomService.save(roomEntity)).thenReturn(roomModel1);
 
-        ResponseEntity result = roomController.createRoom(roomEntity);
+        RoomModel result = roomController.createRoom(roomEntity);
 
-        RoomModel resultModel = (RoomModel) result.getBody();
-        Assert.assertNotNull(resultModel);
-        String actualRoomName = resultModel.getRoomName();
-        int actualStatus = result.getStatusCode().value();
+        Assert.assertNotNull(result);
+        String actualRoomName = result.getRoomName();
 
         Assert.assertEquals(expectedRoomName, actualRoomName);
-        assertEquals(STATUS_CREATED, actualStatus);
     }
 
 }
