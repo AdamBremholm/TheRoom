@@ -1,5 +1,7 @@
 # TheRoom
 
+[![Build Status](https://drone.kepr.org/api/badges/AdamBremholm/TheRoom/status.svg)](https://drone.kepr.org/AdamBremholm/TheRoom)
+
 ## mySQL setup:
 * create database theroom;
 * create user 'springuser'@'%' identified by 'ThePassword';
