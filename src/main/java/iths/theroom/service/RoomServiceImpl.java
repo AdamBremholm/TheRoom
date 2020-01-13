@@ -61,10 +61,11 @@ public class RoomServiceImpl implements RoomService {
 
         validate(roomEntity);
         Optional<RoomEntity> optionalRoomEntity = roomRepository.getOneByRoomName(roomEntity.getRoomName());
-        RoomEntity savedRoomEntity;
+
         if(optionalRoomEntity.isEmpty()) {
-            savedRoomEntity = roomRepository.saveAndFlush(roomEntity);
+            RoomEntity savedRoomEntity = roomRepository.saveAndFlush(roomEntity);
             return roomFactory.entityToModel(savedRoomEntity);
+
         } else {
             return roomFactory.entityToModel(optionalRoomEntity.get());
         }
