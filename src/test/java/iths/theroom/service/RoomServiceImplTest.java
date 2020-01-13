@@ -12,6 +12,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -42,6 +43,9 @@ public class RoomServiceImplTest {
 
         roomEntity1 = new RoomEntity();
         roomEntity2 = new RoomEntity();
+        roomEntity1.setRoomName("RoomName1");
+        roomEntity2.setRoomName("RoomName2");
+
         roomModel1 = new RoomModel();
         roomModel2 = new RoomModel();
         roomModel1.setRoomName("RoomName1");
@@ -66,5 +70,22 @@ public class RoomServiceImplTest {
 
         assertNotNull(resultList);
         assertEquals(roomModels, resultList);
+    }
+
+    @Test
+    public void whenGetOneByName_ReturnRoomModel(){
+
+        String expectedRoomName = roomModel1.getRoomName();
+
+        when(roomRepository.getOneByRoomName(expectedRoomName)).thenReturn(Optional.of(roomEntity1));
+        when(roomFactory.entityToModel(roomEntity1)).thenReturn(roomModel1);
+
+        RoomModel result = roomService.getOneByName(expectedRoomName);
+
+        assertNotNull(result);
+
+        String actualRoomName = result.getRoomName();
+
+        assertEquals(expectedRoomName, actualRoomName);
     }
 }
