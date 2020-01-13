@@ -75,7 +75,7 @@ public class RoomServiceImplTest {
     }
 
     @Test
-    public void whenGetOneByName_ReturnRoomModel(){
+    public void whenGetOneModelByName_ReturnRoomModel(){
 
         String expectedRoomName = roomModel1.getRoomName();
 
@@ -90,15 +90,29 @@ public class RoomServiceImplTest {
     }
 
     @Test(expected = BadRequestException.class)
-    public void whenGetOneByName_IfNameIsNullThrowBadRequestException(){
+    public void whenGetOneModelByName_IfNameIsNullThrowBadRequestException(){
 
         roomService.getOneModelByName(null);
     }
 
     @Test(expected = NotFoundException.class)
-    public void whenGetOneByName_IfRoomDoesntExistThrowNotFoundException(){
+    public void whenGetOneModelByName_IfRoomDoesntExistThrowNotFoundException(){
 
         when(roomRepository.getOneByRoomName("")).thenReturn(Optional.empty());
         roomService.getOneModelByName("");
+    }
+
+    @Test
+    public void whenGetOneEntityByName_ReturnRoomEntity(){
+
+        String expectedRoomName = roomEntity1.getRoomName();
+
+        when(roomRepository.getOneByRoomName(expectedRoomName)).thenReturn(Optional.of(roomEntity1));
+
+        RoomEntity result = roomService.getOneEntityByName(expectedRoomName);
+        assertNotNull(result);
+
+        String actualRoomName = result.getRoomName();
+        assertEquals(expectedRoomName, actualRoomName);
     }
 }
