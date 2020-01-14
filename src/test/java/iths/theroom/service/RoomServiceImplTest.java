@@ -239,4 +239,11 @@ public class RoomServiceImplTest {
         verify(roomRepository, times(1)).delete(roomEntity1);
     }
 
+    @Test(expected = NotFoundException.class)
+    public void whenDeleteRoom_IfRoomNotExistThrowNotFoundException(){
+
+        when(roomRepository.getOneByRoomName("")).thenReturn(Optional.empty());
+        roomService.deleteRoom("");
+    }
+
 }
