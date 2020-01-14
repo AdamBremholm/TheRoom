@@ -13,7 +13,14 @@ steps:
       branch:
         - develop
         - master
-        - f-ci-jar-download-steps
+        - f-new-slack-plugin
+
+  - name: slack
+    image: plugins/slack
+    settings:
+      webhook:
+        from_secret: slack-webhook
+      channel: drone
 
   - name: publish
     image: plugins/github-release
