@@ -218,4 +218,14 @@ public class RoomServiceImplTest {
         assertEquals(expectedRoomColorAfterUpdate, actualRoomColorAfterUpdate);
     }
 
+    @Test(expected = NotFoundException.class)
+    public void whenUpdateRoomMessageForm_IfRoomDoesntExistThrowNotFoundException(){
+
+        MessageForm messageForm = new MessageForm();
+        messageForm.setRoomName("");
+
+        when(roomRepository.getOneByRoomName("")).thenReturn(Optional.empty());
+        roomService.updateRoom(messageForm);
+    }
+
 }
