@@ -13,7 +13,7 @@ public interface MessageService {
     void remove(String uuid);
     List<MessageModel> getAllMessagesFromUser(String userName, String roomName, String count);
 
-    int decreaseMessageRating(String uuid);
+    MessageModel decreaseMessageRating(String uuid, String userName);
 
-    int increaseMessageRating(String uuid);
+    MessageModel increaseMessageRating(String uuid, String userName);
 }
