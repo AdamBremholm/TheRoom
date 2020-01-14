@@ -16,13 +16,13 @@ import static org.junit.Assert.*;
 
 public class RoomFactoryTest {
 
-    RoomFactory roomFactory;
-    RoomEntity roomEntity1;
-    RoomEntity roomEntity2;
-    MessageEntity messageEntity1;
-    MessageEntity messageEntity2;
+    private RoomFactory roomFactory;
+    private RoomEntity roomEntity1;
+    private RoomEntity roomEntity2;
+    private MessageEntity messageEntity1;
+    private MessageEntity messageEntity2;
 
-    List<RoomEntity> roomEntities;
+    private List<RoomEntity> roomEntities;
 
     @Before
     public void setUp(){
@@ -79,6 +79,18 @@ public class RoomFactoryTest {
     public void entityToModel_IfMessagesIsNullDontThrowException(){
         RoomModel result = roomFactory.entityToModel(roomEntity2);
         assertNotNull(result);
+    }
+
+    @Test
+    public void entityListToModelList_ReturnValidModelList(){
+
+        int expectedListSize = roomEntities.size();
+
+        List<RoomModel> result = roomFactory.entityToModel(roomEntities);
+        assertNotNull(result);
+
+        int actualListSize = result.size();
+        assertEquals(expectedListSize, actualListSize);
     }
 
 }
