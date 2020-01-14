@@ -2,7 +2,6 @@ package iths.theroom.entity;
 
 import javax.persistence.*;
 
-
 @Entity(name= "profile")
 public class ProfileEntity {
 
@@ -16,9 +15,7 @@ public class ProfileEntity {
     private String starSign;
     private long visitors;
 
-public ProfileEntity(){
-
-    }
+public ProfileEntity(){}
 
     @OneToOne(mappedBy = "profile")
     private UserEntity profileOwner;

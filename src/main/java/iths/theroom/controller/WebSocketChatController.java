@@ -1,6 +1,5 @@
 package iths.theroom.controller;
 
-
 import iths.theroom.enums.Type;
 import iths.theroom.factory.MessageFactory;
 import iths.theroom.model.MessageModel;
