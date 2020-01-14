@@ -107,7 +107,6 @@ public class JwtChannelInterceptor implements ChannelInterceptor {
         if(roomUrl != null && roomUrl.contains(".")) {
             roomUrlSegments = roomUrl.split("\\.");
             int segments = roomUrlSegments.length;
-            System.out.println(segments);
 
             if(segments > 0) {
                 roomName = roomUrlSegments[segments - 1];
