@@ -228,4 +228,15 @@ public class RoomServiceImplTest {
         roomService.updateRoom(messageForm);
     }
 
+    @Test
+    public void whenDeleteRoom_DeleteAndReturnRoomModel(){
+
+        when(roomRepository.getOneByRoomName("")).thenReturn(Optional.of(roomEntity1));
+        when(roomFactory.entityToModel(roomEntity1)).thenReturn(roomModel1);
+
+        RoomModel roomModel = roomService.deleteRoom("");
+        assertNotNull(roomModel);
+        verify(roomRepository, times(1)).delete(roomEntity1);
+    }
+
 }
