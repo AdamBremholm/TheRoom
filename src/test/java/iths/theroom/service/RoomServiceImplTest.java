@@ -162,6 +162,7 @@ public class RoomServiceImplTest {
 
     @Test
     public void whenUpdateRoom_IfRoomExistSaveWithNewDataAndReturnRoomModel(){
+
         String expectedRoomNameAfterUpdate = roomEntity2.getRoomName();
         when(roomRepository.getOneByRoomName(roomEntity1.getRoomName())).thenReturn(Optional.of(roomEntity1));
         when(roomRepository.saveAndFlush(roomEntity1)).thenReturn(roomEntity1);
@@ -173,6 +174,13 @@ public class RoomServiceImplTest {
         verify(roomRepository, times(1)).saveAndFlush(roomEntity1);
         String actualRoomNameAfterUpdate = roomEntity1.getRoomName();
         assertEquals(expectedRoomNameAfterUpdate, actualRoomNameAfterUpdate);
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void whenUpdateRoom_IfRoomDoesntExistThrowNotFoundException(){
+
+        when(roomRepository.getOneByRoomName("")).thenReturn(Optional.empty());
+        roomService.updateRoom("", roomEntity1);
     }
 
 }
