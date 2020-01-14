@@ -44,13 +44,17 @@ public class RoomServiceImplTest {
         MockitoAnnotations.initMocks(this);
 
         roomEntity1 = new RoomEntity();
-        roomEntity2 = new RoomEntity();
         roomEntity1.setRoomName("RoomName1");
+        roomEntity1.setBackgroundColor("Blue");
+
+        roomEntity2 = new RoomEntity();
         roomEntity2.setRoomName("RoomName2");
+        roomEntity2.setBackgroundColor("Red");
 
         roomModel1 = new RoomModel();
-        roomModel2 = new RoomModel();
         roomModel1.setRoomName("RoomName1");
+
+        roomModel2 = new RoomModel();
         roomModel2.setRoomName("RoomName2");
 
         roomModels = new ArrayList<>();
@@ -164,6 +168,8 @@ public class RoomServiceImplTest {
     public void whenUpdateRoom_IfRoomExistSaveWithNewDataAndReturnRoomModel(){
 
         String expectedRoomNameAfterUpdate = roomEntity2.getRoomName();
+        String expectedRoomColorAfterUpdate = roomEntity2.getBackgroundColor();
+
         when(roomRepository.getOneByRoomName(roomEntity1.getRoomName())).thenReturn(Optional.of(roomEntity1));
         when(roomRepository.saveAndFlush(roomEntity1)).thenReturn(roomEntity1);
         when(roomFactory.entityToModel(roomEntity1)).thenReturn(roomModel1);
@@ -172,8 +178,11 @@ public class RoomServiceImplTest {
 
         assertNotNull(roomModel);
         verify(roomRepository, times(1)).saveAndFlush(roomEntity1);
+
         String actualRoomNameAfterUpdate = roomEntity1.getRoomName();
+        String actualRoomColorAfterUpdate = roomEntity1.getBackgroundColor();
         assertEquals(expectedRoomNameAfterUpdate, actualRoomNameAfterUpdate);
+        assertEquals(expectedRoomColorAfterUpdate, actualRoomColorAfterUpdate);
     }
 
     @Test(expected = NotFoundException.class)
