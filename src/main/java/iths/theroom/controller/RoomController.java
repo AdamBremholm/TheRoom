@@ -4,8 +4,6 @@ import iths.theroom.entity.RoomEntity;
 import iths.theroom.model.RoomModel;
 import iths.theroom.service.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,7 +29,7 @@ public class RoomController {
     @GetMapping(path="/{name}")
     public RoomModel getOneByName(@PathVariable("name") String name) {
 
-        return roomService.getOneByName(name);
+        return roomService.getOneModelByName(name);
     }
 
     @PostMapping(path = "/")

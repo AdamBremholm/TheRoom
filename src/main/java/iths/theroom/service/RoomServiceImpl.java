@@ -3,7 +3,6 @@ package iths.theroom.service;
 import iths.theroom.entity.RoomEntity;
 import iths.theroom.exception.BadRequestException;
 import iths.theroom.exception.NotFoundException;
-import iths.theroom.factory.EntityFactory;
 import iths.theroom.factory.RoomFactory;
 import iths.theroom.model.RoomModel;
 import iths.theroom.pojos.MessageForm;
@@ -19,12 +18,12 @@ import java.util.Optional;
 @Transactional
 public class RoomServiceImpl implements RoomService {
 
-    private final EntityFactory<RoomModel, RoomEntity> entityFactory;
+    private final RoomFactory roomFactory;
     private final RoomRepository roomRepository;
 
     @Autowired
-    public RoomServiceImpl(RoomFactory entityFactory, RoomRepository roomRepository) {
-        this.entityFactory = entityFactory;
+    public RoomServiceImpl(RoomFactory roomFactory, RoomRepository roomRepository) {
+        this.roomFactory = roomFactory;
         this.roomRepository = roomRepository;
     }
 
@@ -32,12 +31,11 @@ public class RoomServiceImpl implements RoomService {
     public List<RoomModel> getAllRooms() {
 
         List<RoomEntity> roomEntities = roomRepository.findAll();
-        return entityFactory.entityToModel(roomEntities);
-
+        return roomFactory.entityToModel(roomEntities);
     }
 
     @Override
-    public RoomModel getOneByName(String name) {
+    public RoomModel getOneModelByName(String name) {
 
         if(name == null){
             throw new BadRequestException("Missing critical path parameter: 'name'");
@@ -45,35 +43,35 @@ public class RoomServiceImpl implements RoomService {
 
         RoomEntity roomEntity = checkIfRoomExists(name);
 
-        return entityFactory.entityToModel(roomEntity);
+        return roomFactory.entityToModel(roomEntity);
     }
 
-
     @Override
-    public RoomEntity getOneByNameE(String name) {
+    public RoomEntity getOneEntityByName(String name) {
 
         if(name == null){
             throw new BadRequestException("Missing critical path parameter: 'name'");
         }
 
-        RoomEntity roomEntity = checkIfRoomExists(name);
-
-        return roomEntity;
+        return checkIfRoomExists(name);
     }
 
     @Override
     public RoomModel save(RoomEntity roomEntity) {
 
-        validate(roomEntity);
-        Optional<RoomEntity> optionalRoomEntity = roomRepository.getOneByRoomName(roomEntity.getRoomName());
-        RoomEntity savedRoomEntity = null;
-        if(optionalRoomEntity.isEmpty()) {
-            savedRoomEntity = roomRepository.saveAndFlush(roomEntity);
-            return entityFactory.entityToModel(savedRoomEntity);
-        } else {
-            return entityFactory.entityToModel(optionalRoomEntity.get());
+        if(roomEntity.getRoomName() == null) {
+            throw new BadRequestException("Missing critical field: roomName");
         }
 
+        Optional<RoomEntity> optionalRoomEntity = roomRepository.getOneByRoomName(roomEntity.getRoomName());
+
+        if(optionalRoomEntity.isEmpty()) {
+            RoomEntity savedRoomEntity = roomRepository.saveAndFlush(roomEntity);
+            return roomFactory.entityToModel(savedRoomEntity);
+
+        } else {
+            return roomFactory.entityToModel(optionalRoomEntity.get());
+        }
     }
 
     @Override
@@ -85,8 +83,7 @@ public class RoomServiceImpl implements RoomService {
         roomEntityToUpdate.setBackgroundColor(roomEntity.getBackgroundColor());
 
         RoomEntity updatedRoomEntity = roomRepository.saveAndFlush(roomEntityToUpdate);
-        return entityFactory.entityToModel(updatedRoomEntity);
-
+        return roomFactory.entityToModel(updatedRoomEntity);
     }
 
     @Override
@@ -109,7 +106,7 @@ public class RoomServiceImpl implements RoomService {
             throw new BadRequestException(e.getMessage());
         }
 
-        return entityFactory.entityToModel(roomToDelete);
+        return roomFactory.entityToModel(roomToDelete);
     }
 
     private RoomEntity checkIfRoomExists(String name) {
@@ -124,12 +121,4 @@ public class RoomServiceImpl implements RoomService {
         }
     }
 
-
-    private void validate(RoomEntity roomEntity) throws BadRequestException {
-
-        if(roomEntity.getRoomName() == null) {
-            throw new BadRequestException("Missing critical field: roomName");
-        }
-
-    }
 }

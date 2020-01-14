@@ -10,13 +10,13 @@ public interface RoomService {
 
     List<RoomModel> getAllRooms();
 
-    RoomModel getOneByName(String name);
+    RoomModel getOneModelByName(String name);
 
     RoomModel save(RoomEntity roomEntity);
 
     RoomModel updateRoom(String name, RoomEntity roomEntity);
 
-    RoomEntity getOneByNameE(String name);
+    RoomEntity getOneEntityByName(String name);
 
     RoomModel deleteRoom(String name);
 

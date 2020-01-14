@@ -67,7 +67,7 @@ public class RoomControllerIntegrationTest {
 
         String expectedRoomName = roomModel1.getRoomName();
 
-        Mockito.when(roomService.getOneByName("")).thenReturn(roomModel1);
+        Mockito.when(roomService.getOneModelByName("")).thenReturn(roomModel1);
 
         RoomModel result = roomController.getOneByName("");
 
