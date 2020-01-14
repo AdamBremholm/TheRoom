@@ -106,27 +106,28 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public int decreaseMessageRating(String uuid) {
+    public MessageModel decreaseMessageRating(String uuid, String userName) {
 
-        Optional<MessageEntity> messageFound = messageRepository.findByUuid(uuid);
-        MessageEntity messageEntity = messageFound.orElseThrow(NoSuchMessageException::new);
+        MessageEntity messageEntity = fetchMessageIfExists(uuid);
+        UserEntity userEntity = fetchUserIfExists(userName);
 
-        messageEntity.getMessageRatingEntity().decreaseRating();
+        messageEntity.getMessageRatingEntity().decreaseRating(userEntity);
         messageRepository.save(messageEntity);
 
-        return messageEntity.getMessageRatingEntity().getRating();
+        return toModel(messageEntity);
 
     }
 
     @Override
-    public int increaseMessageRating(String uuid) {
-        Optional<MessageEntity> messageFound = messageRepository.findByUuid(uuid);
-        MessageEntity messageEntity = messageFound.orElseThrow(NoSuchMessageException::new);
+    public MessageModel increaseMessageRating(String uuid, String userName) {
 
-        messageEntity.getMessageRatingEntity().increaseRating();
+        MessageEntity messageEntity = fetchMessageIfExists(uuid);
+        UserEntity userEntity = fetchUserIfExists(userName);
+
+        messageEntity.getMessageRatingEntity().increaseRating(userEntity);
         messageRepository.save(messageEntity);
 
-        return messageEntity.getMessageRatingEntity().getRating();
+        return toModel(messageEntity);
 
     }
 
@@ -165,6 +166,17 @@ public class MessageServiceImpl implements MessageService {
         }
         return messagesByUserLimited;
     }
+
+    private MessageEntity fetchMessageIfExists(String messageUuid){
+        Optional<MessageEntity> messageFound = messageRepository.findByUuid(messageUuid);
+        return messageFound.orElseThrow(NoSuchMessageException::new);
+    }
+
+    private UserEntity fetchUserIfExists(String userName){
+        Optional<UserEntity> userFound = userRepository.findByUserName(userName);
+        return userFound.orElseThrow(NoSuchUserException::new);
+    }
+
     private boolean isBanned(UserEntity user, RoomEntity room){
         return room.getBannedUsers().contains(user);
     }
