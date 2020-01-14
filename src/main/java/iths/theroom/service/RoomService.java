@@ -1,6 +1,7 @@
 package iths.theroom.service;
 
 import iths.theroom.entity.RoomEntity;
+import iths.theroom.entity.UserEntity;
 import iths.theroom.model.RoomModel;
 import iths.theroom.pojos.MessageForm;
 
@@ -21,4 +22,6 @@ public interface RoomService {
     RoomModel deleteRoom(String name);
 
     RoomModel updateRoom(MessageForm messageForm);
+
+    boolean isUserBannedHere(String userName, String roomName);
 }

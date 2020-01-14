@@ -1,6 +1,7 @@
 package iths.theroom.service;
 
 import iths.theroom.entity.RoomEntity;
+import iths.theroom.entity.UserEntity;
 import iths.theroom.exception.BadRequestException;
 import iths.theroom.exception.NotFoundException;
 import iths.theroom.factory.RoomFactory;
@@ -17,6 +18,9 @@ import java.util.Optional;
 @Service
 @Transactional
 public class RoomServiceImpl implements RoomService {
+
+    @Autowired
+    private UserService userService;
 
     private final RoomFactory roomFactory;
     private final RoomRepository roomRepository;
@@ -92,6 +96,13 @@ public class RoomServiceImpl implements RoomService {
         roomEntity.setRoomName(messageForm.getRoomName());
         roomEntity.setBackgroundColor(messageForm.getRoomBackgroundColor());
         return updateRoom(roomEntity.getRoomName(), roomEntity);
+    }
+
+    @Override
+    public boolean isUserBannedHere(String username, String roomName) {
+        UserEntity user = userService.getByUserName(username);
+        RoomEntity room = getOneEntityByName(roomName);
+        return room.getBannedUsers().contains(user);
     }
 
     @Override

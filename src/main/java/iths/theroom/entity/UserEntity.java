@@ -34,8 +34,8 @@ public class UserEntity {
     @JoinColumn(name = "id", referencedColumnName = "id")
     private AvatarEntity avatarEntity;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.PERSIST}, fetch=FetchType.LAZY)
-    @JoinColumn(name="id", referencedColumnName = "id")
+    @ManyToMany(cascade = CascadeType.PERSIST, fetch=FetchType.EAGER)
+    @JoinColumn(name="banned_id", referencedColumnName = "id")
     private Set<RoomEntity> excludedRooms;
 
     @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.PERSIST}, fetch=FetchType.LAZY)

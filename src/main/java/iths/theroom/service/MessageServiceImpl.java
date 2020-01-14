@@ -56,17 +56,17 @@ public class MessageServiceImpl implements MessageService {
         Optional<RoomEntity> room = roomRepository.getOneByRoomName(form.getRoomName());
         room.orElseThrow(() ->  new BadRequestException("no such room exists"));
         MessageEntity message = new MessageEntity(form.getType(), form.getContent(), user, room.get(), new MessageRatingEntity());
-        if(isBanned(user, room.get())){
-            message.setContent("ur banned bud");
-            return toModel(message);
-        }
-
         room.get().addMessage(message);
-        //remove for production
+
+        ////////remove for production//////////
+        //Will be replaced by the rest admin controller
         if(user.getUserName().contains("ban")){
             room.get().banUser(user);
         }
+        ///////////////////////////////////////
+
         roomRepository.save(room.get());
+        userRepository.save(user);
         return toModel(messageRepository.save(message));
     }
 
