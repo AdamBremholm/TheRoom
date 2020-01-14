@@ -1,24 +1,20 @@
 package iths.theroom.controller;
 
-import iths.theroom.entity.RoomEntity;
-import iths.theroom.entity.UserEntity;
+
 import iths.theroom.enums.Type;
-import iths.theroom.exception.BadRequestException;
-import iths.theroom.exception.NoSuchUserException;
 import iths.theroom.factory.MessageFactory;
 import iths.theroom.model.MessageModel;
-import iths.theroom.model.RoomModel;
 import iths.theroom.pojos.MessageForm;
 import iths.theroom.service.InitEntityWrapperService;
 import iths.theroom.service.MessageService;
 import iths.theroom.service.RoomService;
-import iths.theroom.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import java.util.Objects;
 
@@ -43,6 +39,20 @@ public class WebSocketChatController {
            roomService.updateRoom(messageForm);
         }
         return messageService.save(messageForm);
+    }
+
+    @MessageMapping("/chat.increaseRating.{messageUuid}")
+    @SendTo("/topic/{messageUuid}")
+    public MessageModel increaseRating(@DestinationVariable String messageUuid, Authentication authentication){
+        String userName = authentication.getName();
+        return messageService.increaseMessageRating(messageUuid, userName);
+    }
+
+    @MessageMapping("/chat.decreaseRating.{messageUuid}")
+    @SendTo("/topic/{messageUuid}")
+    public MessageModel decreaseRating(@DestinationVariable String messageUuid, Authentication authentication){
+        String userName = authentication.getName();
+        return messageService.decreaseMessageRating(messageUuid, userName);
     }
 
     @MessageMapping("/chat.newUser.{roomName}")
