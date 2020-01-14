@@ -67,7 +67,7 @@ function register(event){
 
 
 function login(event){
-   let password = document.querySelector('#password').value.trim();
+    let password = document.querySelector('#password').value.trim();
     event.preventDefault();
     if(name && password) {
         axios.post('/login', {
@@ -96,7 +96,6 @@ function connect(event) {
         stompClient = Stomp.over(socket);
             stompClient.connect({Authorization: "Bearer " + token}, function () {
                 connectionSuccess();
-                token="";
             }, function (message) {
                 if(message.toString().includes("Unauthorized")){
                     document.querySelector('#login-display-message').textContent = "Unauthorized"
@@ -150,13 +149,13 @@ function onMessageReceivedSubscription(payload){
 
 }
 
-
 function onMessageReceived(payload) {
 
-    var message = JSON.parse(payload.body);
+    let message = JSON.parse(payload.body);
     var messageElement = document.createElement('li');
     var textElement = document.createElement('p');
     var messageText;
+    var backgroundColorString = null;
     if (message.type === 'newUser') {
         messageElement.classList.add('event-data');
         message.content = message.sender + ' has joined the chat';
@@ -185,7 +184,7 @@ function onMessageReceived(payload) {
         var localTime = new Date(message.time );
         var timeString = localTime.toString().split(' ').slice(0, 5).join(' ');
         var timeNode = document.createTextNode(" - " + timeString);
-        var backgroundColorString = null;
+
         if(message.roomBackgroundColor!=null) {
             backgroundColorString = message.roomBackgroundColor;
             document.getElementById('dialogue-page').style.backgroundColor = backgroundColorString;
@@ -218,27 +217,8 @@ function onMessageReceived(payload) {
         var decrRating = document.createElement('div');
         decrRating.className = "incDecButton";
         decrRating.innerHTML = '-';
-        decrRating.addEventListener('click', function (evt) {
-            var xhttp = new XMLHttpRequest();
-            xhttp.onreadystatechange = function() {
-                if (this.readyState == 4 && this.status == 200) {
-                    var ratingText = document.getElementById("rating"+message.uuid);
-                    var rating = this.responseText;
-                    ratingText.innerHTML = rating;
-
-                    if(rating > 0){
-                        ratingText.style.color = "green";
-                    }
-                    else if(rating < 0){
-                        ratingText.style.color = "red";
-                    }
-                    else{
-                        ratingText.style.color = "black";
-                    }
-                }
-            };
-            xhttp.open("PUT", "/api/messages/decRating." + message.uuid, true);
-            xhttp.send();
+        decrRating.addEventListener('click', function() {
+            stompClient.send("/app/chat.decreaseRating." + message.uuid, {});
         });
 
         ratingGridCol2.appendChild(decrRating);
@@ -252,40 +232,38 @@ function onMessageReceived(payload) {
         var incrRating = document.createElement('div');
         incrRating.className = "incDecButton";
         incrRating.innerHTML = '+';
-        incrRating.addEventListener('click', function (evt) {
-            var xhttp = new XMLHttpRequest();
-            xhttp.onreadystatechange = function() {
-                if (this.readyState == 4 && this.status == 200) {
-                    var ratingText = document.getElementById("rating"+message.uuid);
-                    var rating = this.responseText;
-                    ratingText.innerHTML = rating;
-
-                    if(rating > 0){
-                        ratingText.style.color = "green";
-                    }
-                    else if(rating < 0){
-                        ratingText.style.color = "red";
-                    }
-                    else{
-                        ratingText.style.color = "black";
-                    }
-                }
-            };
-            xhttp.open("PUT", "/api/messages/incRating." + message.uuid, true);
-            xhttp.send();
+        incrRating.addEventListener('click', function () {
+            stompClient.send("/app/chat.increaseRating." + message.uuid, {
+               Authorization: "Bearer " + token
+            });
         });
 
         ratingGridCol4.appendChild(incrRating);
 
         messageElement.appendChild(textElement);
         messageElement.appendChild(ratingGrid);
+
+        stompClient.subscribe('/topic/' + message.uuid,  function (payload) {
+            let updatedMessage = JSON.parse(payload.body);
+            let ratingText = document.getElementById("rating"+message.uuid);
+            let rating = updatedMessage.rating;
+            ratingText.innerHTML = rating;
+
+            if(rating > 0){
+                ratingText.style.color = "green";
+            }
+            else if(rating < 0){
+                ratingText.style.color = "red";
+            }
+            else{
+                ratingText.style.color = "black";
+            }
+        });
     }
 
     document.querySelector('#messageList').appendChild(messageElement);
     document.querySelector('#messageList').scrollTop = document
         .querySelector('#messageList').scrollHeight;
-
-    document.querySelector('#decrease'+message.uuid)
 }
 
 
