@@ -1,6 +1,5 @@
 package iths.theroom.controller;
 
-
 import iths.theroom.entity.UserEntity;
 import iths.theroom.exception.BadRequestException;
 import iths.theroom.exception.ConflictException;
@@ -8,12 +7,8 @@ import iths.theroom.model.UserModel;
 import iths.theroom.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import static iths.theroom.factory.UserFactory.*;
-
 import java.util.List;
-
-
 
 @RestController
 @RequestMapping("/api")
@@ -35,6 +30,4 @@ public class UserController {
     public UserModel addMessage(@RequestBody UserEntity userEntity) throws ConflictException, BadRequestException {
         return toModel(userService.save(userEntity));
     }
-
-
 }

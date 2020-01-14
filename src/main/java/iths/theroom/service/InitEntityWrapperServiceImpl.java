@@ -63,4 +63,4 @@ public class InitEntityWrapperServiceImpl implements InitEntityWrapperService {
         }
         return room;
     }
-    }
+}

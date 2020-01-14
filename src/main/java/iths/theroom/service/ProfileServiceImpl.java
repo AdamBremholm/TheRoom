@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import javax.servlet.http.HttpServletRequest;
 
 @Service
@@ -29,16 +28,6 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     @Override
-    public ProfileModel getProfile(String email) {
-        return null;
-    }
-
-    @Override
-    public ProfileModel getProfiles() {
-        return null;
-    }
-
-    @Override
     public ProfileModel save(ProfileForm form, HttpServletRequest req) {
 
         UserDetails userDetails = userPrincipalDetailsService.loadUserByUsername(form.getUsername());
@@ -53,36 +42,6 @@ public class ProfileServiceImpl implements ProfileService {
             throw new UnauthorizedException("Invalid credentials");
         }
         return ProfileFactory.toModel(userService.updateUser(user).getProfile());
-    }
-
-    @Override
-    public ProfileModel setAboutMe(String email, String aboutMe) {
-        return null;
-    }
-
-    @Override
-    public ProfileModel setGender(String email, String gender) {
-        return null;
-    }
-
-    @Override
-    public ProfileModel setAge(String email, int age) {
-        return null;
-    }
-
-    @Override
-    public ProfileModel setCountry(String email, String country) {
-        return null;
-    }
-
-    @Override
-    public ProfileModel setStarSign(String email, String starSign) {
-        return null;
-    }
-
-    @Override
-    public ProfileModel incrementVisitor(String email) {
-        return null;
     }
 }
 
