@@ -165,6 +165,13 @@ public class RoomServiceImplTest {
         assertEquals(expectedRoomName, actualRoomName);
     }
 
+    @Test(expected = BadRequestException.class)
+    public void whenSave_IfRoomNameIsNullThrowBadRequestException(){
+
+        RoomEntity roomEntity = new RoomEntity();
+        roomService.save(roomEntity);
+    }
+
     @Test
     public void whenUpdateRoom_IfRoomExistSaveWithNewDataAndReturnRoomModel(){
 
