@@ -160,4 +160,19 @@ public class RoomServiceImplTest {
         assertEquals(expectedRoomName, actualRoomName);
     }
 
+    @Test
+    public void whenUpdateRoom_IfRoomExistSaveWithNewDataAndReturnRoomModel(){
+        String expectedRoomNameAfterUpdate = roomEntity2.getRoomName();
+        when(roomRepository.getOneByRoomName(roomEntity1.getRoomName())).thenReturn(Optional.of(roomEntity1));
+        when(roomRepository.saveAndFlush(roomEntity1)).thenReturn(roomEntity1);
+        when(roomFactory.entityToModel(roomEntity1)).thenReturn(roomModel1);
+
+        RoomModel roomModel = roomService.updateRoom(roomEntity1.getRoomName(), roomEntity2);
+
+        assertNotNull(roomModel);
+        verify(roomRepository, times(1)).saveAndFlush(roomEntity1);
+        String actualRoomNameAfterUpdate = roomEntity1.getRoomName();
+        assertEquals(expectedRoomNameAfterUpdate, actualRoomNameAfterUpdate);
+    }
+
 }
