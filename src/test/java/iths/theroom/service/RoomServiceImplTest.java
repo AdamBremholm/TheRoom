@@ -246,4 +246,13 @@ public class RoomServiceImplTest {
         roomService.deleteRoom("");
     }
 
+    @Test(expected = BadRequestException.class)
+    public void whenDeleteRoom_IfDeleteFailsThrowBadRequestException(){
+
+        when(roomRepository.getOneByRoomName("")).thenReturn(Optional.of(roomEntity1));
+        doThrow(new RuntimeException()).when(roomRepository).delete(roomEntity1);
+
+        roomService.deleteRoom("");
+    }
+
 }
