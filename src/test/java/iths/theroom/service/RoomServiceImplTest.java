@@ -5,6 +5,7 @@ import iths.theroom.exception.BadRequestException;
 import iths.theroom.exception.NotFoundException;
 import iths.theroom.factory.RoomFactory;
 import iths.theroom.model.RoomModel;
+import iths.theroom.pojos.MessageForm;
 import iths.theroom.repository.RoomRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -190,6 +191,31 @@ public class RoomServiceImplTest {
 
         when(roomRepository.getOneByRoomName("")).thenReturn(Optional.empty());
         roomService.updateRoom("", roomEntity1);
+    }
+
+    @Test
+    public void whenUpdateRoomMessageForm_SaveNewDataAndReturnRoomModel(){
+
+        String expectedRoomNameAfterUpdate = "roomEntity1";
+        String expectedRoomColorAfterUpdate = "Green";
+
+        MessageForm messageForm = new MessageForm();
+        messageForm.setRoomName(expectedRoomNameAfterUpdate);
+        messageForm.setRoomBackgroundColor(expectedRoomColorAfterUpdate);
+
+        when(roomRepository.getOneByRoomName(expectedRoomNameAfterUpdate)).thenReturn(Optional.of(roomEntity1));
+        when(roomRepository.saveAndFlush(roomEntity1)).thenReturn(roomEntity1);
+        when(roomFactory.entityToModel(roomEntity1)).thenReturn(roomModel1);
+
+        RoomModel roomModel = roomService.updateRoom(messageForm);
+        assertNotNull(roomModel);
+        verify(roomRepository, times(1)).saveAndFlush(roomEntity1);
+
+        String actualRoomNameAfterUpdate = roomEntity1.getRoomName();
+        String actualRoomColorAfterUpdate = roomEntity1.getBackgroundColor();
+
+        assertEquals(expectedRoomNameAfterUpdate, actualRoomNameAfterUpdate);
+        assertEquals(expectedRoomColorAfterUpdate, actualRoomColorAfterUpdate);
     }
 
 }
