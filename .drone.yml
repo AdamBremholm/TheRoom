@@ -23,14 +23,3 @@ steps:
       files: /drone/src/target/theroomapp-*-SNAPSHOT.jar
     when:
       event: tag
-
-  - name: notify
-    image: plugins/slack-blame
-    settings:
-      token:
-        from_secret: slack-token
-      channel: drone
-      success_template: |
-        The build is fixed! Thanks @{{user.name}}
-      failure_template: |
-        The build is broken! Blame {{user.name}}
