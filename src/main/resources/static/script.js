@@ -94,26 +94,27 @@ function connect(event) {
     if (name) {
         let socket = new SockJS('/websocketApp');
         stompClient = Stomp.over(socket);
-            stompClient.connect({Authorization: "Bearer " + token}, function () {
-                connectionSuccess();
-            }, function (message) {
-                if(message.toString().includes("Unauthorized")){
-                    document.querySelector('#login-display-message').textContent = "Unauthorized"
-                } else if(message.toString().includes("AccessDeniedException")){
-                    document.querySelector('#login-display-message').textContent = "Access to this room is denied"
-                }
-            });
+        stompClient.connect({Authorization: "Bearer " + token}, function () {
+            connectionSuccess();
+            token="";
+        }, function (message) {
+            if(message.toString().includes("Unauthorized")){
+                document.querySelector('#login-display-message').textContent = "Unauthorized"
+            } else if(message.toString().includes("AccessDeniedException")){
+                document.querySelector('#login-display-message').textContent = "Access to this room is denied"
+            }
+        });
     }
     event.preventDefault();
 }
 function connectionSuccess() {
     document.getElementById("roomTitle").innerHTML = room;
-        stompClient.subscribe('/topic/' + room,  onMessageReceivedSubscription);
-        stompClient.send("/app/chat.newUser." + room, {}, JSON.stringify({
-            sender: name,
-            type: 'newUser',
-            roomName: room,
-        }))
+    stompClient.subscribe('/topic/' + room,  onMessageReceivedSubscription);
+    stompClient.send("/app/chat.newUser." + room, {}, JSON.stringify({
+        sender: name,
+        type: 'newUser',
+        roomName: room,
+    }))
 }
 function sendMessage(event) {
     let type = null;
@@ -143,10 +144,19 @@ function sendMessage(event) {
 }
 
 function onMessageReceivedSubscription(payload){
-        document.querySelector('#login-page').classList.add('hidden');
-        document.querySelector('#dialogue-page').classList.remove('hidden');
-        onMessageReceived(payload)
+    document.querySelector('#login-page').classList.add('hidden');
+    document.querySelector('#dialogue-page').classList.remove('hidden');
+    onMessageReceived(payload)
 
+}
+
+function updateRoomColor(message) {
+
+    let backgroundColorString = message.roomBackgroundColor;
+    if (backgroundColorString != null) {
+        document.getElementById('dialogue-page').style.backgroundColor = backgroundColorString;
+        document.getElementById('html5colorpicker').value = backgroundColorString;
+    }
 }
 
 function onMessageReceived(payload) {
@@ -162,17 +172,30 @@ function onMessageReceived(payload) {
         messageText = document.createTextNode(message.content);
         textElement.appendChild(messageText);
         messageElement.appendChild(textElement);
-        backgroundColorString = message.roomBackgroundColor;
-        if(backgroundColorString!=null) {
-            document.getElementById('dialogue-page').style.backgroundColor = backgroundColorString;
-            document.getElementById('html5colorpicker').value = backgroundColorString;
-        }
+
+        updateRoomColor(message)
+
+        document.querySelector('#messageList').appendChild(messageElement);
+        document.querySelector('#messageList').scrollTop = document
+            .querySelector('#messageList').scrollHeight;
+
+        document.querySelector('#decrease' + message.uuid)
+
+    } else if (message.type === 'BG_CHANGE') {
+        updateRoomColor(message)
+
     } else if (message.type === 'Leave') {
         messageElement.classList.add('event-data');
         message.content = message.sender.userName + 'has left the chat';
         messageText = document.createTextNode(message.content);
         textElement.appendChild(messageText);
         messageElement.appendChild(textElement);
+
+        document.querySelector('#messageList').appendChild(messageElement);
+        document.querySelector('#messageList').scrollTop = document
+            .querySelector('#messageList').scrollHeight;
+
+
     } else {
         messageElement.classList.add('message-data');
         let element = document.createElement('i');
@@ -212,7 +235,7 @@ function onMessageReceived(payload) {
         ratingGridCol4.className = "col col-custom";
 
         ratingGrid.appendChild(ratingGridRow);
-        ratingGridRow.append(ratingGridCol1, ratingGridCol2, ratingGridCol3,ratingGridCol4);
+        ratingGridRow.append(ratingGridCol1, ratingGridCol2, ratingGridCol3, ratingGridCol4);
 
         let decrRating = document.createElement('div');
         decrRating.className = "incDecButton";
@@ -225,7 +248,7 @@ function onMessageReceived(payload) {
 
         let rating = document.createElement('div');
         rating.innerHTML = message.rating;
-        rating.id = 'rating'+message.uuid;
+        rating.id = 'rating' + message.uuid;
 
         ratingGridCol3.appendChild(rating);
 
@@ -233,9 +256,7 @@ function onMessageReceived(payload) {
         incrRating.className = "incDecButton";
         incrRating.innerHTML = '+';
         incrRating.addEventListener('click', function () {
-            stompClient.send("/app/chat.increaseRating." + message.uuid, {
-               Authorization: "Bearer " + token
-            });
+            stompClient.send("/app/chat.increaseRating." + message.uuid, {});
         });
 
         ratingGridCol4.appendChild(incrRating);
