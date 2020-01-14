@@ -47,14 +47,4 @@ public class MessageController {
         return messageService.getAllMessagesFromUser(userName, roomName, count);
     }
 
-    @PutMapping("/messages/decRating.{uuid}")
-    public int decreaseMessageRating(@PathVariable String uuid){
-        return messageService.decreaseMessageRating(uuid);
-    }
-
-    @PutMapping("/messages/incRating.{uuid}")
-    public int increaseMessageRating(@PathVariable String uuid){
-        return messageService.increaseMessageRating(uuid);
-    }
-
 }
