@@ -74,4 +74,11 @@ public class RoomFactoryTest {
         assertTrue(actualMessageContent.contains(expectedMessage1Content));
         assertTrue(actualMessageContent.contains(expectedMessage2Content));
     }
+
+    @Test
+    public void entityToModel_IfMessagesIsNullDontThrowException(){
+        RoomModel result = roomFactory.entityToModel(roomEntity2);
+        assertNotNull(result);
+    }
+
 }
