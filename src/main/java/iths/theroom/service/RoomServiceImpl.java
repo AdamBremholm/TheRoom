@@ -59,7 +59,10 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public RoomModel save(RoomEntity roomEntity) {
 
-        validate(roomEntity);
+        if(roomEntity.getRoomName() == null) {
+            throw new BadRequestException("Missing critical field: roomName");
+        }
+
         Optional<RoomEntity> optionalRoomEntity = roomRepository.getOneByRoomName(roomEntity.getRoomName());
 
         if(optionalRoomEntity.isEmpty()) {
@@ -118,10 +121,4 @@ public class RoomServiceImpl implements RoomService {
         }
     }
 
-    private void validate(RoomEntity roomEntity) throws BadRequestException {
-
-        if(roomEntity.getRoomName() == null) {
-            throw new BadRequestException("Missing critical field: roomName");
-        }
-    }
 }
