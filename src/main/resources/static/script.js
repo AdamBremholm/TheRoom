@@ -3,9 +3,9 @@ document.querySelector('#loginForm').addEventListener('submit', handleFirstForm,
 document.querySelector('#registerForm').addEventListener('submit', register, true);
 document.querySelector('#dialogueForm').addEventListener('submit', sendMessage, true);
 
-var stompClient = null;
-var name = null;
-var room = null;
+let stompClient = null;
+let name = null;
+let room = null;
 let token = null;
 
 document.querySelector('#html5colorpicker').addEventListener('change', sendMessage, true);
@@ -92,7 +92,7 @@ function connect(event) {
     room = document.querySelector('#room').value.trim();
 
     if (name) {
-        var socket = new SockJS('/websocketApp');
+        let socket = new SockJS('/websocketApp');
         stompClient = Stomp.over(socket);
             stompClient.connect({Authorization: "Bearer " + token}, function () {
                 connectionSuccess();
@@ -127,7 +127,7 @@ function sendMessage(event) {
         messageContent = document.querySelector('#chatMessage').value.trim();
     }
     if (stompClient) {
-        var chatMessage = {
+        let chatMessage = {
             sender : name,
             content : messageContent,
             type : type,
@@ -152,10 +152,10 @@ function onMessageReceivedSubscription(payload){
 function onMessageReceived(payload) {
 
     let message = JSON.parse(payload.body);
-    var messageElement = document.createElement('li');
-    var textElement = document.createElement('p');
-    var messageText;
-    var backgroundColorString = null;
+    let messageElement = document.createElement('li');
+    let textElement = document.createElement('p');
+    let messageText;
+    let backgroundColorString = null;
     if (message.type === 'newUser') {
         messageElement.classList.add('event-data');
         message.content = message.sender + ' has joined the chat';
@@ -175,15 +175,15 @@ function onMessageReceived(payload) {
         messageElement.appendChild(textElement);
     } else {
         messageElement.classList.add('message-data');
-        var element = document.createElement('i');
-        var text = document.createTextNode(message.sender[0]);
+        let element = document.createElement('i');
+        let text = document.createTextNode(message.sender[0]);
         element.appendChild(text);
         messageElement.appendChild(element);
-        var usernameElement = document.createElement('span');
-        var usernameText = document.createTextNode(message.sender);
-        var localTime = new Date(message.time );
-        var timeString = localTime.toString().split(' ').slice(0, 5).join(' ');
-        var timeNode = document.createTextNode(" - " + timeString);
+        let usernameElement = document.createElement('span');
+        let usernameText = document.createTextNode(message.sender);
+        let localTime = new Date(message.time );
+        let timeString = localTime.toString().split(' ').slice(0, 5).join(' ');
+        let timeNode = document.createTextNode(" - " + timeString);
 
         if(message.roomBackgroundColor!=null) {
             backgroundColorString = message.roomBackgroundColor;
@@ -196,25 +196,25 @@ function onMessageReceived(payload) {
         messageElement.appendChild(usernameElement);
         usernameElement.appendChild(timeNode);
 
-        var ratingGrid = document.createElement('div');
+        let ratingGrid = document.createElement('div');
         ratingGrid.className = "container ratingGrid";
 
-        var ratingGridRow = document.createElement('div');
+        let ratingGridRow = document.createElement('div');
         ratingGridRow.className = "row justify-content-end";
 
-        var ratingGridCol1 = document.createElement('div');
+        let ratingGridCol1 = document.createElement('div');
         ratingGridCol1.className = "col-10";
-        var ratingGridCol2 = document.createElement('div');
+        let ratingGridCol2 = document.createElement('div');
         ratingGridCol2.className = "col col-custom";
-        var ratingGridCol3 = document.createElement('div');
+        let ratingGridCol3 = document.createElement('div');
         ratingGridCol3.className = "col col-custom";
-        var ratingGridCol4 = document.createElement('div');
+        let ratingGridCol4 = document.createElement('div');
         ratingGridCol4.className = "col col-custom";
 
         ratingGrid.appendChild(ratingGridRow);
         ratingGridRow.append(ratingGridCol1, ratingGridCol2, ratingGridCol3,ratingGridCol4);
 
-        var decrRating = document.createElement('div');
+        let decrRating = document.createElement('div');
         decrRating.className = "incDecButton";
         decrRating.innerHTML = '-';
         decrRating.addEventListener('click', function() {
@@ -223,13 +223,13 @@ function onMessageReceived(payload) {
 
         ratingGridCol2.appendChild(decrRating);
 
-        var rating = document.createElement('div');
+        let rating = document.createElement('div');
         rating.innerHTML = message.rating;
         rating.id = 'rating'+message.uuid;
 
         ratingGridCol3.appendChild(rating);
 
-        var incrRating = document.createElement('div');
+        let incrRating = document.createElement('div');
         incrRating.className = "incDecButton";
         incrRating.innerHTML = '+';
         incrRating.addEventListener('click', function () {
