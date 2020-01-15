@@ -1,11 +1,13 @@
 package iths.theroom.entity;
 
 import iths.theroom.enums.Type;
-import static iths.theroom.config.DataBaseConfig.*;
+
 import javax.persistence.*;
 import java.time.Instant;
 import java.util.Objects;
 import java.util.UUID;
+
+import static iths.theroom.config.DataBaseConfig.*;
 
 @Entity
 @Table(name = TABLE_MESSAGE)
@@ -13,7 +15,7 @@ public class MessageEntity {
 
     @Id
     @GeneratedValue
-    private Long id;
+    private long id;
     @Column(name = "uuid", unique = true)
     private String uuid;
     private Type type;
