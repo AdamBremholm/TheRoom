@@ -1,10 +1,13 @@
 package iths.theroom.service;
 
+import iths.theroom.entity.MessageEntity;
 import iths.theroom.entity.RoomEntity;
 import iths.theroom.entity.UserEntity;
 import iths.theroom.exception.BadRequestException;
 import iths.theroom.exception.NotFoundException;
+import iths.theroom.factory.MessageFactory;
 import iths.theroom.factory.RoomFactory;
+import iths.theroom.model.MessageModel;
 import iths.theroom.model.RoomModel;
 import iths.theroom.pojos.MessageForm;
 import iths.theroom.repository.RoomRepository;
@@ -12,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,16 +23,16 @@ import java.util.Optional;
 @Transactional
 public class RoomServiceImpl implements RoomService {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
     private final RoomFactory roomFactory;
     private final RoomRepository roomRepository;
 
     @Autowired
-    public RoomServiceImpl(RoomFactory roomFactory, RoomRepository roomRepository) {
+    public RoomServiceImpl(RoomFactory roomFactory, RoomRepository roomRepository, UserService userService) {
         this.roomFactory = roomFactory;
         this.roomRepository = roomRepository;
+        this.userService = userService;
     }
 
     @Override
@@ -107,6 +111,19 @@ public class RoomServiceImpl implements RoomService {
         }
         catch(Exception e){}
         return false;
+    }
+
+    @Override
+    public List<MessageModel> getAllMessagesForRoom(String roomName) {
+        try{
+            RoomEntity roomEntity = checkIfRoomExists(roomName);
+            List<MessageEntity> messages = new ArrayList<>(roomEntity.getMessages());
+
+            return MessageFactory.toModel(messages);
+        } catch(NotFoundException e){
+
+            return null;
+        }
     }
 
     @Override
