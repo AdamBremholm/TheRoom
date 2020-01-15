@@ -173,7 +173,7 @@ function onMessageReceived(payload) {
         textElement.appendChild(messageText);
         messageElement.appendChild(textElement);
 
-        updateRoomColor(message)
+        updateRoomColor(message);
 
         document.querySelector('#messageList').appendChild(messageElement);
         document.querySelector('#messageList').scrollTop = document
@@ -195,6 +195,22 @@ function onMessageReceived(payload) {
         document.querySelector('#messageList').scrollTop = document
             .querySelector('#messageList').scrollHeight;
 
+
+    } else if(message.type === "RATING"){
+
+        let ratingText = document.getElementById("rating"+message.uuid);
+        let rating = message.rating;
+        ratingText.innerHTML = rating;
+
+        if(rating > 0){
+            ratingText.style.color = "green";
+        }
+        else if(rating < 0){
+            ratingText.style.color = "red";
+        }
+        else{
+            ratingText.style.color = "black";
+        }
 
     } else {
         messageElement.classList.add('message-data');
@@ -239,9 +255,10 @@ function onMessageReceived(payload) {
 
         let decrRating = document.createElement('div');
         decrRating.className = "incDecButton";
+        decrRating.id = "decreaseRating";
         decrRating.innerHTML = '-';
         decrRating.addEventListener('click', function() {
-            stompClient.send("/app/chat.decreaseRating." + message.uuid, {});
+            stompClient.send("/app/chat.decreaseRating." + room + "." + message.uuid, {});
         });
 
         ratingGridCol2.appendChild(decrRating);
@@ -254,35 +271,20 @@ function onMessageReceived(payload) {
 
         let incrRating = document.createElement('div');
         incrRating.className = "incDecButton";
+        incrRating.id = "increaseRating";
         incrRating.innerHTML = '+';
-        incrRating.addEventListener('click', function () {
-            stompClient.send("/app/chat.increaseRating." + message.uuid, {});
+        incrRating.addEventListener('click', function() {
+            stompClient.send("/app/chat.increaseRating." + room + "." + message.uuid, {});
         });
 
         ratingGridCol4.appendChild(incrRating);
 
         messageElement.appendChild(textElement);
         messageElement.appendChild(ratingGrid);
-
-        stompClient.subscribe('/topic/' + message.uuid,  function (payload) {
-            let updatedMessage = JSON.parse(payload.body);
-            let ratingText = document.getElementById("rating"+message.uuid);
-            let rating = updatedMessage.rating;
-            ratingText.innerHTML = rating;
-
-            if(rating > 0){
-                ratingText.style.color = "green";
-            }
-            else if(rating < 0){
-                ratingText.style.color = "red";
-            }
-            else{
-                ratingText.style.color = "black";
-            }
-        });
+        document.querySelector('#messageList').appendChild(messageElement);
     }
 
-    document.querySelector('#messageList').appendChild(messageElement);
+
     document.querySelector('#messageList').scrollTop = document
         .querySelector('#messageList').scrollHeight;
 }

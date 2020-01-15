@@ -40,15 +40,15 @@ public class WebSocketChatController {
         return messageService.save(messageForm);
     }
 
-    @MessageMapping("/chat.increaseRating.{messageUuid}")
-    @SendTo("/topic/{messageUuid}")
+    @MessageMapping("/chat.increaseRating.{roomName}.{messageUuid}")
+    @SendTo("/topic/{roomName}")
     public MessageModel increaseRating(@DestinationVariable String messageUuid, Authentication authentication){
         String userName = authentication.getName();
         return messageService.increaseMessageRating(messageUuid, userName);
     }
 
-    @MessageMapping("/chat.decreaseRating.{messageUuid}")
-    @SendTo("/topic/{messageUuid}")
+    @MessageMapping("/chat.decreaseRating.{roomName}.{messageUuid}")
+    @SendTo("/topic/{roomName}")
     public MessageModel decreaseRating(@DestinationVariable String messageUuid, Authentication authentication){
         String userName = authentication.getName();
         return messageService.decreaseMessageRating(messageUuid, userName);

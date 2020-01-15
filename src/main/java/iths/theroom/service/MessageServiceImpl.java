@@ -114,7 +114,10 @@ public class MessageServiceImpl implements MessageService {
         messageEntity.getMessageRatingEntity().decreaseRating(userEntity);
         messageRepository.save(messageEntity);
 
-        return toModel(messageEntity);
+        MessageModel messageModel = toModel(messageEntity);
+        messageModel.setType("RATING");
+
+        return messageModel;
 
     }
 
@@ -127,7 +130,10 @@ public class MessageServiceImpl implements MessageService {
         messageEntity.getMessageRatingEntity().increaseRating(userEntity);
         messageRepository.save(messageEntity);
 
-        return toModel(messageEntity);
+        MessageModel messageModel = toModel(messageEntity);
+        messageModel.setType("RATING");
+
+        return messageModel;
 
     }
 
