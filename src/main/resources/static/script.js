@@ -173,12 +173,8 @@ function onMessageReceived(payload) {
         textElement.appendChild(messageText);
         messageElement.appendChild(textElement);
 
-        updateRoomColor(message)
-
-        document.querySelector('#messageList').appendChild(messageElement);
-        document.querySelector('#messageList').scrollTop = document
-            .querySelector('#messageList').scrollHeight;
-
+        updateRoomColor(message);
+        appendToMessageList(messageElement);
         document.querySelector('#decrease' + message.uuid)
 
     } else if (message.type === 'BG_CHANGE') {
@@ -190,10 +186,7 @@ function onMessageReceived(payload) {
         messageText = document.createTextNode(message.content);
         textElement.appendChild(messageText);
         messageElement.appendChild(textElement);
-
-        document.querySelector('#messageList').appendChild(messageElement);
-        document.querySelector('#messageList').scrollTop = document
-            .querySelector('#messageList').scrollHeight;
+        appendToMessageList(messageElement);
 
 
     } else {
@@ -280,8 +273,12 @@ function onMessageReceived(payload) {
                 ratingText.style.color = "black";
             }
         });
+        appendToMessageList(messageElement);
     }
 
+}
+
+function appendToMessageList(messageElement){
     document.querySelector('#messageList').appendChild(messageElement);
     document.querySelector('#messageList').scrollTop = document
         .querySelector('#messageList').scrollHeight;
