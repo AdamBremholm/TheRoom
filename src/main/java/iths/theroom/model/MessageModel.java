@@ -2,6 +2,7 @@ package iths.theroom.model;
 
 public class MessageModel {
 
+    private long id;
     private String uuid;
     private String type;
     private String content;
@@ -12,6 +13,12 @@ public class MessageModel {
     private int rating;
 
     public MessageModel() {}
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(Long id){ this.id = id; }
 
     public String getUuid() {
         return uuid;
@@ -76,4 +83,6 @@ public class MessageModel {
     public void setRoomBackgroundColor(String roomBackgroundColor) {
         this.roomBackgroundColor = roomBackgroundColor;
     }
+
+
 }

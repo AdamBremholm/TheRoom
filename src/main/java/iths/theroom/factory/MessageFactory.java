@@ -17,6 +17,7 @@ public class MessageFactory {
     public static MessageModel toModel(MessageEntity messageEntity){
         MessageModel messageModel = new MessageModel();
 
+        messageModel.setId(messageEntity.getId());
         messageModel.setUuid(messageEntity.getUuid());
         messageModel.setContent(messageEntity.getContent());
         messageModel.setSender(messageEntity.getSender().getUserName());
