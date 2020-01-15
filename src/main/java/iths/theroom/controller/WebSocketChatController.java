@@ -15,6 +15,8 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+
+import java.util.List;
 import java.util.Objects;
 
 @Controller
@@ -52,6 +54,12 @@ public class WebSocketChatController {
     public MessageModel decreaseRating(@DestinationVariable String messageUuid, Authentication authentication){
         String userName = authentication.getName();
         return messageService.decreaseMessageRating(messageUuid, userName);
+    }
+
+    @MessageMapping("/chat.retrieveAll.{userName}.{roomName}")
+    @SendTo("/topic/{userName}.{roomName}")
+    public List<MessageModel> getAllMessages(@DestinationVariable String roomName){
+        return roomService.getAllMessagesForRoom(roomName);
     }
 
     @MessageMapping("/chat.newUser.{roomName}")
