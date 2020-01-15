@@ -115,11 +115,15 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public List<MessageModel> getAllMessagesForRoom(String roomName) {
+        try{
+            RoomEntity roomEntity = checkIfRoomExists(roomName);
+            List<MessageEntity> messages = new ArrayList<>(roomEntity.getMessages());
 
-        RoomEntity roomEntity = checkIfRoomExists(roomName);
-        List<MessageEntity> messages = new ArrayList<>(roomEntity.getMessages());
+            return MessageFactory.toModel(messages);
+        } catch(NotFoundException e){
 
-        return MessageFactory.toModel(messages);
+            return null;
+        }
     }
 
     @Override
