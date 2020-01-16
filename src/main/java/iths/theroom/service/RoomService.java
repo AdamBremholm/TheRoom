@@ -26,4 +26,5 @@ public interface RoomService {
     boolean isUserBannedHere(String userName, String roomName);
 
     List<MessageModel> getAllMessagesForRoom(String roomName);
+
 }

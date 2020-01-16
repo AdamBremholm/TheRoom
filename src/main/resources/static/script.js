@@ -176,10 +176,6 @@ function updateRoomColor(message) {
 function loadOldMessages(payload){
     let messageArray = JSON.parse(payload.body);
 
-    messageArray.sort(function(a, b){
-       return a.id - b.id;
-    });
-
     messageArray.forEach(function(message, index){
         let messageElement = document.createElement('li');
         let textElement = document.createElement('p');

@@ -1,5 +1,6 @@
 package iths.theroom.controller;
 
+import iths.theroom.entity.RoomEntity;
 import iths.theroom.enums.Type;
 import iths.theroom.factory.MessageFactory;
 import iths.theroom.model.MessageModel;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Controller;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Controller
 public class WebSocketChatController {
@@ -60,9 +62,8 @@ public class WebSocketChatController {
     @MessageMapping("/chat.retrieveAll.{userName}.{roomName}")
     @SendTo("/topic/{userName}.{roomName}")
     public List<MessageModel> getAllMessages(@DestinationVariable String roomName){
-
-        List<MessageModel> messages = roomService.getAllMessagesForRoom(roomName);
-        return Objects.requireNonNullElseGet(messages, ArrayList::new);
+        RoomEntity room = roomService.getOneEntityByName(roomName);
+        return messageService.findAllByRoomEntityOrderById(room);
     }
 
     @MessageMapping("/chat.newUser.{roomName}")

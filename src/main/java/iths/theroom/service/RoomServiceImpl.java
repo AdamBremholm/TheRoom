@@ -10,6 +10,7 @@ import iths.theroom.factory.RoomFactory;
 import iths.theroom.model.MessageModel;
 import iths.theroom.model.RoomModel;
 import iths.theroom.pojos.MessageForm;
+import iths.theroom.repository.MessageRepository;
 import iths.theroom.repository.RoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -118,13 +120,13 @@ public class RoomServiceImpl implements RoomService {
         try{
             RoomEntity roomEntity = checkIfRoomExists(roomName);
             List<MessageEntity> messages = new ArrayList<>(roomEntity.getMessages());
-
-            return MessageFactory.toModel(messages);
+            return MessageFactory.toModel(messages.stream().sorted((m1, m2) -> (int) (m1.getId()-m2.getId())).collect(Collectors.toList()));
         } catch(NotFoundException e){
 
             return null;
         }
     }
+
 
     @Override
     public RoomModel deleteRoom(String name) {

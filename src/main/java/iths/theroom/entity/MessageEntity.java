@@ -15,7 +15,7 @@ public class MessageEntity {
 
     @Id
     @GeneratedValue
-    private long id;
+    private Long id;
     @Column(name = "uuid", unique = true)
     private String uuid;
     private Type type;
@@ -55,7 +55,7 @@ public class MessageEntity {
 
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
