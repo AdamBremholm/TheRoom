@@ -6,6 +6,7 @@ import iths.theroom.entity.UserEntity;
 import iths.theroom.exception.BadRequestException;
 import iths.theroom.exception.NoSuchUserException;
 import iths.theroom.exception.NotFoundException;
+import iths.theroom.factory.MessageFactory;
 import iths.theroom.model.MessageModel;
 import iths.theroom.pojos.MessageForm;
 import iths.theroom.repository.MessageRepository;
@@ -14,6 +15,7 @@ import iths.theroom.exception.NoSuchMessageException;
 import iths.theroom.repository.RoomRepository;
 import iths.theroom.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -132,6 +134,11 @@ public class MessageServiceImpl implements MessageService {
 
         return messageModel;
 
+    }
+
+    @Override
+    public List<MessageModel> findAllByRoomEntityOrderById(RoomEntity roomEntity) {
+       return MessageFactory.toModel(messageRepository.findAllByRoomEntityOrderById(roomEntity));
     }
 
     private List<MessageEntity> filterByMessagesUsersName(String userName) {

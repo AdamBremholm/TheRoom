@@ -2,7 +2,6 @@ package iths.theroom.model;
 
 public class MessageModel {
 
-    private long id;
     private String uuid;
     private String type;
     private String content;
@@ -13,12 +12,6 @@ public class MessageModel {
     private int rating;
 
     public MessageModel() {}
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id){ this.id = id; }
 
     public String getUuid() {
         return uuid;
