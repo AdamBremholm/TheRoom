@@ -55,7 +55,7 @@ public class MessageEntity {
 
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 

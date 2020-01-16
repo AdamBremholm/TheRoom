@@ -84,11 +84,8 @@ public class MessageServiceImpl implements MessageService {
             throw new NotFoundException("No user found with that username");
         }
         if (roomName != null) {
-            try {
-                messages = filterByMessagesRoom(messages, roomName);
-            } catch (Exception e) {
-                throw new NotFoundException("Room not found");
-            }
+
+         messages = filterByMessagesRoom(messages, roomName);
         }
         if (count != null) {
             try {
@@ -183,7 +180,4 @@ public class MessageServiceImpl implements MessageService {
         return userFound.orElseThrow(NoSuchUserException::new);
     }
 
-    private boolean isBanned(UserEntity user, RoomEntity room){
-        return room.getBannedUsers().contains(user);
-    }
 }
