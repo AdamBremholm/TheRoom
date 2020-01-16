@@ -1,6 +1,5 @@
 package iths.theroom.service;
 
-import iths.theroom.entity.RoomEntity;
 import iths.theroom.model.MessageModel;
 import iths.theroom.pojos.MessageForm;
 
@@ -16,5 +15,5 @@ public interface MessageService {
 
     MessageModel decreaseMessageRating(String uuid, String userName);
     MessageModel increaseMessageRating(String uuid, String userName);
-    List<MessageModel> findAllByRoomEntityOrderById(RoomEntity roomEntity);
+    List<MessageModel> findAllByRoomEntityOrderById(String roomName);
 }
