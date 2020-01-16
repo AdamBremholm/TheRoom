@@ -2,6 +2,7 @@ package iths.theroom.controller;
 
 import iths.theroom.entity.RoomEntity;
 import iths.theroom.enums.Type;
+import iths.theroom.exception.NotFoundException;
 import iths.theroom.factory.MessageFactory;
 import iths.theroom.model.MessageModel;
 import iths.theroom.pojos.MessageForm;
@@ -18,6 +19,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -62,8 +64,13 @@ public class WebSocketChatController {
     @MessageMapping("/chat.retrieveAll.{userName}.{roomName}")
     @SendTo("/topic/{userName}.{roomName}")
     public List<MessageModel> getAllMessages(@DestinationVariable String roomName){
-        RoomEntity room = roomService.getOneEntityByName(roomName);
-        return messageService.findAllByRoomEntityOrderById(room);
+        try {
+            RoomEntity room = roomService.getOneEntityByName(roomName);
+            return messageService.findAllByRoomEntityOrderById(room);
+        } catch (NotFoundException nfe){
+            return Collections.emptyList();
+        }
+
     }
 
     @MessageMapping("/chat.newUser.{roomName}")
