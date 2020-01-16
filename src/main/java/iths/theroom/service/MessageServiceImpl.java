@@ -1,25 +1,25 @@
 package iths.theroom.service;
 
+import iths.theroom.entity.MessageEntity;
 import iths.theroom.entity.MessageRatingEntity;
 import iths.theroom.entity.RoomEntity;
 import iths.theroom.entity.UserEntity;
 import iths.theroom.exception.BadRequestException;
+import iths.theroom.exception.NoSuchMessageException;
 import iths.theroom.exception.NoSuchUserException;
 import iths.theroom.exception.NotFoundException;
 import iths.theroom.factory.MessageFactory;
 import iths.theroom.model.MessageModel;
 import iths.theroom.pojos.MessageForm;
 import iths.theroom.repository.MessageRepository;
-import iths.theroom.entity.MessageEntity;
-import iths.theroom.exception.NoSuchMessageException;
 import iths.theroom.repository.RoomRepository;
 import iths.theroom.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -137,8 +137,12 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public List<MessageModel> findAllByRoomEntityOrderById(RoomEntity roomEntity) {
-       return MessageFactory.toModel(messageRepository.findAllByRoomEntityOrderById(roomEntity));
+    public List<MessageModel> findAllByRoomEntityOrderById(String roomName) {
+        Optional<RoomEntity> roomFound = roomRepository.getOneByRoomName(roomName);
+        if(roomFound.isPresent()){
+            return MessageFactory.toModel(messageRepository.findAllByRoomEntityOrderById(roomFound.get()));
+        }
+        return Collections.emptyList();
     }
 
     private List<MessageEntity> filterByMessagesUsersName(String userName) {
