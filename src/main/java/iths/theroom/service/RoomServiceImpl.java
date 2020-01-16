@@ -1,25 +1,19 @@
 package iths.theroom.service;
 
-import iths.theroom.entity.MessageEntity;
 import iths.theroom.entity.RoomEntity;
 import iths.theroom.entity.UserEntity;
 import iths.theroom.exception.BadRequestException;
 import iths.theroom.exception.NotFoundException;
-import iths.theroom.factory.MessageFactory;
 import iths.theroom.factory.RoomFactory;
-import iths.theroom.model.MessageModel;
 import iths.theroom.model.RoomModel;
 import iths.theroom.pojos.MessageForm;
-import iths.theroom.repository.MessageRepository;
 import iths.theroom.repository.RoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -114,19 +108,6 @@ public class RoomServiceImpl implements RoomService {
         catch(Exception e){}
         return false;
     }
-
-    @Override
-    public List<MessageModel> getAllMessagesForRoom(String roomName) {
-        try{
-            RoomEntity roomEntity = checkIfRoomExists(roomName);
-            List<MessageEntity> messages = new ArrayList<>(roomEntity.getMessages());
-            return MessageFactory.toModel(messages.stream().sorted((m1, m2) -> (int) (m1.getId()-m2.getId())).collect(Collectors.toList()));
-        } catch(NotFoundException e){
-
-            return null;
-        }
-    }
-
 
     @Override
     public RoomModel deleteRoom(String name) {
