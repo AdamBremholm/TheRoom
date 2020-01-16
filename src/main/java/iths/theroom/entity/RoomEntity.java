@@ -25,6 +25,7 @@ public class RoomEntity {
 
     public RoomEntity(){
         this.messages = new HashSet<>();
+        this.bannedUsers = new HashSet<>();
     }
 
     public RoomEntity(String roomName){
