@@ -31,7 +31,7 @@ public class MessageEntity {
     private RoomEntity roomEntity;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "rating_id", referencedColumnName = "id")
+    @JoinColumn(name = COLUMN_RATING_ID, referencedColumnName = COLUMN_ID)
     private MessageRatingEntity messageRatingEntity;
 
     public MessageEntity() {

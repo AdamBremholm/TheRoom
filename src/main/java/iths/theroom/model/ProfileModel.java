@@ -10,8 +10,7 @@ public class ProfileModel {
     private String starSign;
     private long visitors;
 
-public ProfileModel(){}
-
+    public ProfileModel(){}
 
     public String getGender() {
         return gender;

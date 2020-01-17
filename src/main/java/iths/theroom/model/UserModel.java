@@ -8,10 +8,8 @@ public class UserModel implements Serializable {
 
     private String userName;
     private String email;
-
     private String firstName;
     private String lastName;
-
     private Set<MessageModel> messages;
     private AvatarModel avatar;
     private String roles;

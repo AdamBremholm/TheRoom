@@ -20,7 +20,6 @@ import java.util.Optional;
 public class RoomServiceImpl implements RoomService {
 
     private final UserService userService;
-
     private final RoomFactory roomFactory;
     private final RoomRepository roomRepository;
 

@@ -4,7 +4,6 @@ import iths.theroom.entity.ProfileEntity;
 import iths.theroom.model.ProfileModel;
 import org.springframework.stereotype.Component;
 
-
 @Component
 public class ProfileFactory {
 

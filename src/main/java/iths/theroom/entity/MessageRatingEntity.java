@@ -5,7 +5,7 @@ import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
-import static iths.theroom.config.DataBaseConfig.TABLE_MESSAGE_RATING;
+import static iths.theroom.config.DataBaseConfig.*;
 
 @Entity
 @Table(name= TABLE_MESSAGE_RATING)
@@ -14,22 +14,21 @@ public class MessageRatingEntity {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private long id;
-
     private int rating;
 
     @OneToOne(mappedBy = "messageRatingEntity")
     private MessageEntity messageEntity;
 
     @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-    @JoinTable(name = "USERS_INCREASE",
-            joinColumns = {@JoinColumn(name = "RATING_ID")},
-            inverseJoinColumns = {@JoinColumn(name = "USER_ID")})
+    @JoinTable(name = TABLE_USER_INCREASE,
+            joinColumns = {@JoinColumn(name = COLUMN_RATING_ID)},
+            inverseJoinColumns = {@JoinColumn(name = COLUMN_USER_ID)})
     private Set<UserEntity> usersIncrease;
 
     @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-    @JoinTable(name = "USERS_DECREASE",
-            joinColumns = {@JoinColumn(name = "RATING_ID")},
-            inverseJoinColumns = {@JoinColumn(name = "USER_ID")})
+    @JoinTable(name = TABLE_USER_DECREASE,
+            joinColumns = {@JoinColumn(name = COLUMN_RATING_ID)},
+            inverseJoinColumns = {@JoinColumn(name = COLUMN_USER_ID)})
     private Set<UserEntity> usersDecrease;
 
     public MessageRatingEntity(){

@@ -6,5 +6,6 @@ import iths.theroom.pojos.ProfileForm;
 import javax.servlet.http.HttpServletRequest;
 
 public interface ProfileService {
+
         ProfileModel save(ProfileForm form, HttpServletRequest req);
 }

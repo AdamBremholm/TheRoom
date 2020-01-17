@@ -8,9 +8,13 @@ import java.util.List;
 public interface AvatarService {
 
     List<AvatarModel> getAllAvatars();
+
     AvatarModel getAvatarById(Long id);
+
     AvatarModel createAvatar(AvatarEntity avatar);
+
     AvatarModel updateAvatar(AvatarEntity avatar);
+
     void deleteAvatar(Long id);
 
 }

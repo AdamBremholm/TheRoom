@@ -11,7 +11,6 @@ public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @Column(unique = true, nullable = false)
     private String userName;
     private String password;
@@ -19,10 +18,8 @@ public class UserEntity {
     private String email;
     @Transient
     private String passwordConfirm;
-
     private String firstName;
     private String lastName;
-
     private String roles;
     private String permissions;
     private int active;
@@ -31,17 +28,16 @@ public class UserEntity {
     private Set<MessageEntity> messages;
 
     @OneToOne(mappedBy = "userEntity", cascade = {CascadeType.PERSIST, CascadeType.PERSIST})
-    @JoinColumn(name = "id", referencedColumnName = "id")
+    @JoinColumn(name = COLUMN_ID, referencedColumnName = COLUMN_ID)
     private AvatarEntity avatarEntity;
 
     @ManyToMany(cascade = CascadeType.PERSIST, fetch=FetchType.EAGER)
-    @JoinColumn(name="banned_id", referencedColumnName = "id")
+    @JoinColumn(name=COLUMN_BANNED_ID, referencedColumnName = COLUMN_ID)
     private Set<RoomEntity> excludedRooms;
 
     @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.PERSIST}, fetch=FetchType.LAZY)
-    @JoinColumn(name = "profile_id", referencedColumnName = "id")
+    @JoinColumn(name = COLUMN_PROFILE_ID, referencedColumnName = COLUMN_ID)
     private ProfileEntity profile;
-
 
     public UserEntity(String userName, String password, String email,
                       String passwordConfirm, String firstName, String lastName, Set<MessageEntity> messages, AvatarEntity avatarEntity, String roles, String permissions) {

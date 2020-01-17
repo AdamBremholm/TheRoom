@@ -13,8 +13,12 @@ import static iths.theroom.factory.AvatarFactory.*;
 @Service
 public class AvatarServiceImpl implements AvatarService {
 
+    private final AvatarRepository repository;
+
     @Autowired
-    private AvatarRepository repository;
+    public AvatarServiceImpl(AvatarRepository repository) {
+        this.repository = repository;
+    }
 
     @Override
     public List<AvatarModel> getAllAvatars() {

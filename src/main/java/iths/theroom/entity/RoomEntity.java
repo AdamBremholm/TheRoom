@@ -19,7 +19,6 @@ public class RoomEntity {
     @OneToMany(mappedBy = "roomEntity")
     private Set<MessageEntity> messages;
 
-
     @ManyToMany(mappedBy = "excludedRooms")
     private Set<UserEntity> bannedUsers;
 

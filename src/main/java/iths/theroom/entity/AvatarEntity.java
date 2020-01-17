@@ -2,6 +2,7 @@ package iths.theroom.entity;
 
 import javax.persistence.*;
 
+import static iths.theroom.config.DataBaseConfig.COLUMN_ID;
 import static iths.theroom.config.DataBaseConfig.TABLE_AVATAR;
 
 @Entity
@@ -11,14 +12,13 @@ public class AvatarEntity {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private long id;
-
     private int base;
     private int head;
     private int torso;
     private int legs;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id", referencedColumnName = "id")
+    @JoinColumn(name = COLUMN_ID, referencedColumnName = COLUMN_ID)
     private UserEntity userEntity;
 
     public AvatarEntity() {

@@ -25,7 +25,6 @@ import static com.auth0.jwt.algorithms.Algorithm.HMAC512;
 @Component
 public class JwtChannelInterceptor implements ChannelInterceptor {
 
-
     @Autowired
     UserService userService;
 
@@ -92,6 +91,7 @@ public class JwtChannelInterceptor implements ChannelInterceptor {
         }
         return null;
     }
+
     private boolean isUserBanned(Message<?> message){
 
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(message);

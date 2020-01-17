@@ -9,7 +9,6 @@ public class RoomModel {
     private String backgroundColor;
     private Set<MessageModel> messages;
 
-
     public RoomModel(){
         this.messages = new HashSet<>();
     }
@@ -29,6 +28,7 @@ public class RoomModel {
     public void addMessage(MessageModel message) {
         this.messages.add(message);
     }
+
     public void setMessages(Set<MessageModel> messages) {
         this.messages = messages;
     }
