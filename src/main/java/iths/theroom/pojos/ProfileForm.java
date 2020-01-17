@@ -1,6 +1,7 @@
 package iths.theroom.pojos;
 
 public class ProfileForm {
+
     private String password;
     private String username;
     private String gender;
@@ -9,10 +10,7 @@ public class ProfileForm {
     private String aboutMe;
     private String starSign;
 
-    public ProfileForm(){
-
-    }
-
+    public ProfileForm(){}
 
     public String getPassword() {
         return password;

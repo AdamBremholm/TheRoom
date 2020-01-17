@@ -4,6 +4,7 @@ package iths.theroom.pojos;
 import iths.theroom.enums.Type;
 
 public class MessageForm{
+
     private Type type;
     private String content;
     private String roomName;

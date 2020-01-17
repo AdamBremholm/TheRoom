@@ -11,6 +11,7 @@ import java.util.Optional;
 
 
 public interface MessageRepository extends JpaRepository<MessageEntity, Long> {
+
     Optional<MessageEntity> findByUuid(String uuid);
     List<MessageEntity> findAllByRoomEntityOrderById(RoomEntity roomEntity);
 }
