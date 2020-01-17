@@ -42,6 +42,7 @@ public class MessageFactory {
         return messageModels;
 
     }
+
     public static MessageModel toModel(MessageForm messageForm){
         MessageModel messageModel = new MessageModel();
         messageModel.setContent(messageForm.getContent());

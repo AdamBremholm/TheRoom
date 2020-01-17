@@ -19,7 +19,6 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @Order(Ordered.HIGHEST_PRECEDENCE + 99)
 public class WebSocketChatConfig implements WebSocketMessageBrokerConfigurer {
 
-
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/websocketApp")
@@ -38,7 +37,6 @@ public class WebSocketChatConfig implements WebSocketMessageBrokerConfigurer {
     public void configureClientInboundChannel(ChannelRegistration registration) {
         registration.interceptors(addJwtChannelInterceptor());
     }
-
 
     @Bean
     public JwtChannelInterceptor addJwtChannelInterceptor() {

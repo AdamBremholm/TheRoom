@@ -1,6 +1,7 @@
 package iths.theroom.model;
 
 public class LoginViewModel {
+
     private String username;
     private String password;
 

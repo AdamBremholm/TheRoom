@@ -13,12 +13,12 @@ import java.util.Optional;
 
 @Service
 public class UserPrincipalDetailsService implements UserDetailsService {
+
     private UserRepository userRepository;
 
     public UserPrincipalDetailsService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
-
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {

@@ -18,6 +18,7 @@ import java.io.IOException;
 import static com.auth0.jwt.algorithms.Algorithm.HMAC512;
 
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
+
     private UserService userService;
 
     public JwtAuthorizationFilter(AuthenticationManager authenticationManager, UserService userService) {
@@ -43,7 +44,6 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         // Continue filter execution
         chain.doFilter(request, response);
     }
-
 
     private Authentication getUsernamePasswordAuthentication(HttpServletRequest request) {
         String token = request.getHeader(JwtProperties.HEADER_STRING)

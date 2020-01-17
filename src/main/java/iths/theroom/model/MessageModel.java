@@ -77,5 +77,4 @@ public class MessageModel {
         this.roomBackgroundColor = roomBackgroundColor;
     }
 
-
 }

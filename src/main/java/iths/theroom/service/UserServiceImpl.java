@@ -30,7 +30,6 @@ public class UserServiceImpl implements UserService {
          return userRepository.findById(id).orElseThrow(NoSuchUserException::new);
     }
 
-
     @Override
     public UserEntity save(UserEntity userEntity) throws ConflictException, BadRequestException {
         validateUserEntity(userEntity);
@@ -48,8 +47,6 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAll();
     }
 
-
-
     private void validateUserEntity(UserEntity userEntity) throws BadRequestException {
         Optional<UserEntity> optionalUserEntity = Optional.ofNullable(userEntity);
         optionalUserEntity.map(UserEntity::getUserName)
@@ -64,7 +61,6 @@ public class UserServiceImpl implements UserService {
         encodePassword(optionalUserEntity.get());
     }
 
-
     private void validatePassword(UserEntity userEntity) throws BadRequestException {
         if(userEntity!=null) {
             if (!userEntity.getPassword().equals(userEntity.getPasswordConfirm()))
@@ -73,7 +69,6 @@ public class UserServiceImpl implements UserService {
         }
 
     }
-
 
     private void checkForDuplicates(UserEntity userEntity) throws ConflictException {
         Optional<UserEntity> foundUserByUserName = userRepository.findByUserName(userEntity.getUserName());
@@ -84,11 +79,9 @@ public class UserServiceImpl implements UserService {
             throw new ConflictException("email: "+userEntity.getEmail() +" is already taken");
     }
 
-
     private void encodePassword(UserEntity userEntity){
         userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
     }
-
 
     @Override
     public UserDetails loadUserByUsername(String userName) throws NotFoundException {

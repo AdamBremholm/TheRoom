@@ -12,7 +12,6 @@ public class AvatarEntity {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private long id;
-
     private int base;
     private int head;
     private int torso;

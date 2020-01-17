@@ -1,6 +1,5 @@
 package iths.theroom.pojos;
 
-
 import iths.theroom.enums.Type;
 
 public class MessageForm{
