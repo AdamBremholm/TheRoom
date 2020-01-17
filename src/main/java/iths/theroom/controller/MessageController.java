@@ -4,7 +4,6 @@ import iths.theroom.model.MessageModel;
 import iths.theroom.pojos.MessageForm;
 import iths.theroom.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
