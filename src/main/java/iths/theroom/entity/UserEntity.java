@@ -31,15 +31,15 @@ public class UserEntity {
     private Set<MessageEntity> messages;
 
     @OneToOne(mappedBy = "userEntity", cascade = {CascadeType.PERSIST, CascadeType.PERSIST})
-    @JoinColumn(name = "id", referencedColumnName = "id")
+    @JoinColumn(name = COLUMN_ID, referencedColumnName = COLUMN_ID)
     private AvatarEntity avatarEntity;
 
     @ManyToMany(cascade = CascadeType.PERSIST, fetch=FetchType.EAGER)
-    @JoinColumn(name="banned_id", referencedColumnName = "id")
+    @JoinColumn(name=COLUMN_BANNED_ID, referencedColumnName = COLUMN_ID)
     private Set<RoomEntity> excludedRooms;
 
     @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.PERSIST}, fetch=FetchType.LAZY)
-    @JoinColumn(name = "profile_id", referencedColumnName = "id")
+    @JoinColumn(name = COLUMN_PROFILE_ID, referencedColumnName = COLUMN_ID)
     private ProfileEntity profile;
 
 
