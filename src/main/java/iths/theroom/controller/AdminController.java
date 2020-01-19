@@ -30,7 +30,7 @@ public class AdminController {
     }
 
     @DeleteMapping("/delete")
-    public RoomModel deleteRoom(@RequestParam(name="roomname") String roomName) {
+    public RoomModel deleteRoom(@RequestParam(name="roomname") String roomName) throws NotFoundException, BadRequestException {
         return adminService.deleteRoom(roomName);
     }
 

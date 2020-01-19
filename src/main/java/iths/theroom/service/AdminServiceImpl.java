@@ -97,10 +97,17 @@ public class AdminServiceImpl implements AdminService{
 
     @Override
     public RoomModel deleteRoom(String roomName) {
-        RoomEntity room = roomRepository.findRoomByNameWithQuery(roomName);
-        roomRepository.delete(room);
-
-        return roomFactory.entityToModel(room);
+        if(!roomName.isBlank()) {
+            RoomEntity room = roomRepository.findRoomByNameWithQuery(roomName);
+            if(room != null) {
+                roomRepository.delete(room);
+                return roomFactory.entityToModel(room);
+            } else {
+                throw new NotFoundException("This room does not exist");
+            }
+        } else {
+            throw new BadRequestException("No empty fields allowed!");
+        }
     }
 
     @Override
