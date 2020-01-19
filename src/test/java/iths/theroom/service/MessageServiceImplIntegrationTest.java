@@ -27,6 +27,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 
 
@@ -274,8 +275,17 @@ public class MessageServiceImplIntegrationTest {
         assertThat(messageService.increaseMessageRating("123abc", "sven").getRating()).isEqualTo(1);
     }
 
-
     @Test
-    public void increaseMessageRating() {
+    public void findAllByRoomEntityOrderById_List() {
+        roomEntity.addMessage(message);
+        MessageEntity message1 = new MessageEntity();
+        MessageEntity message2 = new MessageEntity();
+        MessageEntity message3 = new MessageEntity();
+        message1.setContent(message.getContent());
+        message2.setContent("im in the middle");
+        message3.setContent(message.getContent());
+        Mockito.when(roomRepository.getOneByRoomName(any())).thenReturn(Optional.ofNullable(roomEntity));
+        Mockito.when(messageRepository.findAllByRoomEntityOrderById(any())).thenReturn(List.of(message1, message2, message3));
+        assertTrue(messageService.findAllByRoomEntityOrderById(roomEntity.getRoomName()).get(1).getContent().equals("im in the middle"));
     }
 }
