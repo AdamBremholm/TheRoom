@@ -1,5 +1,6 @@
 package iths.theroom.controller;
 
+import iths.theroom.exception.BadRequestException;
 import iths.theroom.model.MessageModel;
 import iths.theroom.model.RoomModel;
 import iths.theroom.model.UserModel;
@@ -16,7 +17,7 @@ public class AdminController {
 
     @PutMapping("/ban")
     public RoomModel banUserFromRoom(@RequestParam(name="username") String userName,
-                                     @RequestParam(name="roomname") String roomName) {
+                                     @RequestParam(name="roomname") String roomName) throws BadRequestException {
         return adminService.banUserFromRoom(userName, roomName);
     }
 

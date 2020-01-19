@@ -2,6 +2,7 @@ package iths.theroom.service;
 
 import iths.theroom.entity.RoomEntity;
 import iths.theroom.entity.UserEntity;
+import iths.theroom.exception.BadRequestException;
 import iths.theroom.factory.RoomFactory;
 import iths.theroom.model.MessageModel;
 import iths.theroom.model.RoomModel;
@@ -35,15 +36,25 @@ public class AdminServiceImpl implements AdminService{
     }
 
     @Override
-    public RoomModel banUserFromRoom(String userName, String roomName) {
+    public RoomModel banUserFromRoom(String userName, String roomName) throws BadRequestException {
         RoomEntity room = roomRepository.findRoomByNameWithQuery(roomName);
         UserEntity user = userRepository.findUserByNameWithQuery(userName);
-        Set<UserEntity> bannedUsers = room.getBannedUsers();
-        Set<RoomEntity> excludedFromRooms = user.getExcludedRooms();
-        bannedUsers.add(user);
-        room.setBannedUsers(bannedUsers);
-        excludedFromRooms.add(room);
-        user.setExcludedRooms(excludedFromRooms);
+        Set<UserEntity> bannedUsers;
+        Set<RoomEntity> excludedFromRooms;
+        if(room != null) {
+            bannedUsers = room.getBannedUsers();
+            bannedUsers.add(user);
+            room.setBannedUsers(bannedUsers);
+        } else {
+            throw new BadRequestException("This room does not exist!");
+        }
+        if(user != null) {
+            excludedFromRooms = user.getExcludedRooms();
+            excludedFromRooms.add(room);
+            user.setExcludedRooms(excludedFromRooms);
+        } else {
+            throw new BadRequestException("This user does not exist!");
+        }
         roomRepository.save(room);
 
         return roomFactory.entityToModel(room);

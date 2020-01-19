@@ -64,7 +64,7 @@ public class MessageServiceImpl implements MessageService {
 
             return toModel(messageRepository.save(message));
         } else {
-            throw new UnauthorizedException("{\"You are banned from typing in this room!}");
+            throw new UnauthorizedException("{\"You are banned from chatting in this room!}");
         }
         /*MessageEntity message = new MessageEntity(form.getType(), form.getContent(), user, room.get(), new MessageRatingEntity());
         room.get().addMessage(message);*/
