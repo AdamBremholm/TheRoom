@@ -15,15 +15,12 @@ import iths.theroom.repository.MessageRepository;
 import iths.theroom.repository.RoomRepository;
 import iths.theroom.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-
 import static iths.theroom.factory.MessageFactory.toModel;
 
 @Service
@@ -81,30 +78,44 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public List<MessageModel> getAllMessagesFromUser(String userName, String roomName, String count) {
-
-        UserEntity user = userRepository.findByUserName(userName).orElseThrow(NoSuchUserException::new);
+        UserEntity user;
         RoomEntity roomEntity;
         List<MessageEntity> messages;
-        if(roomName != null) {
-            roomEntity = roomRepository.getOneByRoomName(roomName).orElseThrow(NoSuchUserException::new);
-            messages = filterByMessagesUserAndRoom(user, roomEntity);
-        }
-        else {
-            messages = filterByMessagesUsersName(user);
-        }
+        int messageCount = 0;
 
         if(count != null) {
             try {
-                int messageCount = Integer.parseInt(count);
-                if(messageCount > messages.size()){
-                    return toModel(messages);
-                }
-                else {
-                    return toModel(filterMessagesByCount(messages, messageCount));
-                }
-            }
-            catch (NumberFormatException e) {
+                messageCount = Integer.parseInt(count);
+
+            } catch (NumberFormatException e) {
                 throw new BadRequestException("Count must be a digit");
+            }
+        }
+
+        if(userRepository.findByUserName(userName).isPresent()) {
+            user = userRepository.findByUserName(userName).get();
+            messages = filterByMessagesUsersName(user);
+        }
+
+        else {
+            throw new NotFoundException("No user found with that username");
+        }
+
+        if(roomName != null) {
+            if(roomRepository.getOneByRoomName(roomName).isPresent()) {
+                roomEntity = roomRepository.getOneByRoomName(roomName).get();
+                messages = filterByMessagesUserAndRoom(user, roomEntity);
+            }
+            else {
+                throw new NotFoundException("Requested user has not posted in that room");
+            }
+        }
+        if(messageCount > messages.size()){
+            throw new NotFoundException("Not enough messages exists for that criteria");
+        }
+        else {
+            if( messageCount > 0) {
+                messages = filterMessagesByCount(messages, messageCount);
             }
         }
         return toModel(messages);
