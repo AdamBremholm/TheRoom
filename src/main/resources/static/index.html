@@ -65,6 +65,14 @@
     <div class="dialogue-container">
         <div class="dialogue-header">
             <h2 id="roomTitle"></h2>
+            Username: <input id="uname-sheet" type="text" name="uname">
+            <div class="admin-tools">
+                <div class="btn-group">
+                    <button type="button" onclick="banUser()">Ban user</button>
+                    <button id="unban-user">Un-ban user</button>
+                    <button id="give-admin">Give admin status</button>
+                </div>
+            </div>
         </div>
         <ul id="messageList">
         </ul>

@@ -86,6 +86,21 @@ function login(event){
 
 }
 
+function banUser() {
+    let param = new URLSearchParams();
+    let user = document.querySelector('#uname-sheet').value.trim();
+    let room = document.getElementById('roomTitle').innerHTML;
+    param.append('username', user);
+    param.append('roomname', room);
+    axios({
+        method: 'put',
+        url: '/api/admin/ban',
+        data: param
+    }).then(function (res) {
+        console.log(res);
+    });
+
+}
 
 function connect(event) {
     name = document.querySelector('#name').value.trim();
@@ -392,5 +407,7 @@ function changeRatingColor(ratingElement){
         ratingElement.style.color = "black";
     }
 }
+
+
 
 
