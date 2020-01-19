@@ -99,7 +99,21 @@ function banUser() {
     }).then(function (res) {
         console.log(res);
     });
+}
 
+function unbanUser() {
+    let param = new URLSearchParams();
+    let user = document.querySelector('#uname-sheet').value.trim();
+    let room = document.getElementById('roomTitle').innerHTML;
+    param.append('username', user);
+    param.append('roomname', room);
+    axios({
+        method: 'put',
+        url: '/api/admin/unban',
+        data: param
+    }).then(function (res) {
+        console.log(res);
+    });
 }
 
 function connect(event) {
