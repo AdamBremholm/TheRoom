@@ -5,10 +5,7 @@ import iths.theroom.model.RoomModel;
 import iths.theroom.model.UserModel;
 import iths.theroom.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/admin")
@@ -29,8 +26,9 @@ public class AdminController {
         return adminService.removeBanFromUser(userName, roomName);
     }
 
-    public RoomModel deleteRoom() {
-        return null;
+    @DeleteMapping("/delete")
+    public RoomModel deleteRoom(@RequestParam(name="roomname") String roomName) {
+        return adminService.deleteRoom(roomName);
     }
 
     public UserModel upgradeUserToAdmin() {

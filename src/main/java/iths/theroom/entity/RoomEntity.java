@@ -16,11 +16,11 @@ public class RoomEntity {
     private String roomName;
     private String backgroundColor;
 
-    @OneToMany(mappedBy = "roomEntity")
+    @OneToMany(mappedBy = "roomEntity", cascade = CascadeType.REMOVE)
     private Set<MessageEntity> messages;
 
 
-    @ManyToMany(mappedBy = "excludedRooms")
+    @ManyToMany(mappedBy = "excludedRooms", cascade = CascadeType.REMOVE)
     private Set<UserEntity> bannedUsers;
 
     public RoomEntity(){

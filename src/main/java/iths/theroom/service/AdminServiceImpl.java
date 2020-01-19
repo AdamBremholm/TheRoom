@@ -64,7 +64,10 @@ public class AdminServiceImpl implements AdminService{
 
     @Override
     public RoomModel deleteRoom(String roomName) {
-        return null;
+        RoomEntity room = roomRepository.findRoomByNameWithQuery(roomName);
+        roomRepository.delete(room);
+
+        return roomFactory.entityToModel(room);
     }
 
     @Override
