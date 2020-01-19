@@ -99,13 +99,15 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public boolean isUserBannedHere(String username, String roomName) {
-        try {
             UserEntity user = userService.getByUserName(username);
+            if(roomRepository.getOneByRoomName(roomName).isPresent()) {
+                RoomEntity room = roomRepository.getOneByRoomName(roomName).get();
+            }
+            else {
+                throw new NotFoundException("Room not found");
+            }
             RoomEntity room = getOneEntityByName(roomName);
             return room.getBannedUsers().contains(user);
-        }
-        catch(Exception e){}
-        return false;
     }
 
     @Override
