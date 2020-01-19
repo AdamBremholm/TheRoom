@@ -1,7 +1,9 @@
 package iths.theroom.service;
 
 import iths.theroom.entity.RoomEntity;
+import iths.theroom.entity.UserEntity;
 import iths.theroom.exception.BadRequestException;
+import iths.theroom.exception.NoSuchUserException;
 import iths.theroom.exception.NotFoundException;
 import iths.theroom.factory.RoomFactory;
 import iths.theroom.model.RoomModel;
@@ -27,6 +29,9 @@ public class RoomServiceImplTest {
 
     @Mock
     RoomRepository roomRepository;
+
+    @Mock
+    UserServiceImpl userService;
 
     @InjectMocks
     RoomServiceImpl roomService;
@@ -262,4 +267,39 @@ public class RoomServiceImplTest {
         roomService.deleteRoom("");
     }
 
+    @Test
+    public void whenIsUserBanned_IfTrueReturnTrue(){
+        UserEntity user = new UserEntity("abc");
+        RoomEntity room = new RoomEntity("123");
+        room.banUser(user);
+        when(roomRepository.getOneByRoomName(any())).thenReturn(Optional.of(room));
+        when(userService.getByUserName(any())).thenReturn(user);
+        assertTrue(roomService.isUserBannedHere(user.getUserName(), room.getRoomName()));
+    }
+
+    @Test
+    public void whenIsUserBanned_IfFalseReturnFalse(){
+        UserEntity user = new UserEntity("abc");
+        RoomEntity room = new RoomEntity("123");
+        when(roomRepository.getOneByRoomName(any())).thenReturn(Optional.of(room));
+        when(userService.getByUserName(any())).thenReturn(user);
+        assertFalse(roomService.isUserBannedHere(user.getUserName(), room.getRoomName()));
+    }
+
+    @Test(expected = NoSuchUserException.class)
+    public void whenIsUserBanned_UserDoesntExist(){
+        RoomEntity room = new RoomEntity("123");
+        when(roomRepository.getOneByRoomName(any())).thenReturn(Optional.of(room));
+        when(userService.getByUserName("this name doesnt exist")).thenThrow(new NoSuchUserException());
+        roomService.isUserBannedHere("this name doesnt exist", room.getRoomName());
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void whenIsUserBanned_RoomDoesntExist(){
+        UserEntity user = new UserEntity("abc");
+        RoomEntity room = new RoomEntity("123");
+        when(roomRepository.getOneByRoomName(any())).thenReturn(Optional.empty());
+        when(userService.getByUserName(any())).thenReturn(user);
+        roomService.isUserBannedHere(user.getUserName(), "this room doesnt exist for sure");
+    }
 }
