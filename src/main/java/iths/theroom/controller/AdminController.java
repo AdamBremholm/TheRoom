@@ -3,7 +3,6 @@ package iths.theroom.controller;
 import iths.theroom.exception.BadRequestException;
 import iths.theroom.exception.ConflictException;
 import iths.theroom.exception.NotFoundException;
-import iths.theroom.model.MessageModel;
 import iths.theroom.model.RoomModel;
 import iths.theroom.model.UserModel;
 import iths.theroom.service.AdminService;
@@ -38,10 +37,5 @@ public class AdminController {
     public UserModel upgradeUserToAdmin(@RequestParam("username") String userName) throws NotFoundException, ConflictException, BadRequestException {
         return adminService.upgradeUserToAdmin(userName);
     }
-
-    public MessageModel removeMessageFromFeed() {
-        return null;
-    }
-
 
 }

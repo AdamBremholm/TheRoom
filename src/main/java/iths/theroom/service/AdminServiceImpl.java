@@ -6,10 +6,8 @@ import iths.theroom.exception.BadRequestException;
 import iths.theroom.exception.ConflictException;
 import iths.theroom.exception.NotFoundException;
 import iths.theroom.factory.RoomFactory;
-import iths.theroom.model.MessageModel;
 import iths.theroom.model.RoomModel;
 import iths.theroom.model.UserModel;
-import iths.theroom.repository.MessageRepository;
 import iths.theroom.repository.RoomRepository;
 import iths.theroom.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,18 +21,17 @@ import java.util.Set;
 import static iths.theroom.factory.UserFactory.toModel;
 
 @Service
+//@PreAuthorize("hasRole('ROLE_ADMIN')")
 public class AdminServiceImpl implements AdminService{
 
     private RoomRepository roomRepository;
     private UserRepository userRepository;
-    private MessageRepository messageRepository;
     private RoomFactory roomFactory;
 
     @Autowired
-    public AdminServiceImpl(RoomRepository roomRepository, UserRepository userRepository, MessageRepository messageRepository, RoomFactory roomFactory) {
+    public AdminServiceImpl(RoomRepository roomRepository, UserRepository userRepository, RoomFactory roomFactory) {
         this.roomRepository = roomRepository;
         this.userRepository = userRepository;
-        this.messageRepository = messageRepository;
         this.roomFactory = roomFactory;
     }
 
@@ -135,8 +132,4 @@ public class AdminServiceImpl implements AdminService{
         }
     }
 
-    @Override
-    public MessageModel removeMessage(String uuid) {
-        return null;
-    }
 }
