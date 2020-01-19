@@ -132,6 +132,13 @@ public class UserEntity {
         this.messages = messages;
     }
 
+    public Set<RoomEntity> getExcludedRooms() {
+        return excludedRooms;
+    }
+
+    public void setExcludedRooms(Set<RoomEntity> excludedRooms) {
+        this.excludedRooms = excludedRooms;
+    }
 
     public AvatarEntity getAvatarEntity() {
         return avatarEntity;
