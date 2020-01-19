@@ -15,6 +15,7 @@ import iths.theroom.repository.MessageRepository;
 import iths.theroom.repository.RoomRepository;
 import iths.theroom.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -80,27 +81,32 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public List<MessageModel> getAllMessagesFromUser(String userName, String roomName, String count) {
-        List<MessageEntity> messages = filterByMessagesUsersName(userName);
 
-        if (messages.isEmpty()) {
-            throw new NotFoundException("No user found with that username");
+        UserEntity user = userRepository.findByUserName(userName).orElseThrow(NoSuchUserException::new);
+        RoomEntity roomEntity;
+        List<MessageEntity> messages;
+        if(roomName != null) {
+            roomEntity = roomRepository.getOneByRoomName(roomName).orElseThrow(NoSuchUserException::new);
+            messages = filterByMessagesUserAndRoom(user, roomEntity);
         }
-        if (roomName != null) {
+        else {
+            messages = filterByMessagesUsersName(user);
+        }
 
-         messages = filterByMessagesRoom(messages, roomName);
-        }
-        if (count != null) {
+        if(count != null) {
             try {
                 int messageCount = Integer.parseInt(count);
-                if (messageCount > messages.size()) {
-                    throw new NotFoundException("Not enough messages exists for that criteria");
+                if(messageCount > messages.size()){
+                    return toModel(messages);
                 }
-                messages = filterMessagesByCount(messages, messageCount);
-            } catch (NumberFormatException e) {
+                else {
+                    return toModel(filterMessagesByCount(messages, messageCount));
+                }
+            }
+            catch (NumberFormatException e) {
                 throw new BadRequestException("Count must be a digit");
             }
         }
-
         return toModel(messages);
     }
 
@@ -145,26 +151,12 @@ public class MessageServiceImpl implements MessageService {
         return Collections.emptyList();
     }
 
-    private List<MessageEntity> filterByMessagesUsersName(String userName) {
-        List<MessageEntity> messagesByUser = new ArrayList<>();
-
-        for(MessageEntity messageEntity: messageRepository.findAll()){
-            if(messageEntity.getSender().getUserName().equals(userName)){
-                messagesByUser.add(messageEntity);
-            }
-        }
-        return messagesByUser;
+    private List<MessageEntity> filterByMessagesUsersName(UserEntity user) {
+        return messageRepository.findAllBySenderOrderByTimeDesc(user);
     }
 
-    private List<MessageEntity> filterByMessagesRoom(List<MessageEntity> messages, String roomName) {
-        List<MessageEntity> messagesFilteredByRoomName = new ArrayList<>();
-
-        for (MessageEntity messageEntity : messages) {
-            if (messageEntity.getRoomEntity().getRoomName().equals(roomName)) {
-                messagesFilteredByRoomName.add(messageEntity);
-            }
-        }
-        return messagesFilteredByRoomName;
+    private List<MessageEntity> filterByMessagesUserAndRoom(UserEntity user, RoomEntity roomEntity) {
+        return messageRepository.findAllBySenderAndRoomEntityOrderByTimeDesc(user, roomEntity);
     }
 
     private List<MessageEntity> filterMessagesByCount(List<MessageEntity> messages, int count) {
