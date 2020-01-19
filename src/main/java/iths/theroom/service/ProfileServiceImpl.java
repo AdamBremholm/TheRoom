@@ -32,6 +32,7 @@ public class ProfileServiceImpl implements ProfileService {
 
         UserDetails userDetails = userPrincipalDetailsService.loadUserByUsername(form.getUsername());
         UserEntity user = userService.getByUserName(userDetails.getUsername());
+
         user.getProfile().setAboutMe(form.getAboutMe());
         user.getProfile().setAge(form.getAge());
         user.getProfile().setCountry(form.getCountry());
@@ -39,7 +40,7 @@ public class ProfileServiceImpl implements ProfileService {
         user.getProfile().setStarSign(form.getStarSign());
 
         if(!userService.isUserWhoItClaimsToBe(userDetails.getUsername(), req)){
-            throw new UnauthorizedException("Invalid credentials");
+           throw new UnauthorizedException("Invalid credentials");
         }
         return ProfileFactory.toModel(userService.updateUser(user).getProfile());
     }
