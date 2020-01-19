@@ -1,6 +1,7 @@
 package iths.theroom.controller;
 
 import iths.theroom.exception.BadRequestException;
+import iths.theroom.exception.ConflictException;
 import iths.theroom.model.MessageModel;
 import iths.theroom.model.RoomModel;
 import iths.theroom.model.UserModel;
@@ -33,7 +34,7 @@ public class AdminController {
     }
 
     @PutMapping("/upgrade")
-    public UserModel upgradeUserToAdmin(@RequestParam("username") String userName) {
+    public UserModel upgradeUserToAdmin(@RequestParam("username") String userName) throws BadRequestException, ConflictException {
         return adminService.upgradeUserToAdmin(userName);
     }
 

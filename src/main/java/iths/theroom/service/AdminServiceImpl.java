@@ -3,6 +3,7 @@ package iths.theroom.service;
 import iths.theroom.entity.RoomEntity;
 import iths.theroom.entity.UserEntity;
 import iths.theroom.exception.BadRequestException;
+import iths.theroom.exception.ConflictException;
 import iths.theroom.factory.RoomFactory;
 import iths.theroom.model.MessageModel;
 import iths.theroom.model.RoomModel;
@@ -84,10 +85,19 @@ public class AdminServiceImpl implements AdminService{
     }
 
     @Override
-    public UserModel upgradeUserToAdmin(String userName) {
+    public UserModel upgradeUserToAdmin(String userName) throws BadRequestException, ConflictException{
         UserEntity user = userRepository.findUserByNameWithQuery(userName);
-        String roles = user.getRoles();
-        roles += ",ADMIN";
+        String roles;
+        if(user != null) {
+            roles = user.getRoles();
+        } else {
+            throw new BadRequestException("This user does not exist");
+        }
+        if (!roles.contains("ADMIN")) {
+            roles += ",ADMIN";
+        } else {
+            throw new ConflictException("This user is already an administrator");
+        }
         user.setRoles(roles);
         userRepository.save(user);
 
