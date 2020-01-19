@@ -19,7 +19,7 @@ public class AdminController {
 
     @PutMapping("/ban")
     public RoomModel banUserFromRoom(@RequestParam(name="username") String userName,
-                                     @RequestParam(name="roomname") String roomName) throws NotFoundException {
+                                     @RequestParam(name="roomname") String roomName) throws NotFoundException, BadRequestException {
         return adminService.banUserFromRoom(userName, roomName);
     }
 

@@ -39,27 +39,31 @@ public class AdminServiceImpl implements AdminService{
 
     @Override
     public RoomModel banUserFromRoom(String userName, String roomName) throws NotFoundException {
-        RoomEntity room = roomRepository.findRoomByNameWithQuery(roomName);
-        UserEntity user = userRepository.findUserByNameWithQuery(userName);
-        Set<UserEntity> bannedUsers;
-        Set<RoomEntity> excludedFromRooms;
-        if(room != null) {
-            bannedUsers = room.getBannedUsers();
-            bannedUsers.add(user);
-            room.setBannedUsers(bannedUsers);
-        } else {
-            throw new NotFoundException("This room does not exist!");
-        }
-        if(user != null) {
-            excludedFromRooms = user.getExcludedRooms();
-            excludedFromRooms.add(room);
-            user.setExcludedRooms(excludedFromRooms);
-        } else {
-            throw new NotFoundException("This user does not exist!");
-        }
-        roomRepository.save(room);
+        if(!userName.isBlank() && !roomName.isBlank()) {
+            RoomEntity room = roomRepository.findRoomByNameWithQuery(roomName);
+            UserEntity user = userRepository.findUserByNameWithQuery(userName);
+            Set<UserEntity> bannedUsers;
+            Set<RoomEntity> excludedFromRooms;
+            if(room != null) {
+                bannedUsers = room.getBannedUsers();
+                bannedUsers.add(user);
+                room.setBannedUsers(bannedUsers);
+            } else {
+                throw new NotFoundException("This room does not exist!");
+            }
+            if(user != null) {
+                excludedFromRooms = user.getExcludedRooms();
+                excludedFromRooms.add(room);
+                user.setExcludedRooms(excludedFromRooms);
+            } else {
+                throw new NotFoundException("This user does not exist!");
+            }
+            roomRepository.save(room);
 
-        return roomFactory.entityToModel(room);
+            return roomFactory.entityToModel(room);
+        } else {
+            throw new BadRequestException("No empty fields allowed!");
+        }
     }
 
     @Override
