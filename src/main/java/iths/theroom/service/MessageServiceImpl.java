@@ -11,7 +11,6 @@ import iths.theroom.entity.MessageEntity;
 import iths.theroom.repository.RoomRepository;
 import iths.theroom.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,7 +48,6 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    //@PreAuthorize("hasRole('ROLE_ADMIN')")
     public MessageModel save(MessageForm form) {
         UserEntity user = userRepository.findByUserName(form.getSender()).orElseThrow(NoSuchUserException::new);
         Optional<RoomEntity> room = roomRepository.getOneByRoomName(form.getRoomName());

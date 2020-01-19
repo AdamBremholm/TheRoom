@@ -13,6 +13,7 @@ import iths.theroom.repository.MessageRepository;
 import iths.theroom.repository.RoomRepository;
 import iths.theroom.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 
@@ -68,7 +69,7 @@ public class AdminServiceImpl implements AdminService{
 
     @Override
     public RoomModel removeBanFromUser(String userName, String roomName) {
-        if(!userName.isBlank() && roomName.isBlank()) {
+        if(!userName.isBlank() && !roomName.isBlank()) {
             RoomEntity room = roomRepository.findRoomByNameWithQuery(roomName);
             UserEntity user = userRepository.findUserByNameWithQuery(userName);
             Set<UserEntity> bannedUsers;
