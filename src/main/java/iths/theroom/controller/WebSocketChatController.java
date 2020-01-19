@@ -4,7 +4,6 @@ import iths.theroom.enums.Type;
 import iths.theroom.factory.MessageFactory;
 import iths.theroom.model.MessageModel;
 import iths.theroom.pojos.MessageForm;
-import iths.theroom.service.InitEntityWrapperService;
 import iths.theroom.service.MessageService;
 import iths.theroom.service.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,13 +23,11 @@ public class WebSocketChatController {
 
     private final MessageService messageService;
     private final RoomService roomService;
-    private final InitEntityWrapperService initEntityWrapperService;
 
     @Autowired
-    public WebSocketChatController(MessageService messageService, RoomService roomService, InitEntityWrapperService initEntityWrapperService) {
+    public WebSocketChatController(MessageService messageService, RoomService roomService) {
         this.messageService = messageService;
         this.roomService = roomService;
-        this.initEntityWrapperService = initEntityWrapperService;
     }
 
     @MessageMapping("/chat.sendMessage.{roomName}")
@@ -66,7 +63,6 @@ public class WebSocketChatController {
     @SendTo("/topic/{roomName}")
     public MessageModel newUser(@DestinationVariable String roomName, @Payload MessageForm webSocketChatMessage, SimpMessageHeaderAccessor headerAccessor) {
         Objects.requireNonNull(headerAccessor.getSessionAttributes()).put("username", webSocketChatMessage.getSender());
-        initEntityWrapperService.initRoomSession(webSocketChatMessage);
         return MessageFactory.toModel(webSocketChatMessage);
     }
 }
