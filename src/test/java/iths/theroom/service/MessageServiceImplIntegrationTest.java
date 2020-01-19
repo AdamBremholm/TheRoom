@@ -11,6 +11,7 @@ import iths.theroom.pojos.MessageForm;
 import iths.theroom.repository.MessageRepository;
 import iths.theroom.repository.RoomRepository;
 import iths.theroom.repository.UserRepository;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,6 +27,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 
 
 @RunWith(SpringRunner.class)
@@ -106,7 +108,7 @@ public class MessageServiceImplIntegrationTest {
         Mockito.when(messageRepository.findAll())
                 .thenReturn(List.of(message));
 
-        Mockito.when(userRepository.findByUserName(Mockito.any()))
+        Mockito.when(userRepository.findByUserName(any()))
                 .thenReturn(Optional.empty());
 
         assertThat(messageService.save(messageForm)).isInstanceOf(MessageModel.class);
@@ -120,10 +122,10 @@ public class MessageServiceImplIntegrationTest {
         Mockito.when(messageRepository.findAll())
                 .thenReturn(List.of(message));
 
-        Mockito.when(userRepository.findByUserName(Mockito.any()))
+        Mockito.when(userRepository.findByUserName(any()))
                 .thenReturn(Optional.of(userEntity));
 
-        Mockito.when(roomRepository.getOneByRoomName(Mockito.any()))
+        Mockito.when(roomRepository.getOneByRoomName(any()))
                 .thenReturn(Optional.empty());
 
         assertThat(messageService.save(messageForm)).isInstanceOf(MessageModel.class);
@@ -138,19 +140,19 @@ public class MessageServiceImplIntegrationTest {
                 .thenReturn(List.of(message));
 
         userEntity.setUserName("ban");
-        Mockito.when(userRepository.findByUserName(Mockito.any()))
+        Mockito.when(userRepository.findByUserName(any()))
                 .thenReturn(Optional.of(userEntity));
 
-        Mockito.when(roomRepository.getOneByRoomName(Mockito.any()))
+        Mockito.when(roomRepository.getOneByRoomName(any()))
                 .thenReturn(Optional.of(roomEntity));
 
-        Mockito.when(messageRepository.save(Mockito.any()))
+        Mockito.when(messageRepository.save(any()))
                 .thenReturn(message);
 
-        Mockito.when(roomRepository.save(Mockito.any()))
+        Mockito.when(roomRepository.save(any()))
                 .thenReturn(null);
 
-        Mockito.when(userRepository.save(Mockito.any()))
+        Mockito.when(userRepository.save(any()))
                 .thenReturn(null);
 
         messageService.save(messageForm);
@@ -166,19 +168,19 @@ public class MessageServiceImplIntegrationTest {
         Mockito.when(messageRepository.findAll())
                 .thenReturn(List.of(message));
 
-        Mockito.when(userRepository.findByUserName(Mockito.any()))
+        Mockito.when(userRepository.findByUserName(any()))
                 .thenReturn(Optional.of(userEntity));
 
-        Mockito.when(roomRepository.getOneByRoomName(Mockito.any()))
+        Mockito.when(roomRepository.getOneByRoomName(any()))
                 .thenReturn(Optional.of(roomEntity));
 
-        Mockito.when(roomRepository.save(Mockito.any()))
+        Mockito.when(roomRepository.save(any()))
                 .thenReturn(null);
 
-        Mockito.when(userRepository.save(Mockito.any()))
+        Mockito.when(userRepository.save(any()))
                 .thenReturn(null);
 
-        Mockito.when(messageRepository.save(Mockito.any()))
+        Mockito.when(messageRepository.save(any()))
                 .thenReturn(message);
      assertThat(messageService.save(messageForm)).isInstanceOf(MessageModel.class);
     }
@@ -210,58 +212,65 @@ public class MessageServiceImplIntegrationTest {
     @Test(expected = BadRequestException.class)
     public void getAllMessagesFromUser_countIsNotNumberThrowsException() {
         Mockito.when(messageRepository.findAll()).thenReturn(List.of(message));
+        Mockito.when(userRepository.findByUserName("sven")).thenReturn(Optional.ofNullable(userEntity));
         messageService.getAllMessagesFromUser("sven", "room1", "z");
     }
 
     @Test
     public void getAllMessagesFromUser_NormalOperationCountLowerThanMessages() {
-        Mockito.when(messageRepository.findAll()).thenReturn(List.of(message, message));
-        assertThat(messageService.getAllMessagesFromUser("sven", "room1", "1").get(0)).isInstanceOf(MessageModel.class);
+        Mockito.when(userRepository.findByUserName(any())).thenReturn(Optional.ofNullable(userEntity));
+        Mockito.when(roomRepository.getOneByRoomName(any())).thenReturn(Optional.ofNullable(roomEntity));
+        Mockito.when(messageRepository.findAllBySenderOrderByTimeDesc(any(UserEntity.class))).thenReturn(List.of(message, message, message));
+        Mockito.when(messageRepository.findAllBySenderAndRoomEntityOrderByTimeDesc(any(UserEntity.class), any(RoomEntity.class))).thenReturn(List.of(message, message, message));
+        Assert.assertTrue(messageService.getAllMessagesFromUser("sven", "room1", "1").size() == 1);
     }
 
     @Test
     public void getAllMessagesFromUser_NormalOperation() {
-        Mockito.when(messageRepository.findAll()).thenReturn(List.of(message));
+        Mockito.when(userRepository.findByUserName(any())).thenReturn(Optional.ofNullable(userEntity));
+        Mockito.when(roomRepository.getOneByRoomName(any())).thenReturn(Optional.ofNullable(roomEntity));
+        Mockito.when(messageRepository.findAllBySenderOrderByTimeDesc(any(UserEntity.class))).thenReturn(List.of(message));
+        Mockito.when(messageRepository.findAllBySenderAndRoomEntityOrderByTimeDesc(any(UserEntity.class), any(RoomEntity.class))).thenReturn(List.of(message));
         assertThat(messageService.getAllMessagesFromUser("sven", "room1", "1").get(0)).isInstanceOf(MessageModel.class);
     }
 
     @Test(expected = NoSuchMessageException.class)
     public void decreaseMessageRating_messageNotFoundThrowsException() {
-        Mockito.when(messageRepository.findByUuid(Mockito.any())).thenReturn(Optional.empty());
+        Mockito.when(messageRepository.findByUuid(any())).thenReturn(Optional.empty());
         messageService.decreaseMessageRating("123", "johan");
     }
 
     @Test(expected = NoSuchUserException.class)
     public void decreaseMessageRating_userNotFoundThrowsException() {
-        Mockito.when(messageRepository.findByUuid(Mockito.any())).thenReturn(Optional.of(message));
-        Mockito.when(userRepository.findByUserName(Mockito.any())).thenReturn(Optional.empty());
+        Mockito.when(messageRepository.findByUuid(any())).thenReturn(Optional.of(message));
+        Mockito.when(userRepository.findByUserName(any())).thenReturn(Optional.empty());
         messageService.decreaseMessageRating("123", "johan");
     }
 
     @Test
     public void decreaseMessageRating_normalOperations() {
-        Mockito.when(messageRepository.findByUuid(Mockito.any())).thenReturn(Optional.of(message));
-        Mockito.when(userRepository.findByUserName(Mockito.any())).thenReturn(Optional.of(userEntity));
+        Mockito.when(messageRepository.findByUuid(any())).thenReturn(Optional.of(message));
+        Mockito.when(userRepository.findByUserName(any())).thenReturn(Optional.of(userEntity));
         assertThat(messageService.decreaseMessageRating("123abc", "sven").getRating()).isEqualTo(-1);
     }
 
     @Test(expected = NoSuchMessageException.class)
     public void increaseMessageRating_messageNotFoundThrowsException() {
-        Mockito.when(messageRepository.findByUuid(Mockito.any())).thenReturn(Optional.empty());
+        Mockito.when(messageRepository.findByUuid(any())).thenReturn(Optional.empty());
         messageService.increaseMessageRating("123", "johan");
     }
 
     @Test(expected = NoSuchUserException.class)
     public void increaseMessageRating_userNotFoundThrowsException() {
-        Mockito.when(messageRepository.findByUuid(Mockito.any())).thenReturn(Optional.of(message));
-        Mockito.when(userRepository.findByUserName(Mockito.any())).thenReturn(Optional.empty());
+        Mockito.when(messageRepository.findByUuid(any())).thenReturn(Optional.of(message));
+        Mockito.when(userRepository.findByUserName(any())).thenReturn(Optional.empty());
         messageService.increaseMessageRating("123", "johan");
     }
 
     @Test
     public void increaseMessageRating_normalOperations() {
-        Mockito.when(messageRepository.findByUuid(Mockito.any())).thenReturn(Optional.of(message));
-        Mockito.when(userRepository.findByUserName(Mockito.any())).thenReturn(Optional.of(userEntity));
+        Mockito.when(messageRepository.findByUuid(any())).thenReturn(Optional.of(message));
+        Mockito.when(userRepository.findByUserName(any())).thenReturn(Optional.of(userEntity));
         assertThat(messageService.increaseMessageRating("123abc", "sven").getRating()).isEqualTo(1);
     }
 
