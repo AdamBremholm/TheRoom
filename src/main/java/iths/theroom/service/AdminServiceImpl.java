@@ -10,7 +10,6 @@ import iths.theroom.repository.MessageRepository;
 import iths.theroom.repository.RoomRepository;
 import iths.theroom.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 
@@ -79,6 +78,7 @@ public class AdminServiceImpl implements AdminService{
         String roles = user.getRoles();
         roles += ",ADMIN";
         user.setRoles(roles);
+        userRepository.save(user);
 
         return toModel(user);
     }

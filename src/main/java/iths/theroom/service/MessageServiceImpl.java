@@ -3,17 +3,15 @@ package iths.theroom.service;
 import iths.theroom.entity.MessageRatingEntity;
 import iths.theroom.entity.RoomEntity;
 import iths.theroom.entity.UserEntity;
-import iths.theroom.exception.BadRequestException;
-import iths.theroom.exception.NoSuchUserException;
-import iths.theroom.exception.NotFoundException;
+import iths.theroom.exception.*;
 import iths.theroom.model.MessageModel;
 import iths.theroom.pojos.MessageForm;
 import iths.theroom.repository.MessageRepository;
 import iths.theroom.entity.MessageEntity;
-import iths.theroom.exception.NoSuchMessageException;
 import iths.theroom.repository.RoomRepository;
 import iths.theroom.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,23 +49,36 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
+    //@PreAuthorize("hasRole('ROLE_ADMIN')")
     public MessageModel save(MessageForm form) {
         UserEntity user = userRepository.findByUserName(form.getSender()).orElseThrow(NoSuchUserException::new);
         Optional<RoomEntity> room = roomRepository.getOneByRoomName(form.getRoomName());
         room.orElseThrow(() ->  new BadRequestException("no such room exists"));
-        MessageEntity message = new MessageEntity(form.getType(), form.getContent(), user, room.get(), new MessageRatingEntity());
-        room.get().addMessage(message);
 
-        ////////remove for production//////////
+        MessageEntity message;
+        if (!room.get().getBannedUsers().contains(form.getSender())) {
+            message = new MessageEntity(form.getType(), form.getContent(), user, room.get(), new MessageRatingEntity());
+            room.get().addMessage(message);
+            roomRepository.save(room.get());
+            userRepository.save(user);
+
+            return toModel(messageRepository.save(message));
+        } else {
+            throw new UnauthorizedException("{\"You are banned from typing in this room!}");
+        }
+        /*MessageEntity message = new MessageEntity(form.getType(), form.getContent(), user, room.get(), new MessageRatingEntity());
+        room.get().addMessage(message);*/
+
+        /*////////remove for production//////////
         //Will be replaced by the rest admin controller
         if(user.getUserName().contains("ban")){
             room.get().banUser(user);
         }
-        ///////////////////////////////////////
+        ///////////////////////////////////////*/
 
-        roomRepository.save(room.get());
+        /*roomRepository.save(room.get());
         userRepository.save(user);
-        return toModel(messageRepository.save(message));
+        return toModel(messageRepository.save(message));*/
     }
 
     @Override
