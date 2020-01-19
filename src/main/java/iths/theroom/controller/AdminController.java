@@ -2,6 +2,7 @@ package iths.theroom.controller;
 
 import iths.theroom.exception.BadRequestException;
 import iths.theroom.exception.ConflictException;
+import iths.theroom.exception.NotFoundException;
 import iths.theroom.model.MessageModel;
 import iths.theroom.model.RoomModel;
 import iths.theroom.model.UserModel;
@@ -18,13 +19,13 @@ public class AdminController {
 
     @PutMapping("/ban")
     public RoomModel banUserFromRoom(@RequestParam(name="username") String userName,
-                                     @RequestParam(name="roomname") String roomName) throws BadRequestException {
+                                     @RequestParam(name="roomname") String roomName) throws NotFoundException {
         return adminService.banUserFromRoom(userName, roomName);
     }
 
     @PutMapping("/unban")
     public RoomModel removeBanFromUser(@RequestParam(name="username") String userName,
-                                       @RequestParam(name="roomname") String roomName) {
+                                       @RequestParam(name="roomname") String roomName) throws NotFoundException {
         return adminService.removeBanFromUser(userName, roomName);
     }
 
@@ -34,7 +35,7 @@ public class AdminController {
     }
 
     @PutMapping("/upgrade")
-    public UserModel upgradeUserToAdmin(@RequestParam("username") String userName) throws BadRequestException, ConflictException {
+    public UserModel upgradeUserToAdmin(@RequestParam("username") String userName) throws NotFoundException, ConflictException {
         return adminService.upgradeUserToAdmin(userName);
     }
 

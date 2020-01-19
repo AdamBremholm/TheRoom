@@ -4,6 +4,7 @@ import iths.theroom.entity.RoomEntity;
 import iths.theroom.entity.UserEntity;
 import iths.theroom.exception.BadRequestException;
 import iths.theroom.exception.ConflictException;
+import iths.theroom.exception.NotFoundException;
 import iths.theroom.factory.RoomFactory;
 import iths.theroom.model.MessageModel;
 import iths.theroom.model.RoomModel;
@@ -37,7 +38,7 @@ public class AdminServiceImpl implements AdminService{
     }
 
     @Override
-    public RoomModel banUserFromRoom(String userName, String roomName) throws BadRequestException {
+    public RoomModel banUserFromRoom(String userName, String roomName) throws NotFoundException {
         RoomEntity room = roomRepository.findRoomByNameWithQuery(roomName);
         UserEntity user = userRepository.findUserByNameWithQuery(userName);
         Set<UserEntity> bannedUsers;
@@ -47,14 +48,14 @@ public class AdminServiceImpl implements AdminService{
             bannedUsers.add(user);
             room.setBannedUsers(bannedUsers);
         } else {
-            throw new BadRequestException("This room does not exist!");
+            throw new NotFoundException("This room does not exist!");
         }
         if(user != null) {
             excludedFromRooms = user.getExcludedRooms();
             excludedFromRooms.add(room);
             user.setExcludedRooms(excludedFromRooms);
         } else {
-            throw new BadRequestException("This user does not exist!");
+            throw new NotFoundException("This user does not exist!");
         }
         roomRepository.save(room);
 
@@ -65,12 +66,22 @@ public class AdminServiceImpl implements AdminService{
     public RoomModel removeBanFromUser(String userName, String roomName) {
         RoomEntity room = roomRepository.findRoomByNameWithQuery(roomName);
         UserEntity user = userRepository.findUserByNameWithQuery(userName);
-        Set<UserEntity> bannedUsers = room.getBannedUsers();
-        Set<RoomEntity> excludedFromRooms = user.getExcludedRooms();
-        bannedUsers.remove(user);
-        room.setBannedUsers(bannedUsers);
-        excludedFromRooms.remove(room);
-        user.setExcludedRooms(excludedFromRooms);
+        Set<UserEntity> bannedUsers;
+        Set<RoomEntity> excludedFromRooms;
+        if(room != null) {
+            bannedUsers = room.getBannedUsers();
+            bannedUsers.remove(user);
+            room.setBannedUsers(bannedUsers);
+        } else {
+            throw new NotFoundException("This room does not exist!");
+        }
+        if(user != null) {
+            excludedFromRooms = user.getExcludedRooms();
+            excludedFromRooms.remove(room);
+            user.setExcludedRooms(excludedFromRooms);
+        } else {
+            throw new NotFoundException("This user does not exist!");
+        }
         roomRepository.save(room);
 
         return roomFactory.entityToModel(room);
@@ -85,13 +96,13 @@ public class AdminServiceImpl implements AdminService{
     }
 
     @Override
-    public UserModel upgradeUserToAdmin(String userName) throws BadRequestException, ConflictException{
+    public UserModel upgradeUserToAdmin(String userName) throws NotFoundException, ConflictException{
         UserEntity user = userRepository.findUserByNameWithQuery(userName);
         String roles;
         if(user != null) {
             roles = user.getRoles();
         } else {
-            throw new BadRequestException("This user does not exist");
+            throw new NotFoundException("This user does not exist");
         }
         if (!roles.contains("ADMIN")) {
             roles += ",ADMIN";
