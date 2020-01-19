@@ -116,6 +116,19 @@ function unbanUser() {
     });
 }
 
+function giveAdminPrivileges() {
+    let param = new URLSearchParams();
+    let user = document.querySelector('#uname-sheet').value.trim();
+    param.append('username', user);
+    axios({
+        method: 'put',
+        url: '/api/admin/upgrade',
+        data: param
+    }).then(function (res) {
+        console.log(res);
+    });
+}
+
 function connect(event) {
     name = document.querySelector('#name').value.trim();
     room = document.querySelector('#room').value.trim();
