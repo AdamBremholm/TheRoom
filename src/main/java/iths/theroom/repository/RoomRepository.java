@@ -11,6 +11,6 @@ public interface RoomRepository extends JpaRepository<RoomEntity, Long> {
 
     Optional<RoomEntity> getOneByRoomName(String roomName);
     @Query(value = "SELECT * FROM room WHERE room_name = :roomname", nativeQuery = true)
-    RoomEntity getRoomByNameWithQuery(@Param("roomname") String roomName);
+    RoomEntity findRoomByNameWithQuery(@Param("roomname") String roomName);
 
 }
