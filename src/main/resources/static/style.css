@@ -132,6 +132,7 @@ button.accent {
 	height: calc(100% - 60px);
 	max-height: 600px;
 	position: relative;
+	overflow: scroll;
 }
 .ratingGrid{
 	font-size: 10px;
