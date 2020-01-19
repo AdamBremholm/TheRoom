@@ -23,8 +23,10 @@ public class AdminController {
         return adminService.banUserFromRoom(userName, roomName);
     }
 
-    public RoomModel removeBanFromUser() {
-        return null;
+    @PutMapping("/unban")
+    public RoomModel removeBanFromUser(@RequestParam(name="username") String userName,
+                                       @RequestParam(name="roomname") String roomName) {
+        return adminService.removeBanFromUser(userName, roomName);
     }
 
     public RoomModel deleteRoom() {

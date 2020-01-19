@@ -51,6 +51,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST,"/api/users").permitAll()
                 .antMatchers("/", "/index.html", "/script.js", "/style.css", "/favicon.ico", "/websocketApp/**").permitAll()
                 .antMatchers("/api/messages/*").hasRole("ADMIN")
+                .antMatchers("/api/admin/**").permitAll()
                 .anyRequest().authenticated();
     }
 

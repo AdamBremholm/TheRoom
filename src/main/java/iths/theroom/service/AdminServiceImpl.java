@@ -48,8 +48,18 @@ public class AdminServiceImpl implements AdminService{
     }
 
     @Override
-    public RoomModel removeBanFromUser(String roomName, String userName) {
-        return null;
+    public RoomModel removeBanFromUser(String userName, String roomName) {
+        RoomEntity room = roomRepository.findRoomByNameWithQuery(roomName);
+        UserEntity user = userRepository.findUserByNameWithQuery(userName);
+        Set<UserEntity> bannedUsers = room.getBannedUsers();
+        Set<RoomEntity> excludedFromRooms = user.getExcludedRooms();
+        bannedUsers.remove(user);
+        room.setBannedUsers(bannedUsers);
+        excludedFromRooms.remove(room);
+        user.setExcludedRooms(excludedFromRooms);
+        roomRepository.save(room);
+
+        return roomFactory.entityToModel(room);
     }
 
     @Override
