@@ -68,27 +68,31 @@ public class AdminServiceImpl implements AdminService{
 
     @Override
     public RoomModel removeBanFromUser(String userName, String roomName) {
-        RoomEntity room = roomRepository.findRoomByNameWithQuery(roomName);
-        UserEntity user = userRepository.findUserByNameWithQuery(userName);
-        Set<UserEntity> bannedUsers;
-        Set<RoomEntity> excludedFromRooms;
-        if(room != null) {
-            bannedUsers = room.getBannedUsers();
-            bannedUsers.remove(user);
-            room.setBannedUsers(bannedUsers);
-        } else {
-            throw new NotFoundException("This room does not exist!");
-        }
-        if(user != null) {
-            excludedFromRooms = user.getExcludedRooms();
-            excludedFromRooms.remove(room);
-            user.setExcludedRooms(excludedFromRooms);
-        } else {
-            throw new NotFoundException("This user does not exist!");
-        }
-        roomRepository.save(room);
+        if(!userName.isBlank() && roomName.isBlank()) {
+            RoomEntity room = roomRepository.findRoomByNameWithQuery(roomName);
+            UserEntity user = userRepository.findUserByNameWithQuery(userName);
+            Set<UserEntity> bannedUsers;
+            Set<RoomEntity> excludedFromRooms;
+            if(room != null) {
+                bannedUsers = room.getBannedUsers();
+                bannedUsers.remove(user);
+                room.setBannedUsers(bannedUsers);
+            } else {
+                throw new NotFoundException("This room does not exist!");
+            }
+            if(user != null) {
+                excludedFromRooms = user.getExcludedRooms();
+                excludedFromRooms.remove(room);
+                user.setExcludedRooms(excludedFromRooms);
+            } else {
+                throw new NotFoundException("This user does not exist!");
+            }
+            roomRepository.save(room);
 
-        return roomFactory.entityToModel(room);
+            return roomFactory.entityToModel(room);
+        } else {
+            throw new BadRequestException("No empty fields allowed!");
+        }
     }
 
     @Override
