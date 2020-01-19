@@ -25,7 +25,7 @@ public class AdminController {
 
     @PutMapping("/unban")
     public RoomModel removeBanFromUser(@RequestParam(name="username") String userName,
-                                       @RequestParam(name="roomname") String roomName) throws NotFoundException {
+                                       @RequestParam(name="roomname") String roomName) throws NotFoundException, BadRequestException {
         return adminService.removeBanFromUser(userName, roomName);
     }
 
@@ -35,7 +35,7 @@ public class AdminController {
     }
 
     @PutMapping("/upgrade")
-    public UserModel upgradeUserToAdmin(@RequestParam("username") String userName) throws NotFoundException, ConflictException {
+    public UserModel upgradeUserToAdmin(@RequestParam("username") String userName) throws NotFoundException, ConflictException, BadRequestException {
         return adminService.upgradeUserToAdmin(userName);
     }
 

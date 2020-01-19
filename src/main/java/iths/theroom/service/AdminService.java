@@ -8,9 +8,9 @@ import iths.theroom.model.UserModel;
 
 public interface AdminService {
 
-    RoomModel banUserFromRoom(String roomName, String userName) throws NotFoundException;
+    RoomModel banUserFromRoom(String roomName, String userName);
     RoomModel removeBanFromUser(String roomName, String userName);
     RoomModel deleteRoom(String roomName);
-    UserModel upgradeUserToAdmin(String userName) throws NotFoundException, ConflictException;
+    UserModel upgradeUserToAdmin(String userName);
     MessageModel removeMessage(String uuid);
 }

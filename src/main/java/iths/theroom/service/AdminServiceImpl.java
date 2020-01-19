@@ -38,7 +38,7 @@ public class AdminServiceImpl implements AdminService{
     }
 
     @Override
-    public RoomModel banUserFromRoom(String userName, String roomName) throws NotFoundException {
+    public RoomModel banUserFromRoom(String userName, String roomName) {
         if(!userName.isBlank() && !roomName.isBlank()) {
             RoomEntity room = roomRepository.findRoomByNameWithQuery(roomName);
             UserEntity user = userRepository.findUserByNameWithQuery(userName);
@@ -104,23 +104,27 @@ public class AdminServiceImpl implements AdminService{
     }
 
     @Override
-    public UserModel upgradeUserToAdmin(String userName) throws NotFoundException, ConflictException{
-        UserEntity user = userRepository.findUserByNameWithQuery(userName);
-        String roles;
-        if(user != null) {
-            roles = user.getRoles();
-        } else {
-            throw new NotFoundException("This user does not exist");
-        }
-        if (!roles.contains("ADMIN")) {
-            roles += ",ADMIN";
-        } else {
-            throw new ConflictException("This user is already an administrator");
-        }
-        user.setRoles(roles);
-        userRepository.save(user);
+    public UserModel upgradeUserToAdmin(String userName) {
+        if(!userName.isBlank()) {
+            UserEntity user = userRepository.findUserByNameWithQuery(userName);
+            String roles;
+            if(user != null) {
+                roles = user.getRoles();
+            } else {
+                throw new NotFoundException("This user does not exist");
+            }
+            if (!roles.contains("ADMIN")) {
+                roles += ",ADMIN";
+            } else {
+                throw new ConflictException("This user is already an administrator");
+            }
+            user.setRoles(roles);
+            userRepository.save(user);
 
-        return toModel(user);
+            return toModel(user);
+        } else {
+            throw new BadRequestException("No empty fields allowed!");
+        }
     }
 
     @Override
