@@ -13,8 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
+
 import java.util.Optional;
 import java.util.Set;
+
+import static iths.theroom.factory.UserFactory.toModel;
 
 @Service
 public class AdminServiceImpl implements AdminService{
@@ -72,7 +75,12 @@ public class AdminServiceImpl implements AdminService{
 
     @Override
     public UserModel upgradeUserToAdmin(String userName) {
-        return null;
+        UserEntity user = userRepository.findUserByNameWithQuery(userName);
+        String roles = user.getRoles();
+        roles += ",ADMIN";
+        user.setRoles(roles);
+
+        return toModel(user);
     }
 
     @Override

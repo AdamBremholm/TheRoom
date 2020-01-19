@@ -31,8 +31,9 @@ public class AdminController {
         return adminService.deleteRoom(roomName);
     }
 
-    public UserModel upgradeUserToAdmin() {
-        return null;
+    @PutMapping("/upgrade")
+    public UserModel upgradeUserToAdmin(@RequestParam("username") String userName) {
+        return adminService.upgradeUserToAdmin(userName);
     }
 
     public MessageModel removeMessageFromFeed() {
