@@ -294,12 +294,4 @@ public class RoomServiceImplTest {
         roomService.isUserBannedHere("this name doesnt exist", room.getRoomName());
     }
 
-    @Test(expected = NotFoundException.class)
-    public void whenIsUserBanned_RoomDoesntExist(){
-        UserEntity user = new UserEntity("abc");
-        RoomEntity room = new RoomEntity("123");
-        when(roomRepository.getOneByRoomName(any())).thenReturn(Optional.empty());
-        when(userService.getByUserName(any())).thenReturn(user);
-        roomService.isUserBannedHere(user.getUserName(), "this room doesnt exist for sure");
-    }
 }
