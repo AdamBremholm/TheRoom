@@ -11,7 +11,6 @@ import iths.theroom.entity.MessageEntity;
 import iths.theroom.repository.RoomRepository;
 import iths.theroom.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -65,19 +64,6 @@ public class MessageServiceImpl implements MessageService {
         } else {
             throw new UnauthorizedException("{\"You are banned from chatting in this room!}");
         }
-        /*MessageEntity message = new MessageEntity(form.getType(), form.getContent(), user, room.get(), new MessageRatingEntity());
-        room.get().addMessage(message);*/
-
-        /*////////remove for production//////////
-        //Will be replaced by the rest admin controller
-        if(user.getUserName().contains("ban")){
-            room.get().banUser(user);
-        }
-        ///////////////////////////////////////*/
-
-        /*roomRepository.save(room.get());
-        userRepository.save(user);
-        return toModel(messageRepository.save(message));*/
     }
 
     @Override

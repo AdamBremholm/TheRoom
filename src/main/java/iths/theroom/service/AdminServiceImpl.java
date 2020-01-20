@@ -11,17 +11,12 @@ import iths.theroom.model.UserModel;
 import iths.theroom.repository.RoomRepository;
 import iths.theroom.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
-
-
-import java.util.Optional;
 import java.util.Set;
 
 import static iths.theroom.factory.UserFactory.toModel;
 
 @Service
-//@PreAuthorize("hasRole('ROLE_ADMIN')")
 public class AdminServiceImpl implements AdminService{
 
     private RoomRepository roomRepository;
