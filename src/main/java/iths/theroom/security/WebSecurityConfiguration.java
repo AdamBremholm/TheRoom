@@ -54,10 +54,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST,"/api/users").permitAll()
                 .antMatchers("/", "/index.html", "/script.js", "/style.css", "/favicon.ico", "/websocketApp/**").permitAll()
                 .antMatchers("/api/messages/*").hasRole("ADMIN")
-                // Permissions below only sat temporarily to permitAll for easier testing of endpoints in Insomnia/Postman
                 .antMatchers("/api/admin/**").hasRole("ADMIN")
-                .antMatchers("/api/users/**").permitAll()
-                // Permissions above only sat temporarily to permitAll for easier testing of endpoints in Insomnia/Postman
                 .anyRequest().authenticated();
     }
 
