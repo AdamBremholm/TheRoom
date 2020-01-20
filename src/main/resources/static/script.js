@@ -2,19 +2,20 @@
 document.querySelector('#loginForm').addEventListener('submit', handleFirstForm, true);
 document.querySelector('#registerForm').addEventListener('submit', register, true);
 document.querySelector('#dialogueForm').addEventListener('submit', sendMessage, true);
+document.querySelector('#html5colorpicker').addEventListener('change', changeBGColor, true);
 
 let stompClient = null;
 let name = null;
 let room = null;
 let token = null;
 
-document.querySelector('#html5colorpicker').addEventListener('change', sendMessage, true);
+
 
 function handleFirstForm(event) {
     event.preventDefault();
     name = document.querySelector('#name').value.trim();
     if(event.target.value==='login')
-        login(event)
+        login(event);
     else
         switchToRegisterForm(event)
 }
@@ -140,7 +141,7 @@ function giveAdminPrivileges() {
 
 function connect(event) {
     name = document.querySelector('#name').value.trim();
-    room = document.querySelector('#room').value.trim();
+
 
     if (name) {
         let socket = new SockJS('/websocketApp');
@@ -159,6 +160,7 @@ function connect(event) {
 }
 
 function connectionSuccess() {
+    room = document.querySelector('#room').value.trim();
     document.getElementById("roomTitle").innerHTML = room;
 
     stompClient.subscribe('/topic/' + name + "." + room,  retrieveAllRoomMessages,{id: name+"retrieveAll"});
@@ -172,257 +174,195 @@ function retrieveAllRoomMessages(payload) {
     loadOldMessages(payload);
 
     stompClient.unsubscribe(name+"retrieveAll");
-    stompClient.subscribe('/topic/' + room,  onMessageReceivedSubscription);
+
+    document.querySelector('#login-page').classList.add('hidden');
+    document.querySelector('#dialogue-page').classList.remove('hidden');
+
+    stompClient.subscribe('/topic/chatMessages.' + room,  onNewMessage);
+    stompClient.subscribe('/topic/alerts.' + room, onNewAlert);
+    stompClient.subscribe('/topic/backgroundChange.' + room, onBackgroundChange);
+    stompClient.subscribe('/topic/rating.' + room, onRatingChange);
+
     stompClient.send("/app/chat.newUser." + room, {}, JSON.stringify({
         sender: name,
         type: 'newUser',
+        rating: null,
         roomName: room
-    }))
+    }));
 }
 
-function sendMessage(event) {
-    let type = null;
-    let bgColor = null;
-    let messageContent = null;
-    if(event.target.id==='html5colorpicker') {
-        type = "BG_CHANGE";
-        bgColor = document.querySelector('#html5colorpicker').value.trim();
-    } else if (event.target.id==='dialogueForm') {
-        type = "CHAT";
-        messageContent = document.querySelector('#chatMessage').value.trim();
-    }
+function changeBGColor(event){
+    let type = "BG_CHANGE";
+    let bgColor = document.querySelector('#html5colorpicker').value.trim();
+    let messageUri = "/app/chat.changeBgColor." + room;
+
     if (stompClient) {
         let chatMessage = {
             sender : name,
-            content : messageContent,
             type : type,
             roomName : room,
-            rating : document.querySelector('#chatMessage').rating,
+            rating: null,
             roomBackgroundColor :  bgColor
         };
-        stompClient.send("/app/chat.sendMessage."+room, {}, JSON
+        stompClient.send(messageUri, {}, JSON
             .stringify(chatMessage));
         document.querySelector('#chatMessage').value = '';
     }
     event.preventDefault();
 }
 
-function onMessageReceivedSubscription(payload){
-    document.querySelector('#login-page').classList.add('hidden');
-    document.querySelector('#dialogue-page').classList.remove('hidden');
-    onMessageReceived(payload)
+function sendMessage(event) {
 
+    let type = "CHAT";
+    let messageContent = document.querySelector('#chatMessage').value.trim();
+    let messageUri = "/app/chat.sendMessage." + room;
+
+    if (stompClient) {
+        let chatMessage = {
+            sender : name,
+            content : messageContent,
+            type : type,
+            roomName : room
+        };
+        stompClient.send(messageUri, {}, JSON
+            .stringify(chatMessage));
+        document.querySelector('#chatMessage').value = '';
+    }
+    event.preventDefault();
 }
 
-function updateRoomColor(message) {
+function onNewMessage(payload){
+    let message = JSON.parse(payload.body);
+    createMessage(message);
+}
 
-    let backgroundColorString = message.roomBackgroundColor;
-    if (backgroundColorString != null) {
-        document.getElementById('dialogue-page').style.backgroundColor = backgroundColorString;
-        document.getElementById('html5colorpicker').value = backgroundColorString;
+function onBackgroundChange(payload) {
+
+    let bgColor = payload.body;
+
+    if (bgColor != null) {
+        document.getElementById('dialogue-page').style.backgroundColor = bgColor;
+        document.getElementById('html5colorpicker').value = bgColor;
     }
+}
+
+function createMessage(message){
+
+    let messageElement = document.createElement('li');
+    let textElement = document.createElement('p');
+    let messageText;
+    let element = document.createElement('i');
+    let text = document.createTextNode(message.sender[0]);
+    let usernameElement = document.createElement('span');
+    let usernameText = document.createTextNode(message.sender);
+    let localTime = new Date(message.time );
+    let timeString = localTime.toString().split(' ').slice(0, 5).join(' ');
+    let timeNode = document.createTextNode(" - " + timeString);
+
+    messageElement.classList.add('message-data');
+
+    element.appendChild(text);
+    messageElement.appendChild(element);
+
+    messageText = document.createTextNode(message.content);
+    textElement.appendChild(messageText);
+    usernameElement.appendChild(usernameText);
+    messageElement.appendChild(usernameElement);
+    usernameElement.appendChild(timeNode);
+
+    let ratingGrid = document.createElement('div');
+    ratingGrid.className = "container ratingGrid";
+
+    let ratingGridRow = document.createElement('div');
+    ratingGridRow.className = "row justify-content-end";
+
+    let ratingGridCol1 = document.createElement('div');
+    ratingGridCol1.className = "col-10";
+    let ratingGridCol2 = document.createElement('div');
+    ratingGridCol2.className = "col col-custom";
+    let ratingGridCol3 = document.createElement('div');
+    ratingGridCol3.className = "col col-custom";
+    let ratingGridCol4 = document.createElement('div');
+    ratingGridCol4.className = "col col-custom";
+
+    ratingGrid.appendChild(ratingGridRow);
+    ratingGridRow.append(ratingGridCol1, ratingGridCol2, ratingGridCol3, ratingGridCol4);
+
+    let decrRating = document.createElement('div');
+    decrRating.className = "incDecButton";
+    decrRating.id = "decreaseRating";
+    decrRating.innerHTML = '-';
+    decrRating.addEventListener('click', function() {
+        stompClient.send("/app/chat.decreaseRating." + message.uuid + "." + room, {});
+    });
+
+    ratingGridCol2.appendChild(decrRating);
+
+    let rating = document.createElement('div');
+    rating.innerHTML = message.rating;
+    rating.id = 'rating' + message.uuid;
+    changeRatingColor(rating);
+    ratingGridCol3.appendChild(rating);
+
+    let incrRating = document.createElement('div');
+    incrRating.className = "incDecButton";
+    incrRating.id = "increaseRating";
+    incrRating.innerHTML = '+';
+    incrRating.addEventListener('click', function() {
+        stompClient.send("/app/chat.increaseRating." + message.uuid + "." + room, {});
+    });
+
+    ratingGridCol4.appendChild(incrRating);
+
+    messageElement.appendChild(textElement);
+    messageElement.appendChild(ratingGrid);
+    document.querySelector('#messageList').appendChild(messageElement);
 }
 
 function loadOldMessages(payload){
     let messageArray = JSON.parse(payload.body);
 
-    messageArray.forEach(function(message, index){
-        let messageElement = document.createElement('li');
-        let textElement = document.createElement('p');
-        let messageText;
-        let backgroundColorString = null;
-
-        messageElement.classList.add('message-data');
-        let element = document.createElement('i');
-        let text = document.createTextNode(message.sender[0]);
-        element.appendChild(text);
-        messageElement.appendChild(element);
-        let usernameElement = document.createElement('span');
-        let usernameText = document.createTextNode(message.sender);
-        let localTime = new Date(message.time );
-        let timeString = localTime.toString().split(' ').slice(0, 5).join(' ');
-        let timeNode = document.createTextNode(" - " + timeString);
-
-        if(message.roomBackgroundColor!=null) {
-            backgroundColorString = message.roomBackgroundColor;
-            document.getElementById('dialogue-page').style.backgroundColor = backgroundColorString;
-            document.getElementById('html5colorpicker').value = backgroundColorString;
-        }
-        messageText = document.createTextNode(message.content);
-        textElement.appendChild(messageText);
-        usernameElement.appendChild(usernameText);
-        messageElement.appendChild(usernameElement);
-        usernameElement.appendChild(timeNode);
-
-        let ratingGrid = document.createElement('div');
-        ratingGrid.className = "container ratingGrid";
-
-        let ratingGridRow = document.createElement('div');
-        ratingGridRow.className = "row justify-content-end";
-
-        let ratingGridCol1 = document.createElement('div');
-        ratingGridCol1.className = "col-10";
-        let ratingGridCol2 = document.createElement('div');
-        ratingGridCol2.className = "col col-custom";
-        let ratingGridCol3 = document.createElement('div');
-        ratingGridCol3.className = "col col-custom";
-        let ratingGridCol4 = document.createElement('div');
-        ratingGridCol4.className = "col col-custom";
-
-        ratingGrid.appendChild(ratingGridRow);
-        ratingGridRow.append(ratingGridCol1, ratingGridCol2, ratingGridCol3, ratingGridCol4);
-
-        let decrRating = document.createElement('div');
-        decrRating.className = "incDecButton";
-        decrRating.id = "decreaseRating";
-        decrRating.innerHTML = '-';
-        decrRating.addEventListener('click', function() {
-            stompClient.send("/app/chat.decreaseRating." + room + "." + message.uuid, {});
-        });
-
-        ratingGridCol2.appendChild(decrRating);
-
-        let rating = document.createElement('div');
-        rating.innerHTML = message.rating;
-        rating.id = 'rating' + message.uuid;
-        changeRatingColor(rating);
-        ratingGridCol3.appendChild(rating);
-
-        let incrRating = document.createElement('div');
-        incrRating.className = "incDecButton";
-        incrRating.id = "increaseRating";
-        incrRating.innerHTML = '+';
-        incrRating.addEventListener('click', function() {
-            stompClient.send("/app/chat.increaseRating." + room + "." + message.uuid, {});
-        });
-
-        ratingGridCol4.appendChild(incrRating);
-
-        messageElement.appendChild(textElement);
-        messageElement.appendChild(ratingGrid);
-        document.querySelector('#messageList').appendChild(messageElement);
+    messageArray.forEach(function(message){
+        createMessage(message)
     })
 }
 
-function onMessageReceived(payload) {
+function onNewAlert(payload){
 
     let message = JSON.parse(payload.body);
     let messageElement = document.createElement('li');
     let textElement = document.createElement('p');
     let messageText;
-    let backgroundColorString = null;
-    if (message.type === 'newUser') {
+
+    if(message.type === 'newUser'){
         messageElement.classList.add('event-data');
         message.content = message.sender + ' has joined the chat';
         messageText = document.createTextNode(message.content);
         textElement.appendChild(messageText);
         messageElement.appendChild(textElement);
 
-        updateRoomColor(message);
-
-        document.querySelector('#messageList').appendChild(messageElement);
-        document.querySelector('#messageList').scrollTop = document
-            .querySelector('#messageList').scrollHeight;
-
-        document.querySelector('#decrease' + message.uuid)
-
-    } else if (message.type === 'BG_CHANGE') {
-        updateRoomColor(message)
-
-    } else if (message.type === 'Leave') {
+    }
+    else if (message.type === 'Leave'){
         messageElement.classList.add('event-data');
         message.content = message.sender.userName + 'has left the chat';
         messageText = document.createTextNode(message.content);
         textElement.appendChild(messageText);
         messageElement.appendChild(textElement);
 
-        document.querySelector('#messageList').appendChild(messageElement);
-        document.querySelector('#messageList').scrollTop = document
-            .querySelector('#messageList').scrollHeight;
-
-
-    } else if(message.type === "RATING"){
-
-        let ratingElement = document.getElementById("rating"+message.uuid);
-        ratingElement.innerHTML = message.rating;
-
-        changeRatingColor(ratingElement);
-
-    } else {
-        messageElement.classList.add('message-data');
-        let element = document.createElement('i');
-        let text = document.createTextNode(message.sender[0]);
-        element.appendChild(text);
-        messageElement.appendChild(element);
-        let usernameElement = document.createElement('span');
-        let usernameText = document.createTextNode(message.sender);
-        let localTime = new Date(message.time );
-        let timeString = localTime.toString().split(' ').slice(0, 5).join(' ');
-        let timeNode = document.createTextNode(" - " + timeString);
-
-        if(message.roomBackgroundColor!=null) {
-            backgroundColorString = message.roomBackgroundColor;
-            document.getElementById('dialogue-page').style.backgroundColor = backgroundColorString;
-            document.getElementById('html5colorpicker').value = backgroundColorString;
-        }
-        messageText = document.createTextNode(message.content);
-        textElement.appendChild(messageText);
-        usernameElement.appendChild(usernameText);
-        messageElement.appendChild(usernameElement);
-        usernameElement.appendChild(timeNode);
-
-        let ratingGrid = document.createElement('div');
-        ratingGrid.className = "container ratingGrid";
-
-        let ratingGridRow = document.createElement('div');
-        ratingGridRow.className = "row justify-content-end";
-
-        let ratingGridCol1 = document.createElement('div');
-        ratingGridCol1.className = "col-10";
-        let ratingGridCol2 = document.createElement('div');
-        ratingGridCol2.className = "col col-custom";
-        let ratingGridCol3 = document.createElement('div');
-        ratingGridCol3.className = "col col-custom";
-        let ratingGridCol4 = document.createElement('div');
-        ratingGridCol4.className = "col col-custom";
-
-        ratingGrid.appendChild(ratingGridRow);
-        ratingGridRow.append(ratingGridCol1, ratingGridCol2, ratingGridCol3, ratingGridCol4);
-
-        let decrRating = document.createElement('div');
-        decrRating.className = "incDecButton";
-        decrRating.id = "decreaseRating";
-        decrRating.innerHTML = '-';
-        decrRating.addEventListener('click', function() {
-            stompClient.send("/app/chat.decreaseRating." + room + "." + message.uuid, {});
-        });
-
-        ratingGridCol2.appendChild(decrRating);
-
-        let rating = document.createElement('div');
-        rating.innerHTML = message.rating;
-        rating.id = 'rating' + message.uuid;
-        changeRatingColor(rating);
-        ratingGridCol3.appendChild(rating);
-
-        let incrRating = document.createElement('div');
-        incrRating.className = "incDecButton";
-        incrRating.id = "increaseRating";
-        incrRating.innerHTML = '+';
-        incrRating.addEventListener('click', function() {
-            stompClient.send("/app/chat.increaseRating." + room + "." + message.uuid, {});
-        });
-
-        ratingGridCol4.appendChild(incrRating);
-
-        messageElement.appendChild(textElement);
-        messageElement.appendChild(ratingGrid);
-        document.querySelector('#messageList').appendChild(messageElement);
-
     }
 
+    document.querySelector('#messageList').appendChild(messageElement);
 
+    document.querySelector('#messageList').scrollTop = document
+        .querySelector('#messageList').scrollHeight;
+}
 
+function onRatingChange(payload){
+    let message = JSON.parse(payload.body);
+    let ratingElement = document.getElementById("rating"+message.uuid);
+    ratingElement.innerHTML = message.rating;
+
+    changeRatingColor(ratingElement);
 }
 
 function changeRatingColor(ratingElement){
