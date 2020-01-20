@@ -1,6 +1,8 @@
 package iths.theroom.service;
 
 import iths.theroom.entity.RoomEntity;
+import iths.theroom.exception.NotFoundException;
+import iths.theroom.exception.UnauthorizedException;
 import iths.theroom.model.RoomModel;
 import iths.theroom.pojos.MessageForm;
 
@@ -22,6 +24,6 @@ public interface RoomService {
 
     RoomModel updateRoom(MessageForm messageForm);
 
-    boolean isUserBannedHere(String userName, String roomName);
+    void isUserBannedHere(String userName, String roomName) throws UnauthorizedException, NotFoundException;
 
 }

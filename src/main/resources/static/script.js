@@ -232,21 +232,39 @@ function sendMessage(event) {
 }
 
 function onNewMessage(payload){
-    let message = JSON.parse(payload.body);
-    createMessage(message);
+
+    let response = JSON.parse(payload.body);
+
+    if(response.statusCodeValue === 200){
+        let message = response.body;
+        createMessage(message);
+
+    } else {
+        badResponse(response);
+    }
+
 }
 
 function onBackgroundChange(payload) {
 
-    let bgColor = payload.body;
+    let response = JSON.parse(payload.body);
 
-    if (bgColor != null) {
-        document.getElementById('dialogue-page').style.backgroundColor = bgColor;
-        document.getElementById('html5colorpicker').value = bgColor;
+    if(response.statusCodeValue === 200){
+        let bgColor = response.body;
+
+        if (bgColor != null) {
+            document.getElementById('dialogue-page').style.backgroundColor = bgColor;
+            document.getElementById('html5colorpicker').value = bgColor;
+        }
+
+    } else {
+        badResponse(response);
     }
+
 }
 
 function createMessage(message){
+
 
     let messageElement = document.createElement('li');
     let textElement = document.createElement('p');
@@ -320,49 +338,74 @@ function createMessage(message){
 }
 
 function loadOldMessages(payload){
-    let messageArray = JSON.parse(payload.body);
+    let response = JSON.parse(payload.body);
 
-    messageArray.forEach(function(message){
-        createMessage(message)
-    })
+    if(response.statusCodeValue === 200){
+        let messageArray = response.body;
+
+        messageArray.forEach(function(message){
+            createMessage(message)
+        })
+
+    } else {
+        badResponse(response);
+    }
+
+
 }
 
 function onNewAlert(payload){
 
-    let message = JSON.parse(payload.body);
-    let messageElement = document.createElement('li');
-    let textElement = document.createElement('p');
-    let messageText;
+    let response = JSON.parse(payload.body);
 
-    if(message.type === 'newUser'){
-        messageElement.classList.add('event-data');
-        message.content = message.sender + ' has joined the chat';
-        messageText = document.createTextNode(message.content);
-        textElement.appendChild(messageText);
-        messageElement.appendChild(textElement);
+    if(response.statusCodeValue === 200){
+        let message = response.body;
+        let messageElement = document.createElement('li');
+        let textElement = document.createElement('p');
+        let messageText;
 
+        if(message.type === 'newUser'){
+            messageElement.classList.add('event-data');
+            message.content = message.sender + ' has joined the chat';
+            messageText = document.createTextNode(message.content);
+            textElement.appendChild(messageText);
+            messageElement.appendChild(textElement);
+
+        }
+        else if (message.type === 'Leave'){
+            messageElement.classList.add('event-data');
+            message.content = message.sender.userName + 'has left the chat';
+            messageText = document.createTextNode(message.content);
+            textElement.appendChild(messageText);
+            messageElement.appendChild(textElement);
+
+        }
+
+        document.querySelector('#messageList').appendChild(messageElement);
+
+        document.querySelector('#messageList').scrollTop = document
+            .querySelector('#messageList').scrollHeight;
+
+    } else {
+        badResponse(response);
     }
-    else if (message.type === 'Leave'){
-        messageElement.classList.add('event-data');
-        message.content = message.sender.userName + 'has left the chat';
-        messageText = document.createTextNode(message.content);
-        textElement.appendChild(messageText);
-        messageElement.appendChild(textElement);
 
-    }
-
-    document.querySelector('#messageList').appendChild(messageElement);
-
-    document.querySelector('#messageList').scrollTop = document
-        .querySelector('#messageList').scrollHeight;
 }
 
 function onRatingChange(payload){
-    let message = JSON.parse(payload.body);
-    let ratingElement = document.getElementById("rating"+message.uuid);
-    ratingElement.innerHTML = message.rating;
 
-    changeRatingColor(ratingElement);
+    let response = JSON.parse(payload.body);
+
+    if(response.statusCodeValue === 200){
+        let message = response.body;
+        let ratingElement = document.getElementById("rating"+message.uuid);
+        ratingElement.innerHTML = message.rating;
+        changeRatingColor(ratingElement);
+
+    } else {
+        badResponse(response);
+    }
+
 }
 
 function changeRatingColor(ratingElement){
@@ -376,6 +419,13 @@ function changeRatingColor(ratingElement){
     }
     else{
         ratingElement.style.color = "black";
+    }
+}
+
+function badResponse(response){
+
+    if(response.headers.User[0] === name){
+        console.error(response.body);
     }
 }
 

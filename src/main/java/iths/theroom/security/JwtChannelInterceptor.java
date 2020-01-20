@@ -16,9 +16,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-import java.util.List;
-import java.util.Objects;
 
+import java.util.List;
 
 import static com.auth0.jwt.algorithms.Algorithm.HMAC512;
 
@@ -40,14 +39,10 @@ public class JwtChannelInterceptor implements ChannelInterceptor {
             throw new UnauthorizedException("No accessor found");
         }
 
-        if(isUserBanned(message)){
-            return null;
-        }
-
         if (StompCommand.CONNECT.equals(accessor.getCommand())) {
 
-            String header = null;
-            String jwtToken = null;
+            String header;
+            String jwtToken;
 
             List<String> nativeHeaders = accessor.getNativeHeader(JwtProperties.HEADER_STRING);
 
@@ -92,27 +87,4 @@ public class JwtChannelInterceptor implements ChannelInterceptor {
         return null;
     }
 
-    private boolean isUserBanned(Message<?> message){
-
-        StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(message);
-        String username = (String) Objects.requireNonNull(headerAccessor.getSessionAttributes()).get("username");
-        String roomUrl = headerAccessor.getDestination();
-        String roomUrlSegments[];
-        String roomName;
-
-        if(username == null){
-            return false;
-        }
-
-        if(roomUrl != null && roomUrl.contains(".")) {
-            roomUrlSegments = roomUrl.split("\\.");
-            int segments = roomUrlSegments.length;
-
-            if(segments > 0) {
-                roomName = roomUrlSegments[segments - 1];
-                return roomService.isUserBannedHere(username, roomName);
-            }
-        }
-        return false;
-    }
 }

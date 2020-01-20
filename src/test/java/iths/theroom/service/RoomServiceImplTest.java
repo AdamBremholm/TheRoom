@@ -5,6 +5,7 @@ import iths.theroom.entity.UserEntity;
 import iths.theroom.exception.BadRequestException;
 import iths.theroom.exception.NoSuchUserException;
 import iths.theroom.exception.NotFoundException;
+import iths.theroom.exception.UnauthorizedException;
 import iths.theroom.factory.RoomFactory;
 import iths.theroom.model.RoomModel;
 import iths.theroom.pojos.MessageForm;
@@ -269,21 +270,35 @@ public class RoomServiceImplTest {
 
     @Test
     public void whenIsUserBanned_IfTrueReturnTrue(){
+        UnauthorizedException expectedException = null;
         UserEntity user = new UserEntity("abc");
         RoomEntity room = new RoomEntity("123");
         room.banUser(user);
         when(roomRepository.getOneByRoomName(any())).thenReturn(Optional.of(room));
         when(userService.getByUserName(any())).thenReturn(user);
-        assertTrue(roomService.isUserBannedHere(user.getUserName(), room.getRoomName()));
+        try{
+            roomService.isUserBannedHere(user.getUserName(), room.getRoomName());
+        } catch (UnauthorizedException e){
+            expectedException = e;
+        }
+
+        assertNotNull(expectedException);
     }
 
     @Test
     public void whenIsUserBanned_IfFalseReturnFalse(){
+        UnauthorizedException unexpectedException = null;
         UserEntity user = new UserEntity("abc");
         RoomEntity room = new RoomEntity("123");
         when(roomRepository.getOneByRoomName(any())).thenReturn(Optional.of(room));
         when(userService.getByUserName(any())).thenReturn(user);
-        assertFalse(roomService.isUserBannedHere(user.getUserName(), room.getRoomName()));
+        try{
+            roomService.isUserBannedHere(user.getUserName(), room.getRoomName());
+        } catch (UnauthorizedException e){
+            unexpectedException = e;
+        }
+
+        assertNull(unexpectedException);
     }
 
     @Test(expected = NoSuchUserException.class)

@@ -1,13 +1,17 @@
 package iths.theroom.service;
 
 import iths.theroom.entity.UserEntity;
-import iths.theroom.exception.*;
+import iths.theroom.exception.BadRequestException;
+import iths.theroom.exception.ConflictException;
+import iths.theroom.exception.NoSuchUserException;
+import iths.theroom.exception.NotFoundException;
 import iths.theroom.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +43,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserEntity getByUserName(String userName) {
-       return userRepository.findByUserName(userName).orElseThrow(NoSuchUserException::new);
+       return userRepository.findByUserName(userName).orElseThrow(() -> new NotFoundException("User " + userName + " not found!"));
     }
 
     @Override

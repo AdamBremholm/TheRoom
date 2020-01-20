@@ -12,7 +12,6 @@ import iths.theroom.repository.UserRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -130,7 +129,7 @@ public class UserServiceImplIntegrationTest {
         assertThat(userService.save(userEntity1)).isEqualTo(userEntity1);
     }
 
-    @Test(expected = NoSuchUserException.class)
+    @Test(expected = NotFoundException.class)
     public void getByUserName_ThrowsExceptionWhenNotFound() {
         Mockito.when(userRepository.findByUserName(Mockito.any())).thenReturn(Optional.empty());
         userService.getByUserName("nonexistent");

@@ -4,6 +4,7 @@ import iths.theroom.entity.RoomEntity;
 import iths.theroom.entity.UserEntity;
 import iths.theroom.exception.BadRequestException;
 import iths.theroom.exception.NotFoundException;
+import iths.theroom.exception.UnauthorizedException;
 import iths.theroom.factory.RoomFactory;
 import iths.theroom.model.RoomModel;
 import iths.theroom.pojos.MessageForm;
@@ -98,15 +99,17 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public boolean isUserBannedHere(String username, String roomName) {
+    public void isUserBannedHere(String username, String roomName) throws UnauthorizedException, NotFoundException {
 
-            UserEntity user = userService.getByUserName(username);
-            if(roomRepository.getOneByRoomName(roomName).isPresent()) {
-                RoomEntity room = roomRepository.getOneByRoomName(roomName).get();
-                return room.getBannedUsers().contains(user);
+        UserEntity user = userService.getByUserName(username);
+        if(roomRepository.getOneByRoomName(roomName).isPresent()) {
+            RoomEntity room = roomRepository.getOneByRoomName(roomName).get();
+            if(room.getBannedUsers().contains(user)){
+                throw new UnauthorizedException("You have been banned from this room!");
             }
-
-            return false;
+        } else {
+            throw new NotFoundException("User " + username + "not found!");
+        }
 
     }
 
