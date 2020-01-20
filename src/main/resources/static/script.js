@@ -95,9 +95,12 @@ function banUser() {
     axios({
         method: 'put',
         url: '/api/admin/ban',
+        headers: { Authorization: "Bearer " + token },
         data: param
     }).then(function (res) {
         console.log(res);
+    }).catch(function (error) {
+        console.log(error);
     });
 }
 
@@ -110,9 +113,12 @@ function unbanUser() {
     axios({
         method: 'put',
         url: '/api/admin/unban',
+        headers: { Authorization: "Bearer " + token },
         data: param
     }).then(function (res) {
         console.log(res);
+    }).catch(function (error) {
+        console.log(error);
     });
 }
 
@@ -123,9 +129,12 @@ function giveAdminPrivileges() {
     axios({
         method: 'put',
         url: '/api/admin/upgrade',
+        headers: { Authorization: "Bearer " + token },
         data: param
     }).then(function (res) {
         console.log(res);
+    }).catch(function (error) {
+        console.log(error);
     });
 }
 
@@ -138,7 +147,6 @@ function connect(event) {
         stompClient = Stomp.over(socket);
         stompClient.connect({Authorization: "Bearer " + token}, function () {
             connectionSuccess();
-            token="";
         }, function (message) {
             if(message.toString().includes("Unauthorized")){
                 document.querySelector('#login-display-message').textContent = "Unauthorized"

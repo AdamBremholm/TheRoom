@@ -11,6 +11,7 @@ import iths.theroom.entity.MessageEntity;
 import iths.theroom.repository.RoomRepository;
 import iths.theroom.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

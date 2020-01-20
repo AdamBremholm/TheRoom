@@ -15,6 +15,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
@@ -52,10 +55,17 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/", "/index.html", "/script.js", "/style.css", "/favicon.ico", "/websocketApp/**").permitAll()
                 .antMatchers("/api/messages/*").hasRole("ADMIN")
                 // Permissions below only sat temporarily to permitAll for easier testing of endpoints in Insomnia/Postman
-                .antMatchers("/api/admin/**").permitAll()
+                .antMatchers("/api/admin/**").hasRole("ADMIN")
                 .antMatchers("/api/users/**").permitAll()
                 // Permissions above only sat temporarily to permitAll for easier testing of endpoints in Insomnia/Postman
                 .anyRequest().authenticated();
+    }
+
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
+        return source;
     }
 
     @Bean
