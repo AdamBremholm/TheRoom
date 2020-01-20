@@ -1,6 +1,5 @@
 package iths.theroom.controller;
 
-import iths.theroom.exception.NotFoundException;
 import iths.theroom.factory.MessageFactory;
 import iths.theroom.model.MessageModel;
 import iths.theroom.pojos.MessageForm;
@@ -47,10 +46,8 @@ public class WebSocketChatController {
     @MessageMapping("/chat.increaseRating.{messageUuid}.{roomName}")
     @SendTo("/topic/rating.{roomName}")
     public MessageModel increaseRating(@DestinationVariable String messageUuid, Authentication authentication){
-//        String userName = authentication.getName();
-//        return messageService.increaseMessageRating(messageUuid, userName);
-
-        throw new NotFoundException("Hejhej");
+        String userName = authentication.getName();
+        return messageService.increaseMessageRating(messageUuid, userName);
     }
 
     @MessageMapping("/chat.decreaseRating.{messageUuid}.{roomName}")
