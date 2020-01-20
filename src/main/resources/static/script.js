@@ -86,6 +86,57 @@ function login(event){
 
 }
 
+function banUser() {
+    let param = new URLSearchParams();
+    let user = document.querySelector('#uname-sheet').value.trim();
+    let room = document.getElementById('roomTitle').innerHTML;
+    param.append('username', user);
+    param.append('roomname', room);
+    axios({
+        method: 'put',
+        url: '/api/admin/ban',
+        headers: { Authorization: "Bearer " + token },
+        data: param
+    }).then(function (res) {
+        console.log(res);
+    }).catch(function (error) {
+        console.log(error);
+    });
+}
+
+function unbanUser() {
+    let param = new URLSearchParams();
+    let user = document.querySelector('#uname-sheet').value.trim();
+    let room = document.getElementById('roomTitle').innerHTML;
+    param.append('username', user);
+    param.append('roomname', room);
+    axios({
+        method: 'put',
+        url: '/api/admin/unban',
+        headers: { Authorization: "Bearer " + token },
+        data: param
+    }).then(function (res) {
+        console.log(res);
+    }).catch(function (error) {
+        console.log(error);
+    });
+}
+
+function giveAdminPrivileges() {
+    let param = new URLSearchParams();
+    let user = document.querySelector('#uname-sheet').value.trim();
+    param.append('username', user);
+    axios({
+        method: 'put',
+        url: '/api/admin/upgrade',
+        headers: { Authorization: "Bearer " + token },
+        data: param
+    }).then(function (res) {
+        console.log(res);
+    }).catch(function (error) {
+        console.log(error);
+    });
+}
 
 function connect(event) {
     name = document.querySelector('#name').value.trim();
@@ -96,7 +147,6 @@ function connect(event) {
         stompClient = Stomp.over(socket);
         stompClient.connect({Authorization: "Bearer " + token}, function () {
             connectionSuccess();
-            token="";
         }, function (message) {
             if(message.toString().includes("Unauthorized")){
                 document.querySelector('#login-display-message').textContent = "Unauthorized"
@@ -388,5 +438,7 @@ function changeRatingColor(ratingElement){
         ratingElement.style.color = "black";
     }
 }
+
+
 
 

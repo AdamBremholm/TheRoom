@@ -12,6 +12,11 @@ import iths.theroom.factory.MessageFactory;
 import iths.theroom.model.MessageModel;
 import iths.theroom.pojos.MessageForm;
 import iths.theroom.repository.MessageRepository;
+import iths.theroom.exception.*;
+import iths.theroom.model.MessageModel;
+import iths.theroom.pojos.MessageForm;
+import iths.theroom.repository.MessageRepository;
+import iths.theroom.entity.MessageEntity;
 import iths.theroom.repository.RoomRepository;
 import iths.theroom.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,19 +60,18 @@ public class MessageServiceImpl implements MessageService {
         UserEntity user = userRepository.findByUserName(form.getSender()).orElseThrow(NoSuchUserException::new);
         Optional<RoomEntity> room = roomRepository.getOneByRoomName(form.getRoomName());
         room.orElseThrow(() ->  new BadRequestException("no such room exists"));
-        MessageEntity message = new MessageEntity(form.getType(), form.getContent(), user, room.get(), new MessageRatingEntity());
-        room.get().addMessage(message);
 
-        ////////remove for production//////////
-        //Will be replaced by the rest admin controller
-        if(user.getUserName().contains("ban")){
-            room.get().banUser(user);
+        MessageEntity message;
+        if (!room.get().getBannedUsers().contains(form.getSender())) {
+            message = new MessageEntity(form.getType(), form.getContent(), user, room.get(), new MessageRatingEntity());
+            room.get().addMessage(message);
+            roomRepository.save(room.get());
+            userRepository.save(user);
+
+            return toModel(messageRepository.save(message));
+        } else {
+            throw new UnauthorizedException("{\"You are banned from chatting in this room!}");
         }
-        ///////////////////////////////////////
-
-        roomRepository.save(room.get());
-        userRepository.save(user);
-        return toModel(messageRepository.save(message));
     }
 
     @Override
