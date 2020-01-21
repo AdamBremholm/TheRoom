@@ -77,6 +77,7 @@ public class UserControllerIntegrationTest {
         userEntity.setEmail("sven@gmail.com");
         userEntity.setPassword("123abc");
         userEntity.setPasswordConfirm("123abc");
+        userEntity.setRoles("");
         userModel = UserFactory.toModel(userEntity);
         allUsers = Collections.singletonList(userEntity);
     }

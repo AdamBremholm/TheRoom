@@ -63,8 +63,15 @@ public class MessageServiceImplIntegrationTest {
         message.setUuid("123abc");
         message.setContent(content);
 
-        userEntity = new UserEntity("sven", "sve123", "sven@gmail.com"
-                , "sve123", "sven", "svensson", new HashSet<>(), new AvatarEntity(),"USER", "");
+        userEntity = new UserEntity();
+        userEntity.setUserName("sven");
+        userEntity.setFirstName("sven");
+        userEntity.setLastName("svensson");
+        userEntity.setEmail("sven@gmail.com");
+        userEntity.setPassword("sve123");
+        userEntity.setPasswordConfirm("sve123");
+
+
         message.setSender(userEntity);
         roomEntity = new RoomEntity();
         roomEntity.setRoomName("room1");

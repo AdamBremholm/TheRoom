@@ -79,15 +79,32 @@ public class UserServiceImplIntegrationTest {
         messageEntities = new HashSet<>();
         messageEntity = new MessageEntity();
         messageEntities.add(messageEntity);
-        userEntity1 = new UserEntity("sven", "sve123", "sven@gmail.com"
-                , "sve123", "sven", "svensson", new HashSet<>(), new AvatarEntity(),"USER", "");
 
-        userEntity2 = new UserEntity("johan", "sve123", "johan@gmail.com"
-                , "sve124", "sven", "svensson", new HashSet<>(), new AvatarEntity(),"USER", "");
+        userEntity1 = new UserEntity();
+        userEntity1.setUserName("sven");
+        userEntity1.setFirstName("sven");
+        userEntity1.setLastName("svensson");
+        userEntity1.setEmail("sven@gmail.com");
+        userEntity1.setPassword("sve123");
+        userEntity1.setPasswordConfirm("sve123");
+
+        userEntity2 = new UserEntity();
+        userEntity2.setUserName("johan");
+        userEntity2.setPassword("sve123");
+        userEntity2.setPasswordConfirm("sve124");
+        userEntity2.setFirstName("sven");
+        userEntity2.setLastName("svensson");
+        userEntity2.setEmail("johan@gmail.com");
 
 
-        userEntity3 = new UserEntity("johan", "sve123", "johan@gmail.com"
-                , "sve123", "sven", "svensson", new HashSet<>(), new AvatarEntity(), "ADMIN, USER", "");
+        userEntity3 = new UserEntity();
+        userEntity3.setUserName("johan");
+        userEntity3.setPassword("sve123");
+        userEntity3.setPasswordConfirm("sve123");
+        userEntity3.setFirstName("sven");
+        userEntity3.setLastName("svensson");
+        userEntity3.setEmail("johan@gmail.com");
+        userEntity3.setRoles("ADMIN, USER");
 
     }
 
