@@ -40,7 +40,7 @@ public class UserEntity {
     private ProfileEntity profile;
 
     public UserEntity(String userName, String password, String email,
-                      String passwordConfirm, String firstName, String lastName, Set<MessageEntity> messages, AvatarEntity avatarEntity, String roles, String permissions) {
+                      String passwordConfirm, String firstName, String lastName, Set<MessageEntity> messages, AvatarEntity avatarEntity) {
         this.userName = userName;
         this.password = password;
         this.email = email;
@@ -50,18 +50,19 @@ public class UserEntity {
         this.messages = Objects.requireNonNullElse(messages, new HashSet<>());
         this.avatarEntity = avatarEntity;
         this.excludedRooms = new HashSet<>();
-        this.roles = Objects.requireNonNullElse(roles, "");;
-        this.permissions = Objects.requireNonNullElse(permissions, "");
         this.active = 1;
         this.profile = new ProfileEntity();
+        profile.setGender("1");
+        this.roles = "USER";
+        this.permissions = "";
     }
 
     public UserEntity() {
-        this(null, null, null, null, null, null, null, null, null, null);
+        this(null, null, null, null, null, null, null, null);
     }
 
     public UserEntity(String userName) {
-        this(userName, null, null, null, null, null, null, null, null, null);
+        this(userName, null, null, null, null, null, null, null);
     }
 
     public Long getId() {
