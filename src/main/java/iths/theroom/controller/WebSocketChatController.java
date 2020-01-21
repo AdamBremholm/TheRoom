@@ -1,5 +1,6 @@
 package iths.theroom.controller;
 
+import iths.theroom.entity.RoomEntity;
 import iths.theroom.exception.BadRequestException;
 import iths.theroom.exception.NotFoundException;
 import iths.theroom.exception.UnauthorizedException;
@@ -112,6 +113,7 @@ public class WebSocketChatController {
 
         String userName = authentication.getName();
         try{
+            roomService.save(new RoomEntity(roomName));
             roomService.isUserBannedHere(userName, roomName);
             return ResponseEntity.ok(messageService.findAllByRoomEntityOrderById(roomName));
 

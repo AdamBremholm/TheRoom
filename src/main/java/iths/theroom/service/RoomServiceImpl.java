@@ -102,13 +102,20 @@ public class RoomServiceImpl implements RoomService {
     public void isUserBannedHere(String username, String roomName) throws UnauthorizedException, NotFoundException {
 
         UserEntity user = userService.getByUserName(username);
-        if(roomRepository.getOneByRoomName(roomName).isPresent()) {
-            RoomEntity room = roomRepository.getOneByRoomName(roomName).get();
+
+        if(user == null){
+            throw new NotFoundException("User " + username + "not found!");
+        }
+
+        Optional<RoomEntity> roomFound = roomRepository.getOneByRoomName(roomName);
+
+        if(roomFound.isPresent()) {
+            RoomEntity room = roomFound.get();
             if(room.getBannedUsers().contains(user)){
                 throw new UnauthorizedException("You have been banned from this room!");
             }
         } else {
-            throw new NotFoundException("User " + username + "not found!");
+            throw new NotFoundException("Room " + roomName + "not found!");
         }
 
     }
