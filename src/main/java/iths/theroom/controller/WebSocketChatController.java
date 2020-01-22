@@ -32,7 +32,7 @@ public class WebSocketChatController {
 
     @MessageMapping("/chat.sendMessage.{roomName}")
     @SendTo("/topic/chatMessages.{roomName}")
-    public ResponseEntity sendMessage(@Payload MessageForm messageForm, Authentication authentication) {
+    ResponseEntity sendMessage(@Payload MessageForm messageForm, Authentication authentication) {
         String userName = authentication.getName();
         try{
             roomService.isUserBannedHere(userName, messageForm.getRoomName());
@@ -48,7 +48,7 @@ public class WebSocketChatController {
 
     @MessageMapping("/chat.changeBgColor.{roomName}")
     @SendTo("/topic/backgroundChange.{roomName}")
-    public ResponseEntity changeBackground(@Payload MessageForm messageForm, Authentication authentication) {
+    ResponseEntity changeBackground(@Payload MessageForm messageForm, Authentication authentication) {
 
         String userName = authentication.getName();
         try{
@@ -66,8 +66,8 @@ public class WebSocketChatController {
 
     @MessageMapping("/chat.increaseRating.{messageUuid}.{roomName}")
     @SendTo("/topic/rating.{roomName}")
-    public ResponseEntity increaseRating(@DestinationVariable String messageUuid, @DestinationVariable String roomName,
-                                         Authentication authentication){
+    ResponseEntity increaseRating(@DestinationVariable String messageUuid, @DestinationVariable String roomName,
+                                  Authentication authentication){
         String userName = authentication.getName();
         try{
             roomService.isUserBannedHere(userName, roomName);
@@ -82,8 +82,8 @@ public class WebSocketChatController {
 
     @MessageMapping("/chat.decreaseRating.{messageUuid}.{roomName}")
     @SendTo("/topic/rating.{roomName}")
-    public ResponseEntity decreaseRating(@DestinationVariable String messageUuid, @DestinationVariable String roomName,
-                                         Authentication authentication){
+    ResponseEntity decreaseRating(@DestinationVariable String messageUuid, @DestinationVariable String roomName,
+                                  Authentication authentication){
         String userName = authentication.getName();
         try{
             roomService.isUserBannedHere(userName, roomName);
@@ -98,7 +98,7 @@ public class WebSocketChatController {
 
     @MessageMapping("/chat.retrieveAll.{userName}.{roomName}")
     @SendTo("/topic/{userName}.{roomName}")
-    public ResponseEntity getAllMessages(@DestinationVariable String roomName, Authentication authentication){
+    ResponseEntity getAllMessages(@DestinationVariable String roomName, Authentication authentication){
 
         String userName = authentication.getName();
         try{
@@ -116,8 +116,8 @@ public class WebSocketChatController {
 
     @MessageMapping("/chat.newUser.{roomName}")
     @SendTo("/topic/alerts.{roomName}")
-    public ResponseEntity newUser(@DestinationVariable String roomName, @Payload MessageForm messageForm,
-                                  Authentication authentication) {
+    ResponseEntity newUser(@DestinationVariable String roomName, @Payload MessageForm messageForm,
+                           Authentication authentication) {
         String userName = authentication.getName();
         try{
             roomService.isUserBannedHere(userName, roomName);
