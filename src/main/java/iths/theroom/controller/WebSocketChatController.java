@@ -57,7 +57,7 @@ public class WebSocketChatController {
         String userName = authentication.getName();
 
         try{
-            roomService.isUserBannedHere(userName, roomName);
+            roomService.isUserBannedHere(userName, messageForm.getRoomName());
             RoomModel roomModel = roomService.updateRoom(messageForm);
             return ResponseEntity.ok(roomModel.getBackgroundColor());
 
@@ -80,8 +80,6 @@ public class WebSocketChatController {
 
         } catch (UnauthorizedException e){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).header("User", userName).body(e.getMessage());
-        } catch (BadRequestException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).header("User", userName).body(e.getMessage());
         } catch (NotFoundException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).header("User", userName).body(e.getMessage());
         }
