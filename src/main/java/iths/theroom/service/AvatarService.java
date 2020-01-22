@@ -11,10 +11,12 @@ public interface AvatarService {
 
     AvatarModel getAvatarById(Long id);
 
+    AvatarModel findByUuid(String uuid);
+
     AvatarModel createAvatar(AvatarEntity avatar);
 
-    AvatarModel updateAvatar(AvatarEntity avatar);
+    AvatarModel updateAvatar(String id, AvatarEntity avatar);
 
-    void deleteAvatar(Long id);
+    void deleteAvatar(String id);
 
 }

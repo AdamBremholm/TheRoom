@@ -22,9 +22,9 @@ public class AvatarController {
         return avatarService.getAllAvatars();
     }
 
-    @GetMapping(value="/{avatarId}")
-    public AvatarModel getAvatarById(@PathVariable(name="avatarId") Long id) {
-        return avatarService.getAvatarById(id);
+    @GetMapping(value="/{uuid}")
+    public AvatarModel getAvatarById(@PathVariable(name="uuid") String uuid) {
+        return avatarService.findByUuid(uuid);
     }
 
     @PostMapping(produces=MediaType.APPLICATION_JSON_VALUE)
@@ -32,14 +32,14 @@ public class AvatarController {
         return avatarService.createAvatar(avatar);
     }
 
-    @PutMapping(value="/update", produces=MediaType.APPLICATION_JSON_VALUE)
-    public AvatarModel updateAvatar(@RequestBody AvatarEntity avatar) {
-        return avatarService.updateAvatar(avatar);
+    @PutMapping(value="/{uuid}", produces=MediaType.APPLICATION_JSON_VALUE)
+    public AvatarModel updateAvatar(@RequestBody AvatarEntity avatar, @PathVariable(name="uuid") String uuid) {
+        return avatarService.updateAvatar(uuid, avatar);
     }
 
-    @DeleteMapping(value="/delete/{avatarId}")
-    public void deleteAvatar(@PathVariable(name="avatarId")Long id) {
-        avatarService.deleteAvatar(id);
+    @DeleteMapping(value="/{uuid}")
+    public void deleteAvatar(@PathVariable(name="uuid")String uuid) {
+        avatarService.deleteAvatar(uuid);
     }
 
 }
