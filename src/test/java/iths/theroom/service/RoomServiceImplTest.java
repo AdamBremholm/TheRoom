@@ -3,7 +3,6 @@ package iths.theroom.service;
 import iths.theroom.entity.RoomEntity;
 import iths.theroom.entity.UserEntity;
 import iths.theroom.exception.BadRequestException;
-import iths.theroom.exception.NoSuchUserException;
 import iths.theroom.exception.NotFoundException;
 import iths.theroom.exception.UnauthorizedException;
 import iths.theroom.factory.RoomFactory;
@@ -301,11 +300,11 @@ public class RoomServiceImplTest {
         assertNull(unexpectedException);
     }
 
-    @Test(expected = NoSuchUserException.class)
+    @Test(expected = NotFoundException.class)
     public void whenIsUserBanned_UserDoesntExist(){
         RoomEntity room = new RoomEntity("123");
         when(roomRepository.getOneByRoomName(any())).thenReturn(Optional.of(room));
-        when(userService.getByUserName("this name doesnt exist")).thenThrow(new NoSuchUserException());
+        when(userService.getByUserName("this name doesnt exist")).thenThrow(new NotFoundException(""));
         roomService.isUserBannedHere("this name doesnt exist", room.getRoomName());
     }
 
