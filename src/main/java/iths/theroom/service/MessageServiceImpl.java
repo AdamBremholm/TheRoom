@@ -189,7 +189,7 @@ public class MessageServiceImpl implements MessageService {
 
     private UserEntity fetchUserIfExists(String userName){
         Optional<UserEntity> userFound = userRepository.findByUserName(userName);
-        return userFound.orElseThrow(NoSuchUserException::new);
+        return userFound.orElseThrow(() -> new NotFoundException("Username " + userName + " not found"));
     }
 
 }

@@ -247,7 +247,7 @@ public class MessageServiceImplIntegrationTest {
         messageService.decreaseMessageRating("123", "johan");
     }
 
-    @Test(expected = NoSuchUserException.class)
+    @Test(expected = NotFoundException.class)
     public void decreaseMessageRating_userNotFoundThrowsException() {
         Mockito.when(messageRepository.findByUuid(any())).thenReturn(Optional.of(message));
         Mockito.when(userRepository.findByUserName(any())).thenReturn(Optional.empty());
@@ -267,7 +267,7 @@ public class MessageServiceImplIntegrationTest {
         messageService.increaseMessageRating("123", "johan");
     }
 
-    @Test(expected = NoSuchUserException.class)
+    @Test(expected = NotFoundException.class)
     public void increaseMessageRating_userNotFoundThrowsException() {
         Mockito.when(messageRepository.findByUuid(any())).thenReturn(Optional.of(message));
         Mockito.when(userRepository.findByUserName(any())).thenReturn(Optional.empty());
