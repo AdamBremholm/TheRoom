@@ -130,8 +130,6 @@ public class WebSocketChatController {
 
         }catch (UnauthorizedException e){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).header("User", userName).body(e.getMessage());
-        } catch (BadRequestException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).header("User", userName).body(e.getMessage());
         } catch (NotFoundException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).header("User", userName).body(e.getMessage());
         }
