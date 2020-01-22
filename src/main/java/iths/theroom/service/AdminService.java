@@ -1,6 +1,5 @@
 package iths.theroom.service;
 
-import iths.theroom.model.MessageModel;
 import iths.theroom.model.RoomModel;
 import iths.theroom.model.UserModel;
 
