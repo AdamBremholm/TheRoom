@@ -55,7 +55,7 @@ public class WebSocketChatControllerIntegrationTest {
     private MessageEntity testMessage1 = new MessageEntity();
     private UserEntity testUser1 = new UserEntity(
             "234754-91293023-0239409-2134236", "password", "8432412@5219385.com", "password",
-            "John", "Doe", null, null);;
+            "John", "Doe", null, null);
 
     private MessageForm messageForm1;
 
@@ -138,7 +138,7 @@ public class WebSocketChatControllerIntegrationTest {
     }
 
     @Test
-    public void increaseRating_returnCorrectMessageModel(){
+    public void increaseRating_returnCorrectMessageModelAnd200OK(){
         Mockito.when(authentication.getName()).thenReturn(testUser1.getUserName());
 
         ResponseEntity response = webSocketChatController.increaseRating(testMessage1.getUuid(), testRoom1.getRoomName(), authentication);
@@ -149,6 +149,42 @@ public class WebSocketChatControllerIntegrationTest {
         int ratingAfter = messageModel.getRating();
 
         assertEquals(ratingAfter, ratingBefore+1);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    public void increaseRating_ensureUserCanIncreaseMaxOnce(){
+        Mockito.when(authentication.getName()).thenReturn(testUser1.getUserName());
+
+        webSocketChatController.increaseRating(testMessage1.getUuid(), testRoom1.getRoomName(), authentication);
+        ResponseEntity response = webSocketChatController.increaseRating(testMessage1.getUuid(), testRoom1.getRoomName(), authentication);
+
+        MessageModel messageModel = (MessageModel) response.getBody();
+        assertNotNull(messageModel);
+        int ratingBefore = testMessage1.getMessageRatingEntity().getRating();
+        int ratingAfter = messageModel.getRating();
+
+        assertEquals(ratingAfter, ratingBefore+1);
+    }
+
+    @Test
+    public void increaseRating_ifUserDecreasedEnsureUserCanUndoAndIncrease(){
+        Mockito.when(authentication.getName()).thenReturn(testUser1.getUserName());
+
+        ResponseEntity ratingDecrease = webSocketChatController.decreaseRating(testMessage1.getUuid(), testRoom1.getRoomName(), authentication);
+        MessageModel afterDecreasedRating = (MessageModel) ratingDecrease.getBody();
+        assertNotNull(afterDecreasedRating);
+        int ratingBefore = afterDecreasedRating.getRating();
+
+        webSocketChatController.increaseRating(testMessage1.getUuid(), testRoom1.getRoomName(), authentication);
+        ResponseEntity response = webSocketChatController.increaseRating(testMessage1.getUuid(), testRoom1.getRoomName(), authentication);
+
+        MessageModel messageModel = (MessageModel) response.getBody();
+        assertNotNull(messageModel);
+
+        int ratingAfter = messageModel.getRating();
+
+        assertEquals(ratingAfter, ratingBefore+2);
     }
 
     @Test
@@ -187,6 +223,96 @@ public class WebSocketChatControllerIntegrationTest {
         Mockito.when(authentication.getName()).thenReturn(testUser1.getUserName());
 
         ResponseEntity response = webSocketChatController.increaseRating("invalid-uuid", testRoom1.getRoomName(), authentication);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    @Test
+    public void decreaseRating_returnCorrectMessageModelAnd200OK(){
+        Mockito.when(authentication.getName()).thenReturn(testUser1.getUserName());
+
+        ResponseEntity response = webSocketChatController.decreaseRating(testMessage1.getUuid(), testRoom1.getRoomName(), authentication);
+
+        MessageModel messageModel = (MessageModel) response.getBody();
+        assertNotNull(messageModel);
+        int ratingBefore = testMessage1.getMessageRatingEntity().getRating();
+        int ratingAfter = messageModel.getRating();
+
+        assertEquals(ratingAfter, ratingBefore-1);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    public void decreaseRating_ensureUserCanDecreaseMaxOnce(){
+        Mockito.when(authentication.getName()).thenReturn(testUser1.getUserName());
+
+        webSocketChatController.decreaseRating(testMessage1.getUuid(), testRoom1.getRoomName(), authentication);
+        ResponseEntity response = webSocketChatController.decreaseRating(testMessage1.getUuid(), testRoom1.getRoomName(), authentication);
+
+        MessageModel messageModel = (MessageModel) response.getBody();
+        assertNotNull(messageModel);
+        int ratingBefore = testMessage1.getMessageRatingEntity().getRating();
+        int ratingAfter = messageModel.getRating();
+
+        assertEquals(ratingAfter, ratingBefore-1);
+    }
+
+    @Test
+    public void decreaseRating_ifUserIncreasedEnsureUserCanUndoAndDecrease(){
+        Mockito.when(authentication.getName()).thenReturn(testUser1.getUserName());
+
+        ResponseEntity ratingIncreased = webSocketChatController.increaseRating(testMessage1.getUuid(), testRoom1.getRoomName(), authentication);
+        MessageModel afterIncreasedRating = (MessageModel) ratingIncreased.getBody();
+        assertNotNull(afterIncreasedRating);
+        int ratingBefore = afterIncreasedRating.getRating();
+
+        webSocketChatController.decreaseRating(testMessage1.getUuid(), testRoom1.getRoomName(), authentication);
+        ResponseEntity response = webSocketChatController.decreaseRating(testMessage1.getUuid(), testRoom1.getRoomName(), authentication);
+
+        MessageModel messageModel = (MessageModel) response.getBody();
+        assertNotNull(messageModel);
+
+        int ratingAfter = messageModel.getRating();
+
+        assertEquals(ratingAfter, ratingBefore-2);
+    }
+
+    @Test
+    public void decreaseRating_ifUserBannedReturnStatus401Unauthorized(){
+        Mockito.when(authentication.getName()).thenReturn(testUser1.getUserName());
+
+        Set<RoomEntity> bannedFromRooms = new HashSet<>();
+        bannedFromRooms.add(testRoom1);
+        testUser1.setExcludedRooms(bannedFromRooms);
+        userRepository.saveAndFlush(testUser1);
+
+        ResponseEntity response = webSocketChatController.decreaseRating(testMessage1.getUuid(), testRoom1.getRoomName(), authentication);
+        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
+    }
+
+    @Test
+    public void decreaseRating_ifUserDoesntExistReturnStatus404NotFound(){
+        Mockito.when(authentication.getName()).thenReturn("02158029834-209314021934");
+
+        ResponseEntity response = webSocketChatController.decreaseRating(testMessage1.getUuid(), testRoom1.getRoomName(), authentication);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    @Test
+    public void decreaseRating_ifRoomDoesntExistReturnStatus404NotFound(){
+        Mockito.when(authentication.getName()).thenReturn(testUser1.getUserName());
+
+        ResponseEntity response = webSocketChatController.decreaseRating(testMessage1.getUuid(), "0982350928234-2930481", authentication);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    @Test
+    public void decreaseRating_ifMessageDoesntExistReturnStatus404NotFound(){
+        Mockito.when(authentication.getName()).thenReturn(testUser1.getUserName());
+
+        ResponseEntity response = webSocketChatController.decreaseRating("invalid-uuid", testRoom1.getRoomName(), authentication);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
