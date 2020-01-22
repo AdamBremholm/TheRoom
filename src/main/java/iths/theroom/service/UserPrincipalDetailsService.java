@@ -21,11 +21,10 @@ public class UserPrincipalDetailsService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        Optional<UserEntity> user = this.userRepository.findByUserName(s);
-        user.orElseThrow(() -> new NotFoundException("User " + s + " not found!"));
-        UserPrincipal userPrincipal = new UserPrincipal(user.get());
+    public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
+        Optional<UserEntity> user = this.userRepository.findByUserName(userName);
+        user.orElseThrow(() -> new NotFoundException("User " + userName + " not found!"));
 
-        return userPrincipal;
+        return new UserPrincipal(user.get());
     }
 }
