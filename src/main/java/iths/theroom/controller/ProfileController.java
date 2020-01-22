@@ -1,5 +1,6 @@
 package iths.theroom.controller;
 
+import iths.theroom.exception.BadRequestException;
 import iths.theroom.model.ProfileModel;
 import iths.theroom.pojos.ProfileForm;
 import iths.theroom.service.ProfileService;
@@ -8,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
-@RequestMapping(path="/theroom/profile")
+@RequestMapping(path="/theroom")
 public class ProfileController {
 
     private final ProfileService profileService;
@@ -19,8 +20,16 @@ public class ProfileController {
     }
 
     @PostMapping("/profile")
-    public ProfileModel addMessage(HttpServletRequest req, @RequestBody ProfileForm form) {
+    public ProfileModel addProfile(HttpServletRequest req, @RequestBody ProfileForm form) {
         return profileService.save(form, req);
     }
+
+    @GetMapping("/profile/{username}")
+    public ProfileModel getProfile(@PathVariable()String username) {
+        if(username != null && !username.isBlank()) {
+            return profileService.get(username);
+        }
+        throw new BadRequestException("fill in the username");
+        }
 }
 

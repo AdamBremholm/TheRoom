@@ -8,4 +8,5 @@ import javax.servlet.http.HttpServletRequest;
 public interface ProfileService {
 
         ProfileModel save(ProfileForm form, HttpServletRequest req);
+        ProfileModel get(String username);
 }
