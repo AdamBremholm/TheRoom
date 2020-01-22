@@ -121,12 +121,12 @@ public class WebSocketChatController {
 
     @MessageMapping("/chat.newUser.{roomName}")
     @SendTo("/topic/alerts.{roomName}")
-    public ResponseEntity newUser(@DestinationVariable String roomName, @Payload MessageForm webSocketChatMessage,
+    public ResponseEntity newUser(@DestinationVariable String roomName, @Payload MessageForm messageForm,
                                   Authentication authentication) {
         String userName = authentication.getName();
         try{
             roomService.isUserBannedHere(userName, roomName);
-            return ResponseEntity.ok(MessageFactory.toModel(webSocketChatMessage));
+            return ResponseEntity.ok(MessageFactory.toModel(messageForm));
 
         }catch (UnauthorizedException e){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).header("User", userName).body(e.getMessage());
