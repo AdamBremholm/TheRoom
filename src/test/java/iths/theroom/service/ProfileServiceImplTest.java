@@ -85,4 +85,14 @@ public class ProfileServiceImplTest {
         when(userService.updateUser(any())).thenReturn(user);
         assertTrue(profileService.save(form, httpServletRequest).getCountry().equals("sweden"));
     }
+
+    @Test
+    public void getProfileAsTheCorrectUser_PassesAsNormal() {
+        UserEntity user = new UserEntity("bertil");
+        ProfileEntity profile = new ProfileEntity();
+        profile.setCountry("sweden");
+        user.setProfile(profile);
+        when(userService.getByUserName(any())).thenReturn(user);
+        assertTrue(profileService.get(user.getUserName()).getCountry().equals(profile.getCountry()));
+    }
 }

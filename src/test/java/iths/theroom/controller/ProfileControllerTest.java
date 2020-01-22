@@ -2,14 +2,10 @@ package iths.theroom.controller;
 
 import iths.theroom.entity.ProfileEntity;
 import iths.theroom.entity.UserEntity;
-import iths.theroom.exception.NoSuchMessageException;
-import iths.theroom.exception.NotFoundException;
+import iths.theroom.exception.UnauthorizedException;
 import iths.theroom.factory.ProfileFactory;
-import iths.theroom.model.MessageModel;
 import iths.theroom.model.ProfileModel;
-import iths.theroom.service.MessageService;
 import iths.theroom.service.ProfileService;
-import iths.theroom.service.UserService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,7 +21,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-
 import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
@@ -89,23 +84,44 @@ public class ProfileControllerTest {
     @WithMockUser(username="spring")
     @Test
     public void getProfileReturnsOk() throws Exception {
-        Mockito.when(profileService.get("egg")).thenReturn(profileModel);
-        mvc.perform(get("/theroom/profile/egg")
+        Mockito.when(profileService.get("name")).thenReturn(profileModel);
+        mvc.perform(get("/theroom/profile/name")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.country", is(profile.getCountry())))
                 .andExpect(status().isOk());
     }
-    
+
     @WithMockUser(username="spring")
     @Test
     public void postProfileMustMatchUserPrincipalElseReturnUnauth() throws Exception {
-
-        mvc.perform(post("/api/profile")
-                .content()
+        Mockito.when(profileService.save(any(), any())).thenThrow(new UnauthorizedException("Invalid credentials"));
+        mvc.perform(post("/theroom/profile")
+                .content("{\"password\": \"password\", \"username\": \"name\", \"gender\": \"female\", \"country\": \"sweden\", \"age\": 19, \"aboutMe\": \"i like turtles\", \"starSign\": \"lion\"}")
                 .characterEncoding("UTF8")
                 .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @WithMockUser(username="spring")
+    @Test
+    public void postProfileWorksAsExpected() throws Exception {
+        Mockito.when(profileService.save(any(), any())).thenReturn(profileModel);
+        mvc.perform(post("/theroom/profile")
+                .content("{\"password\": \"password\", \"username\": \"name\", \"gender\": \"female\", \"country\": \"sweden\", \"age\": 19, \"aboutMe\": \"i like turtles\", \"starSign\": \"lion\"}")
+                .characterEncoding("UTF8")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.country", is(profile.getCountry())))
                 .andExpect(status().isOk());
     }
 
-
+    @WithMockUser(username="spring")
+    @Test
+    public void postProfileBadJsonEqualsBadRequest() throws Exception {
+        Mockito.when(profileService.save(any(), any())).thenReturn(profileModel);
+        mvc.perform(post("/theroom/profile")
+                .content("not very good json format")
+                .characterEncoding("UTF8")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
 }
