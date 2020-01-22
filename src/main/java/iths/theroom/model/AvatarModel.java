@@ -6,15 +6,17 @@ public class AvatarModel {
     private int head;
     private int torso;
     private int legs;
+    private String uuid;
 
     public AvatarModel() {
     }
 
-    public AvatarModel(int base, int head, int torso, int legs) {
+    public AvatarModel(int base, int head, int torso, int legs, String uuid) {
         this.base = base;
         this.head = head;
         this.torso = torso;
         this.legs = legs;
+        this.uuid = uuid;
     }
 
     public int getBase() {
@@ -47,5 +49,13 @@ public class AvatarModel {
 
     public void setLegs(int legs) {
         this.legs = legs;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 }

@@ -1,7 +1,6 @@
 package iths.theroom.factory;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 import iths.theroom.entity.MessageEntity;
 import iths.theroom.entity.UserEntity;
 import iths.theroom.model.MessageModel;
@@ -12,17 +11,6 @@ import java.util.List;
 
 @Component
 public class UserFactory {
-
-    public UserEntity jsonToEntity(String userJson){
-
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        try{
-           return objectMapper.readValue(userJson, UserEntity.class);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e.getMessage());
-        }
-    }
 
     public static UserModel toModel(UserEntity userEntity){
 

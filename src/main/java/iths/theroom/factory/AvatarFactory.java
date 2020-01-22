@@ -14,6 +14,7 @@ public class AvatarFactory {
         model.setHead(avatarEntity.getHead());
         model.setTorso(avatarEntity.getTorso());
         model.setLegs(avatarEntity.getLegs());
+        model.setUuid(avatarEntity.getUuid());
 
         return model;
     }
