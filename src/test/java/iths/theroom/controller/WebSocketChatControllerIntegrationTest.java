@@ -24,6 +24,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
@@ -57,6 +59,9 @@ public class WebSocketChatControllerIntegrationTest {
             "234754-91293023-0239409-2134236", "password", "8432412@5219385.com", "password",
             "John", "Doe", null, null);
 
+    private final String invalidRoomName = "0982350928234-2930481";
+    private final String invalidUserName = "02158029834-209314021934";
+
     private MessageForm messageForm1;
 
     @Before
@@ -89,7 +94,17 @@ public class WebSocketChatControllerIntegrationTest {
         messageRepository.delete(testMessage1);
         roomRepository.delete(testRoom1);
         userRepository.delete(testUser1);
+        Optional<RoomEntity> roomEntity = roomRepository.getOneByRoomName(invalidRoomName);
+        roomEntity.ifPresent(roomRepository::delete);
 
+
+    }
+
+    private void banUser(RoomEntity room, UserEntity user){
+        Set<RoomEntity> bannedFromRooms = new HashSet<>();
+        bannedFromRooms.add(room);
+        user.setExcludedRooms(bannedFromRooms);
+        userRepository.saveAndFlush(user);
     }
 
 
@@ -110,10 +125,7 @@ public class WebSocketChatControllerIntegrationTest {
     public void changeBackground_ifUserBannedReturnStatus401Unauthorized(){
         Mockito.when(authentication.getName()).thenReturn(testUser1.getUserName());
 
-        Set<RoomEntity> bannedFromRooms = new HashSet<>();
-        bannedFromRooms.add(testRoom1);
-        testUser1.setExcludedRooms(bannedFromRooms);
-        userRepository.saveAndFlush(testUser1);
+        banUser(testRoom1, testUser1);
 
         ResponseEntity response = webSocketChatController.changeBackground(testRoom1.getRoomName(), messageForm1, authentication);
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
@@ -121,7 +133,7 @@ public class WebSocketChatControllerIntegrationTest {
 
     @Test
     public void changeBackGround_ifUserDoesntExistReturnStatus404NotFound(){
-        Mockito.when(authentication.getName()).thenReturn("N/A");
+        Mockito.when(authentication.getName()).thenReturn(invalidUserName);
 
         ResponseEntity response = webSocketChatController.changeBackground(testRoom1.getRoomName(), messageForm1, authentication);
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
@@ -131,7 +143,7 @@ public class WebSocketChatControllerIntegrationTest {
     public void changeBackground_ifRoomDoesntExistReturnStatus404NotFound(){
         Mockito.when(authentication.getName()).thenReturn(testUser1.getUserName());
 
-        messageForm1.setRoomName("N/A");
+        messageForm1.setRoomName(invalidRoomName);
 
         ResponseEntity response = webSocketChatController.changeBackground(testRoom1.getRoomName(), messageForm1, authentication);
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
@@ -191,10 +203,7 @@ public class WebSocketChatControllerIntegrationTest {
     public void increaseRating_ifUserBannedReturnStatus401Unauthorized(){
         Mockito.when(authentication.getName()).thenReturn(testUser1.getUserName());
 
-        Set<RoomEntity> bannedFromRooms = new HashSet<>();
-        bannedFromRooms.add(testRoom1);
-        testUser1.setExcludedRooms(bannedFromRooms);
-        userRepository.saveAndFlush(testUser1);
+        banUser(testRoom1, testUser1);
 
         ResponseEntity response = webSocketChatController.increaseRating(testMessage1.getUuid(), testRoom1.getRoomName(), authentication);
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
@@ -202,7 +211,7 @@ public class WebSocketChatControllerIntegrationTest {
 
     @Test
     public void increaseRating_ifUserDoesntExistReturnStatus404NotFound(){
-        Mockito.when(authentication.getName()).thenReturn("02158029834-209314021934");
+        Mockito.when(authentication.getName()).thenReturn(invalidUserName);
 
         ResponseEntity response = webSocketChatController.increaseRating(testMessage1.getUuid(), testRoom1.getRoomName(), authentication);
 
@@ -213,7 +222,7 @@ public class WebSocketChatControllerIntegrationTest {
     public void increaseRating_ifRoomDoesntExistReturnStatus404NotFound(){
         Mockito.when(authentication.getName()).thenReturn(testUser1.getUserName());
 
-        ResponseEntity response = webSocketChatController.increaseRating(testMessage1.getUuid(), "0982350928234-2930481", authentication);
+        ResponseEntity response = webSocketChatController.increaseRating(testMessage1.getUuid(), invalidRoomName, authentication);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
@@ -281,10 +290,7 @@ public class WebSocketChatControllerIntegrationTest {
     public void decreaseRating_ifUserBannedReturnStatus401Unauthorized(){
         Mockito.when(authentication.getName()).thenReturn(testUser1.getUserName());
 
-        Set<RoomEntity> bannedFromRooms = new HashSet<>();
-        bannedFromRooms.add(testRoom1);
-        testUser1.setExcludedRooms(bannedFromRooms);
-        userRepository.saveAndFlush(testUser1);
+        banUser(testRoom1, testUser1);
 
         ResponseEntity response = webSocketChatController.decreaseRating(testMessage1.getUuid(), testRoom1.getRoomName(), authentication);
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
@@ -292,7 +298,7 @@ public class WebSocketChatControllerIntegrationTest {
 
     @Test
     public void decreaseRating_ifUserDoesntExistReturnStatus404NotFound(){
-        Mockito.when(authentication.getName()).thenReturn("02158029834-209314021934");
+        Mockito.when(authentication.getName()).thenReturn(invalidUserName);
 
         ResponseEntity response = webSocketChatController.decreaseRating(testMessage1.getUuid(), testRoom1.getRoomName(), authentication);
 
@@ -303,7 +309,7 @@ public class WebSocketChatControllerIntegrationTest {
     public void decreaseRating_ifRoomDoesntExistReturnStatus404NotFound(){
         Mockito.when(authentication.getName()).thenReturn(testUser1.getUserName());
 
-        ResponseEntity response = webSocketChatController.decreaseRating(testMessage1.getUuid(), "0982350928234-2930481", authentication);
+        ResponseEntity response = webSocketChatController.decreaseRating(testMessage1.getUuid(), invalidRoomName, authentication);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
@@ -316,5 +322,53 @@ public class WebSocketChatControllerIntegrationTest {
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
+
+    @Test
+    public void getAllMessages_returnCorrectModelListAnd200OK(){
+        Mockito.when(authentication.getName()).thenReturn(testUser1.getUserName());
+
+        ResponseEntity response = webSocketChatController.getAllMessages(testRoom1.getRoomName(), authentication);
+        assertNotNull(response.getBody());
+        List messageList = (List) response.getBody();
+        MessageModel message = (MessageModel) messageList.get(0);
+
+        assertEquals(testMessage1.getUuid(), message.getUuid());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    public void getAllMessages_ifRoomDoesntExistCreateNewRoomAndReturnEmptyList(){
+        Mockito.when(authentication.getName()).thenReturn(testUser1.getUserName());
+
+        ResponseEntity response = webSocketChatController.getAllMessages(invalidRoomName, authentication);
+        assertNotNull(response.getBody());
+        List messageList = (List) response.getBody();
+
+        RoomEntity roomEntity = roomRepository.findRoomByNameWithQuery(invalidRoomName);
+        assertNotNull(roomEntity);
+        assertEquals(0, messageList.size());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+    }
+
+    @Test
+    public void getAllMessages_ifUserBannedReturnStatus401Unauthorized(){
+        Mockito.when(authentication.getName()).thenReturn(testUser1.getUserName());
+
+        banUser(testRoom1, testUser1);
+
+        ResponseEntity response = webSocketChatController.getAllMessages(testRoom1.getRoomName(), authentication);
+        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
+    }
+
+    @Test
+    public void getAllMessages_ifUserDoesntExistReturnStatus404NotFound(){
+        Mockito.when(authentication.getName()).thenReturn(invalidUserName);
+
+        ResponseEntity response = webSocketChatController.getAllMessages(testRoom1.getRoomName(), authentication);
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+
 
 }
