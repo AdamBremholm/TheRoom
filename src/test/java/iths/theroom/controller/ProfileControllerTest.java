@@ -76,7 +76,7 @@ public class ProfileControllerTest {
     @WithMockUser(username="spring")
     @Test
     public void getProfileMustHaveAUserNameElseRejectRequest() throws Exception {
-        mvc.perform(get("/theroom/profile/")
+        mvc.perform(get("/api/profile/")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isMethodNotAllowed());
     }
@@ -85,7 +85,7 @@ public class ProfileControllerTest {
     @Test
     public void getProfileReturnsOk() throws Exception {
         Mockito.when(profileService.get("name")).thenReturn(profileModel);
-        mvc.perform(get("/theroom/profile/name")
+        mvc.perform(get("/api/profile/name")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.country", is(profile.getCountry())))
                 .andExpect(status().isOk());
@@ -95,7 +95,7 @@ public class ProfileControllerTest {
     @Test
     public void postProfileMustMatchUserPrincipalElseReturnUnauth() throws Exception {
         Mockito.when(profileService.save(any(), any())).thenThrow(new UnauthorizedException("Invalid credentials"));
-        mvc.perform(post("/theroom/profile")
+        mvc.perform(post("/api/profile")
                 .content("{\"password\": \"password\", \"username\": \"name\", \"gender\": \"female\", \"country\": \"sweden\", \"age\": 19, \"aboutMe\": \"i like turtles\", \"starSign\": \"lion\"}")
                 .characterEncoding("UTF8")
                 .contentType(MediaType.APPLICATION_JSON))
@@ -106,7 +106,7 @@ public class ProfileControllerTest {
     @Test
     public void postProfileWorksAsExpected() throws Exception {
         Mockito.when(profileService.save(any(), any())).thenReturn(profileModel);
-        mvc.perform(post("/theroom/profile")
+        mvc.perform(post("/api/profile")
                 .content("{\"password\": \"password\", \"username\": \"name\", \"gender\": \"female\", \"country\": \"sweden\", \"age\": 19, \"aboutMe\": \"i like turtles\", \"starSign\": \"lion\"}")
                 .characterEncoding("UTF8")
                 .contentType(MediaType.APPLICATION_JSON))
@@ -118,7 +118,7 @@ public class ProfileControllerTest {
     @Test
     public void postProfileBadJsonEqualsBadRequest() throws Exception {
         Mockito.when(profileService.save(any(), any())).thenReturn(profileModel);
-        mvc.perform(post("/theroom/profile")
+        mvc.perform(post("/api/profile")
                 .content("not very good json format")
                 .characterEncoding("UTF8")
                 .contentType(MediaType.APPLICATION_JSON))
