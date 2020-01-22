@@ -1,5 +1,6 @@
 package iths.theroom.controller;
 
+import iths.theroom.exception.NoSuchMessageException;
 import iths.theroom.model.MessageModel;
 import iths.theroom.service.MessageService;
 import org.junit.Before;
@@ -20,10 +21,11 @@ import java.util.Collections;
 import java.util.List;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringRunner.class)
@@ -48,6 +50,8 @@ public class MessageControllerIntegrationTest {
 
     private MockMvc mvc;
 
+    List<MessageModel> allMessages;
+
     @Before
     public void setup(){
         MockitoAnnotations.initMocks(this);
@@ -60,12 +64,13 @@ public class MessageControllerIntegrationTest {
         message.setSender("sven");
         message.setContent("hello");
         message.setRoom("one");
+        allMessages = Collections.singletonList(message);
     }
 
     @WithMockUser(username="spring", roles="ADMIN")
     @Test
     public void givenMessages_whenGetMessages_thenReturnJsonArray() throws Exception {
-        List<MessageModel> allMessages = Collections.singletonList(message);
+
 
         given(service.getAllMessages()).willReturn(allMessages);
 
@@ -74,6 +79,51 @@ public class MessageControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].content", is(message.getContent())));
+    }
+
+    @WithMockUser(username = "spring", roles="ADMIN")
+    @Test
+    public void whenGetOneMessage_thenReturnJsonObject() throws Exception {
+
+        given(service.getMessageByUuid(any())).willReturn(message);
+
+        mvc.perform(get("/api/messages/abcdf-abcdef-abcdef-abcdef")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content", is(message.getContent())));
+    }
+
+    @WithMockUser(username = "spring", roles="ADMIN")
+    @Test
+    public void whenGetOneMessage_AndMessageNotFound_thenReturn_NotFoundException() throws Exception {
+
+        given(service.getMessageByUuid(any())).willThrow(NoSuchMessageException.class);
+
+        mvc.perform(get("/api/messages/abcdf-abcdef-abcdef-abcdef")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
+
+    @WithMockUser(username = "user", roles="ADMIN")
+    @Test
+    public void whenSearch_ReturnJsonArray() throws Exception {
+
+        given(service.getAllMessagesFromUser(any(), any(), any())).willReturn(allMessages);
+
+        mvc.perform(get("/api/messages/search?username=ronny&roomname=hej&count=1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @WithMockUser(username = "user", roles="ADMIN")
+    @Test
+    public void deleteMessage_worksAsIntended() throws Exception {
+
+        doNothing().when(service).remove(any());
+
+        mvc.perform(delete("/api/messages/abcdf-abcdef-abcdef-abcdef")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 
     @Test
