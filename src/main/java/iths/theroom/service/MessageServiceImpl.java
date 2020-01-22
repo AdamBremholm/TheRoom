@@ -4,28 +4,22 @@ import iths.theroom.entity.MessageEntity;
 import iths.theroom.entity.MessageRatingEntity;
 import iths.theroom.entity.RoomEntity;
 import iths.theroom.entity.UserEntity;
-import iths.theroom.exception.BadRequestException;
-import iths.theroom.exception.NoSuchMessageException;
-import iths.theroom.exception.NoSuchUserException;
-import iths.theroom.exception.NotFoundException;
+import iths.theroom.exception.*;
 import iths.theroom.factory.MessageFactory;
 import iths.theroom.model.MessageModel;
 import iths.theroom.pojos.MessageForm;
 import iths.theroom.repository.MessageRepository;
-import iths.theroom.exception.*;
-import iths.theroom.model.MessageModel;
-import iths.theroom.pojos.MessageForm;
-import iths.theroom.repository.MessageRepository;
-import iths.theroom.entity.MessageEntity;
 import iths.theroom.repository.RoomRepository;
 import iths.theroom.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+
 import static iths.theroom.factory.MessageFactory.toModel;
 
 @Service
@@ -190,12 +184,12 @@ public class MessageServiceImpl implements MessageService {
 
     private MessageEntity fetchMessageIfExists(String messageUuid){
         Optional<MessageEntity> messageFound = messageRepository.findByUuid(messageUuid);
-        return messageFound.orElseThrow(NoSuchMessageException::new);
+        return messageFound.orElseThrow(() -> new NotFoundException("Message with uuid " + messageUuid + " not found"));
     }
 
     private UserEntity fetchUserIfExists(String userName){
         Optional<UserEntity> userFound = userRepository.findByUserName(userName);
-        return userFound.orElseThrow(NoSuchUserException::new);
+        return userFound.orElseThrow(() -> new NotFoundException("Username " + userName + " not found"));
     }
 
 }

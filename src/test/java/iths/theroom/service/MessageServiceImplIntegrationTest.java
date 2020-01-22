@@ -1,11 +1,12 @@
 package iths.theroom.service;
 
-import iths.theroom.entity.*;
+import iths.theroom.entity.MessageEntity;
+import iths.theroom.entity.MessageRatingEntity;
+import iths.theroom.entity.RoomEntity;
+import iths.theroom.entity.UserEntity;
 import iths.theroom.exception.BadRequestException;
-import iths.theroom.exception.NoSuchMessageException;
 import iths.theroom.exception.NoSuchUserException;
 import iths.theroom.exception.NotFoundException;
-import iths.theroom.factory.MessageFactory;
 import iths.theroom.model.MessageModel;
 import iths.theroom.pojos.MessageForm;
 import iths.theroom.repository.MessageRepository;
@@ -18,10 +19,8 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -242,13 +241,13 @@ public class MessageServiceImplIntegrationTest {
         assertThat(messageService.getAllMessagesFromUser("sven", "room1", "1").get(0)).isInstanceOf(MessageModel.class);
     }
 
-    @Test(expected = NoSuchMessageException.class)
+    @Test(expected = NotFoundException.class)
     public void decreaseMessageRating_messageNotFoundThrowsException() {
         Mockito.when(messageRepository.findByUuid(any())).thenReturn(Optional.empty());
         messageService.decreaseMessageRating("123", "johan");
     }
 
-    @Test(expected = NoSuchUserException.class)
+    @Test(expected = NotFoundException.class)
     public void decreaseMessageRating_userNotFoundThrowsException() {
         Mockito.when(messageRepository.findByUuid(any())).thenReturn(Optional.of(message));
         Mockito.when(userRepository.findByUserName(any())).thenReturn(Optional.empty());
@@ -262,13 +261,13 @@ public class MessageServiceImplIntegrationTest {
         assertThat(messageService.decreaseMessageRating("123abc", "sven").getRating()).isEqualTo(-1);
     }
 
-    @Test(expected = NoSuchMessageException.class)
+    @Test(expected = NotFoundException.class)
     public void increaseMessageRating_messageNotFoundThrowsException() {
         Mockito.when(messageRepository.findByUuid(any())).thenReturn(Optional.empty());
         messageService.increaseMessageRating("123", "johan");
     }
 
-    @Test(expected = NoSuchUserException.class)
+    @Test(expected = NotFoundException.class)
     public void increaseMessageRating_userNotFoundThrowsException() {
         Mockito.when(messageRepository.findByUuid(any())).thenReturn(Optional.of(message));
         Mockito.when(userRepository.findByUserName(any())).thenReturn(Optional.empty());

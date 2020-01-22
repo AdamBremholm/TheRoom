@@ -1,7 +1,6 @@
 package iths.theroom.controller;
 
 import iths.theroom.entity.RoomEntity;
-import iths.theroom.exception.BadRequestException;
 import iths.theroom.exception.NotFoundException;
 import iths.theroom.exception.UnauthorizedException;
 import iths.theroom.factory.MessageFactory;
@@ -33,17 +32,14 @@ public class WebSocketChatController {
 
     @MessageMapping("/chat.sendMessage.{roomName}")
     @SendTo("/topic/chatMessages.{roomName}")
-    public ResponseEntity sendMessage(@DestinationVariable String roomName, @Payload MessageForm messageForm,
-                                      Authentication authentication) {
+    ResponseEntity sendMessage(@Payload MessageForm messageForm, Authentication authentication) {
         String userName = authentication.getName();
         try{
-            roomService.isUserBannedHere(userName, roomName);
+            roomService.isUserBannedHere(userName, messageForm.getRoomName());
             return ResponseEntity.ok(messageService.save(messageForm));
 
         } catch (UnauthorizedException e){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).header("User", userName).body(e.getMessage());
-        } catch (BadRequestException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).header("User", userName).body(e.getMessage());
         } catch (NotFoundException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).header("User", userName).body(e.getMessage());
         }
@@ -52,19 +48,16 @@ public class WebSocketChatController {
 
     @MessageMapping("/chat.changeBgColor.{roomName}")
     @SendTo("/topic/backgroundChange.{roomName}")
-    public ResponseEntity changeBackground(@DestinationVariable String roomName, @Payload MessageForm messageForm,
-                                   Authentication authentication) {
-        String userName = authentication.getName();
+    ResponseEntity changeBackground(@Payload MessageForm messageForm, Authentication authentication) {
 
+        String userName = authentication.getName();
         try{
-            roomService.isUserBannedHere(userName, roomName);
+            roomService.isUserBannedHere(userName, messageForm.getRoomName());
             RoomModel roomModel = roomService.updateRoom(messageForm);
             return ResponseEntity.ok(roomModel.getBackgroundColor());
 
         } catch (UnauthorizedException e){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).header("User", userName).body(e.getMessage());
-        } catch (BadRequestException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).header("User", userName).body(e.getMessage());
         } catch (NotFoundException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).header("User", userName).body(e.getMessage());
         }
@@ -73,8 +66,8 @@ public class WebSocketChatController {
 
     @MessageMapping("/chat.increaseRating.{messageUuid}.{roomName}")
     @SendTo("/topic/rating.{roomName}")
-    public ResponseEntity increaseRating(@DestinationVariable String messageUuid, @DestinationVariable String roomName,
-                                         Authentication authentication){
+    ResponseEntity increaseRating(@DestinationVariable String messageUuid, @DestinationVariable String roomName,
+                                  Authentication authentication){
         String userName = authentication.getName();
         try{
             roomService.isUserBannedHere(userName, roomName);
@@ -82,8 +75,6 @@ public class WebSocketChatController {
 
         } catch (UnauthorizedException e){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).header("User", userName).body(e.getMessage());
-        } catch (BadRequestException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).header("User", userName).body(e.getMessage());
         } catch (NotFoundException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).header("User", userName).body(e.getMessage());
         }
@@ -91,8 +82,8 @@ public class WebSocketChatController {
 
     @MessageMapping("/chat.decreaseRating.{messageUuid}.{roomName}")
     @SendTo("/topic/rating.{roomName}")
-    public ResponseEntity decreaseRating(@DestinationVariable String messageUuid, @DestinationVariable String roomName,
-                                         Authentication authentication){
+    ResponseEntity decreaseRating(@DestinationVariable String messageUuid, @DestinationVariable String roomName,
+                                  Authentication authentication){
         String userName = authentication.getName();
         try{
             roomService.isUserBannedHere(userName, roomName);
@@ -100,8 +91,6 @@ public class WebSocketChatController {
 
         } catch (UnauthorizedException e){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).header("User", userName).body(e.getMessage());
-        } catch (BadRequestException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).header("User", userName).body(e.getMessage());
         } catch (NotFoundException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).header("User", userName).body(e.getMessage());
         }
@@ -109,7 +98,7 @@ public class WebSocketChatController {
 
     @MessageMapping("/chat.retrieveAll.{userName}.{roomName}")
     @SendTo("/topic/{userName}.{roomName}")
-    public ResponseEntity getAllMessages(@DestinationVariable String roomName, Authentication authentication){
+    ResponseEntity getAllMessages(@DestinationVariable String roomName, Authentication authentication){
 
         String userName = authentication.getName();
         try{
@@ -119,8 +108,6 @@ public class WebSocketChatController {
 
         } catch (UnauthorizedException e){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).header("User", userName).body(e.getMessage());
-        } catch (BadRequestException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).header("User", userName).body(e.getMessage());
         } catch (NotFoundException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).header("User", userName).body(e.getMessage());
         }
@@ -129,17 +116,15 @@ public class WebSocketChatController {
 
     @MessageMapping("/chat.newUser.{roomName}")
     @SendTo("/topic/alerts.{roomName}")
-    public ResponseEntity newUser(@DestinationVariable String roomName, @Payload MessageForm webSocketChatMessage,
-                                  Authentication authentication) {
+    ResponseEntity newUser(@DestinationVariable String roomName, @Payload MessageForm messageForm,
+                           Authentication authentication) {
         String userName = authentication.getName();
         try{
             roomService.isUserBannedHere(userName, roomName);
-            return ResponseEntity.ok(MessageFactory.toModel(webSocketChatMessage));
+            return ResponseEntity.ok(MessageFactory.toModel(messageForm));
 
         }catch (UnauthorizedException e){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).header("User", userName).body(e.getMessage());
-        } catch (BadRequestException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).header("User", userName).body(e.getMessage());
         } catch (NotFoundException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).header("User", userName).body(e.getMessage());
         }
