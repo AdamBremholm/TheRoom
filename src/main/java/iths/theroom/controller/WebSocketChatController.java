@@ -1,7 +1,6 @@
 package iths.theroom.controller;
 
 import iths.theroom.entity.RoomEntity;
-import iths.theroom.exception.BadRequestException;
 import iths.theroom.exception.NotFoundException;
 import iths.theroom.exception.UnauthorizedException;
 import iths.theroom.factory.MessageFactory;
@@ -33,8 +32,7 @@ public class WebSocketChatController {
 
     @MessageMapping("/chat.sendMessage.{roomName}")
     @SendTo("/topic/chatMessages.{roomName}")
-    public ResponseEntity sendMessage(@Payload MessageForm messageForm,
-                                      Authentication authentication) {
+    public ResponseEntity sendMessage(@Payload MessageForm messageForm, Authentication authentication) {
         String userName = authentication.getName();
         try{
             roomService.isUserBannedHere(userName, messageForm.getRoomName());
@@ -42,8 +40,6 @@ public class WebSocketChatController {
 
         } catch (UnauthorizedException e){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).header("User", userName).body(e.getMessage());
-        } catch (BadRequestException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).header("User", userName).body(e.getMessage());
         } catch (NotFoundException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).header("User", userName).body(e.getMessage());
         }
@@ -53,8 +49,8 @@ public class WebSocketChatController {
     @MessageMapping("/chat.changeBgColor.{roomName}")
     @SendTo("/topic/backgroundChange.{roomName}")
     public ResponseEntity changeBackground(@Payload MessageForm messageForm, Authentication authentication) {
-        String userName = authentication.getName();
 
+        String userName = authentication.getName();
         try{
             roomService.isUserBannedHere(userName, messageForm.getRoomName());
             RoomModel roomModel = roomService.updateRoom(messageForm);
