@@ -106,9 +106,48 @@ public class WebSocketChatControllerIntegrationTest {
         userRepository.saveAndFlush(user);
     }
 
+    @Test
+    public void sendMessage_returnCorrectModelAnd200OK(){
+        Mockito.when(authentication.getName()).thenReturn(testUser1.getUserName());
+
+        ResponseEntity response = webSocketChatController.sendMessage(messageForm1, authentication);
+        assertNotNull(response.getBody());
+        MessageModel model = (MessageModel) response.getBody();
+
+        assertNotNull(model);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
 
     @Test
-    public void changeBackground_returnCorrectString(){
+    public void sendMessage_ifUserBannedReturnStatus401Unauthorized(){
+        Mockito.when(authentication.getName()).thenReturn(testUser1.getUserName());
+
+        banUser(testRoom1, testUser1);
+
+        ResponseEntity response = webSocketChatController.sendMessage(messageForm1, authentication);
+        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
+    }
+
+    @Test
+    public void sendMessage_ifUserDoesntExistReturnStatus404NotFound(){
+        Mockito.when(authentication.getName()).thenReturn(invalidUserName);
+
+        ResponseEntity response = webSocketChatController.sendMessage(messageForm1, authentication);
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    @Test
+    public void sendMessage_ifRoomDoesntExistReturnStatus404NotFound(){
+        Mockito.when(authentication.getName()).thenReturn(testUser1.getUserName());
+
+        messageForm1.setRoomName(invalidRoomName);
+
+        ResponseEntity response = webSocketChatController.sendMessage(messageForm1, authentication);
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    @Test
+    public void changeBackground_returnCorrectStringAnd200OK(){
         Mockito.when(authentication.getName()).thenReturn(testUser1.getUserName());
 
         String expected = "#313131";
@@ -118,6 +157,7 @@ public class WebSocketChatControllerIntegrationTest {
         String actual = (String) response.getBody();
 
         assertEquals(expected, actual);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test
