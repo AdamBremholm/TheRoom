@@ -2,6 +2,8 @@ package iths.theroom.entity;
 
 import javax.persistence.*;
 
+import java.util.UUID;
+
 import static iths.theroom.config.DataBaseConfig.COLUMN_ID;
 import static iths.theroom.config.DataBaseConfig.TABLE_AVATAR;
 
@@ -12,6 +14,8 @@ public class AvatarEntity {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private long id;
+    @Column(name = "uuid", unique = true)
+    private String uuid;
     private int base;
     private int head;
     private int torso;
@@ -73,5 +77,23 @@ public class AvatarEntity {
 
     public void setUserEntity(UserEntity userEntity) {
         this.userEntity = userEntity;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        if(this.uuid==null)
+            this.uuid = uuid;
+        else
+            throw new UnsupportedOperationException("set uuid only allowed once");
+    }
+
+    @PrePersist
+    public void initializeUUID() {
+        if (getUuid() == null) {
+            setUuid(UUID.randomUUID().toString());
+        }
     }
 }
