@@ -52,8 +52,7 @@ public class WebSocketChatController {
 
     @MessageMapping("/chat.changeBgColor.{roomName}")
     @SendTo("/topic/backgroundChange.{roomName}")
-    public ResponseEntity changeBackground(@DestinationVariable String roomName, @Payload MessageForm messageForm,
-                                   Authentication authentication) {
+    public ResponseEntity changeBackground(@Payload MessageForm messageForm, Authentication authentication) {
         String userName = authentication.getName();
 
         try{

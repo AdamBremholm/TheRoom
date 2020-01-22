@@ -113,7 +113,7 @@ public class WebSocketChatControllerIntegrationTest {
 
         String expected = "#313131";
         messageForm1.setRoomBackgroundColor(expected);
-        ResponseEntity response = webSocketChatController.changeBackground(testRoom1.getRoomName(), messageForm1, authentication);
+        ResponseEntity response = webSocketChatController.changeBackground(messageForm1, authentication);
 
         String actual = (String) response.getBody();
 
@@ -126,7 +126,7 @@ public class WebSocketChatControllerIntegrationTest {
 
         banUser(testRoom1, testUser1);
 
-        ResponseEntity response = webSocketChatController.changeBackground(testRoom1.getRoomName(), messageForm1, authentication);
+        ResponseEntity response = webSocketChatController.changeBackground(messageForm1, authentication);
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
     }
 
@@ -134,7 +134,7 @@ public class WebSocketChatControllerIntegrationTest {
     public void changeBackGround_ifUserDoesntExistReturnStatus404NotFound(){
         Mockito.when(authentication.getName()).thenReturn(invalidUserName);
 
-        ResponseEntity response = webSocketChatController.changeBackground(testRoom1.getRoomName(), messageForm1, authentication);
+        ResponseEntity response = webSocketChatController.changeBackground(messageForm1, authentication);
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
@@ -144,7 +144,7 @@ public class WebSocketChatControllerIntegrationTest {
 
         messageForm1.setRoomName(invalidRoomName);
 
-        ResponseEntity response = webSocketChatController.changeBackground(testRoom1.getRoomName(), messageForm1, authentication);
+        ResponseEntity response = webSocketChatController.changeBackground(messageForm1, authentication);
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
