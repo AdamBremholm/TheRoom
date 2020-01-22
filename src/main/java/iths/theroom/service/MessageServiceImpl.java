@@ -4,7 +4,10 @@ import iths.theroom.entity.MessageEntity;
 import iths.theroom.entity.MessageRatingEntity;
 import iths.theroom.entity.RoomEntity;
 import iths.theroom.entity.UserEntity;
-import iths.theroom.exception.*;
+import iths.theroom.exception.BadRequestException;
+import iths.theroom.exception.NoSuchUserException;
+import iths.theroom.exception.NotFoundException;
+import iths.theroom.exception.UnauthorizedException;
 import iths.theroom.factory.MessageFactory;
 import iths.theroom.model.MessageModel;
 import iths.theroom.pojos.MessageForm;
@@ -41,7 +44,7 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public MessageModel getMessageByUuid(String uuid) {
-        return toModel(messageRepository.findByUuid(uuid).orElseThrow(NoSuchMessageException::new));
+        return toModel(messageRepository.findByUuid(uuid).orElseThrow(() -> new NotFoundException("Message with uuid " + uuid + " not found")));
     }
 
     @Override
