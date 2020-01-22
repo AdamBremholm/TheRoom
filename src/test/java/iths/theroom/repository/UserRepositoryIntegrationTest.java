@@ -2,10 +2,8 @@
 
 package iths.theroom.repository;
 
-import iths.theroom.entity.AvatarEntity;
 import iths.theroom.entity.MessageEntity;
 import iths.theroom.entity.UserEntity;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,7 +13,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.HashSet;
-
 import java.util.NoSuchElementException;
 import java.util.Set;
 

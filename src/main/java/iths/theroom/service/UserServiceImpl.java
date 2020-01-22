@@ -3,7 +3,6 @@ package iths.theroom.service;
 import iths.theroom.entity.UserEntity;
 import iths.theroom.exception.BadRequestException;
 import iths.theroom.exception.ConflictException;
-import iths.theroom.exception.NoSuchUserException;
 import iths.theroom.exception.NotFoundException;
 import iths.theroom.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +29,8 @@ public class UserServiceImpl implements UserService {
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public UserEntity getUserById(Long id) {
-         return userRepository.findById(id).orElseThrow(NoSuchUserException::new);
+    public UserEntity getUserById(Long id) throws NotFoundException {
+         return userRepository.findById(id).orElseThrow(() -> new NotFoundException(""));
     }
 
     @Override

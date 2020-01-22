@@ -7,8 +7,10 @@ import iths.theroom.model.UserModel;
 import iths.theroom.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import static iths.theroom.factory.UserFactory.*;
+
 import java.util.List;
+
+import static iths.theroom.factory.UserFactory.toModel;
 
 @RestController
 @RequestMapping("/api")

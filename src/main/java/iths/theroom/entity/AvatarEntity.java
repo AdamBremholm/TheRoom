@@ -1,7 +1,6 @@
 package iths.theroom.entity;
 
 import javax.persistence.*;
-
 import java.util.UUID;
 
 import static iths.theroom.config.DataBaseConfig.COLUMN_ID;

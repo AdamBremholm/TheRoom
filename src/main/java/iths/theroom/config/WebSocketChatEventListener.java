@@ -2,7 +2,7 @@ package iths.theroom.config;
 
 import iths.theroom.entity.UserEntity;
 import iths.theroom.enums.Type;
-import iths.theroom.exception.NoSuchUserException;
+import iths.theroom.exception.NotFoundException;
 import iths.theroom.pojos.MessageForm;
 import iths.theroom.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +36,7 @@ public class WebSocketChatEventListener {
             UserEntity userEntity;
             try {
                 userEntity = userService.getByUserName(username);
-            } catch (NoSuchUserException e){
+            } catch (NotFoundException e){
                 userEntity = new UserEntity(username);
             }
             MessageForm messageForm = new MessageForm();

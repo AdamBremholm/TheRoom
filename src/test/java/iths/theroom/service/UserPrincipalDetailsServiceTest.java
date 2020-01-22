@@ -1,14 +1,16 @@
 package iths.theroom.service;
 
 import iths.theroom.entity.UserEntity;
-import iths.theroom.exception.*;
+import iths.theroom.exception.NotFoundException;
 import iths.theroom.repository.UserRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
 import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -26,7 +28,7 @@ public class UserPrincipalDetailsServiceTest {
         MockitoAnnotations.initMocks(this);
     }
 
-    @Test(expected = NoSuchUserException.class)
+    @Test(expected = NotFoundException.class)
     public void loadByUserName_DoesntGeneratePrincipalsForUnknownUser() {
         when(userRepository.findByUserName(any())).thenReturn(Optional.empty());
         userPrincipalDetailsService.loadUserByUsername("sven");

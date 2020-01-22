@@ -2,6 +2,7 @@ package iths.theroom.entity;
 
 import javax.persistence.*;
 import java.util.*;
+
 import static iths.theroom.config.DataBaseConfig.*;
 
 

@@ -12,6 +12,7 @@ import iths.theroom.repository.RoomRepository;
 import iths.theroom.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.Set;
 
 import static iths.theroom.factory.UserFactory.toModel;
