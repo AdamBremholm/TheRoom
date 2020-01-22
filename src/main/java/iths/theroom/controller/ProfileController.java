@@ -25,7 +25,7 @@ public class ProfileController {
     }
 
     @GetMapping("/profile/{username}")
-    public ProfileModel getProfile(@PathVariable()String username) {
+    public ProfileModel getProfile(@PathVariable("username")String username) {
         if(username != null && !username.isBlank()) {
             return profileService.get(username);
         }
