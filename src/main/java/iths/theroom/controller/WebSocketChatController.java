@@ -33,11 +33,11 @@ public class WebSocketChatController {
 
     @MessageMapping("/chat.sendMessage.{roomName}")
     @SendTo("/topic/chatMessages.{roomName}")
-    public ResponseEntity sendMessage(@DestinationVariable String roomName, @Payload MessageForm messageForm,
+    public ResponseEntity sendMessage(@Payload MessageForm messageForm,
                                       Authentication authentication) {
         String userName = authentication.getName();
         try{
-            roomService.isUserBannedHere(userName, roomName);
+            roomService.isUserBannedHere(userName, messageForm.getRoomName());
             return ResponseEntity.ok(messageService.save(messageForm));
 
         } catch (UnauthorizedException e){
