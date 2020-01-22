@@ -1,12 +1,10 @@
 package iths.theroom.service;
 
 import com.sun.security.auth.UserPrincipal;
-import iths.theroom.entity.AvatarEntity;
 import iths.theroom.entity.MessageEntity;
 import iths.theroom.entity.UserEntity;
 import iths.theroom.exception.BadRequestException;
 import iths.theroom.exception.ConflictException;
-import iths.theroom.exception.NoSuchUserException;
 import iths.theroom.exception.NotFoundException;
 import iths.theroom.repository.UserRepository;
 import org.junit.Before;
@@ -128,7 +126,7 @@ public class UserServiceImplIntegrationTest {
         userService.save(userEntity3);
     }
 
-    @Test(expected = NoSuchUserException.class)
+    @Test(expected = NotFoundException.class)
     public void getUserById_ThrowsExceptionWhenNotFound() {
         Mockito.when(userRepository.findById(Mockito.any())).thenReturn(Optional.empty());
         userService.getUserById(123L);
