@@ -21,13 +21,20 @@
 
 ## How to run :
 
-* Download java 11 or later. 
+* Download Java 11 or later. 
 * Download latest release at https://github.com/AdamBremholm/TheRoom/releases/latest
 * Start up rabbitmq and mysql services
 * Check that port 8080 is open
-
 * run the jar file with:
 ```
 java -jar theroomapp-0.0.1-SNAPSHOT 
 ```
 * Go to http://localhost:8080
+
+* For full api-documentation, go to http://ocalhost:8080/swagger-ui.html
+
+To create your first user with admin privileges run after registring your first user:
+```
+UPDATE `theroom`.`user` SET `roles` = 'ADMIN' WHERE (`id` = '1');
+```
+This user can later promote normal users through the ui. 
