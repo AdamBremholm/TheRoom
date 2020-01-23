@@ -22,8 +22,8 @@ steps:
         from_secret: codecov-token
       files:
         - jacoco.xml
-        paths:
-          - /drone/src/target/site/jacoco/
+      paths:
+        - /drone/src/target/site/jacoco/
 
   - name: slack
     image: plugins/slack
