@@ -18,3 +18,15 @@
 * rabbitmq-plugins enable rabbitmq_stomp
 * rabbitmq-plugins enable rabbitmq_management
 
+
+## How to run :
+
+* Download latest release at https://github.com/AdamBremholm/TheRoom/releases/latest
+* Start up rabbitmq and mysql services
+* Check that port 8080 is open
+
+* run the jar file with:
+```
+java -jar theroomapp-0.0.1-SNAPSHOT 
+```
+*Go to http://localhost:8080
