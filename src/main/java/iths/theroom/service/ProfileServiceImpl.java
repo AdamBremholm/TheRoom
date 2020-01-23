@@ -45,5 +45,10 @@ public class ProfileServiceImpl implements ProfileService {
         }
         return ProfileFactory.toModel(userService.updateUser(user).getProfile());
     }
+
+    @Override
+    public ProfileModel get(String username) {
+       return ProfileFactory.toModel(userService.getByUserName(username).getProfile());
+    }
 }
 

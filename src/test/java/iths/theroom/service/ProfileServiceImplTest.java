@@ -13,9 +13,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import javax.servlet.http.HttpSession;
-
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -83,5 +81,15 @@ public class ProfileServiceImplTest {
         user.setProfile(profile);
         when(userService.updateUser(any())).thenReturn(user);
         assertTrue(profileService.save(form, httpServletRequest).getCountry().equals("sweden"));
+    }
+
+    @Test
+    public void getProfileAsTheCorrectUser_PassesAsNormal() {
+        UserEntity user = new UserEntity("bertil");
+        ProfileEntity profile = new ProfileEntity();
+        profile.setCountry("sweden");
+        user.setProfile(profile);
+        when(userService.getByUserName(any())).thenReturn(user);
+        assertTrue(profileService.get(user.getUserName()).getCountry().equals(profile.getCountry()));
     }
 }
