@@ -33,7 +33,7 @@ java -jar theroomapp-0.0.1-SNAPSHOT
 
 * For full api-documentation, go to http://ocalhost:8080/swagger-ui.html
 
-To create your first user with admin privileges run after registring your first user:
+To create your first user with admin privileges, run this command in the mysql session after registring your first user:
 ```
 UPDATE `theroom`.`user` SET `roles` = 'ADMIN' WHERE (`id` = '1');
 ```
