@@ -262,7 +262,6 @@ function onBackgroundChange(payload) {
 
 function createMessage(message){
 
-
     let messageElement = document.createElement('li');
     let textElement = document.createElement('p');
     let messageText;
@@ -273,6 +272,10 @@ function createMessage(message){
     let localTime = new Date(message.time );
     let timeString = localTime.toString().split(' ').slice(0, 5).join(' ');
     let timeNode = document.createTextNode(" - " + timeString);
+    let bgColor = message.roomBackgroundColor;
+
+    document.getElementById('dialogue-page').style.backgroundColor = bgColor;
+    document.getElementById('html5colorpicker').value = bgColor;
 
     messageElement.classList.add('message-data');
 
