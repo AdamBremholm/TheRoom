@@ -24,7 +24,8 @@ public class ProfileController {
         return profileService.save(form, req);
     }
 
-    @GetMapping("/profile/{username}")
+    //@GetMapping("/profile/{username}")
+    @RequestMapping(value="/profile/{username}", method=RequestMethod.GET)
     public ProfileModel getProfile(@PathVariable("username")String username) {
         if(username != null && !username.isBlank()) {
             return profileService.get(username);
