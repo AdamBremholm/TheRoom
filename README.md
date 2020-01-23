@@ -21,6 +21,7 @@
 
 ## How to run :
 
+* Download java 11 or later. 
 * Download latest release at https://github.com/AdamBremholm/TheRoom/releases/latest
 * Start up rabbitmq and mysql services
 * Check that port 8080 is open
@@ -29,4 +30,4 @@
 ```
 java -jar theroomapp-0.0.1-SNAPSHOT 
 ```
-*Go to http://localhost:8080
+* Go to http://localhost:8080
