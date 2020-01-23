@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
-@RequestMapping(path="/api")
+@RequestMapping("/api")
 public class ProfileController {
 
     private final ProfileService profileService;
