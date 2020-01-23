@@ -13,7 +13,15 @@ steps:
       branch:
         - develop
         - master
-        - f-new-slack-plugin
+        - f-drone-coverage-plugin
+
+  - name: coverage
+    image: plugins/codecov
+    settings:
+      token:
+        from_secret: codecov-token
+      files:
+        - /drone/src/target/site/jacoco/jacoco.xml
 
   - name: slack
     image: plugins/slack
@@ -21,6 +29,8 @@ steps:
       webhook:
         from_secret: slack-webhook
       channel: drone
+    when:
+      status: [ success, failure ]
 
   - name: publish
     image: plugins/github-release

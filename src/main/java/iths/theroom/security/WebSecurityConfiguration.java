@@ -49,6 +49,12 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/login").permitAll()
                 .antMatchers(HttpMethod.POST, "/register").permitAll()
                 .antMatchers(HttpMethod.POST,"/api/users").permitAll()
+                .antMatchers("/v2/api-docs",
+                        "/configuration/ui",
+                        "/swagger-resources/**",
+                        "/configuration/security",
+                        "/swagger-ui.html",
+                        "/webjars/**").permitAll()
                 .antMatchers("/", "/index.html", "/script.js", "/style.css", "/favicon.ico", "/websocketApp/**").permitAll()
                 .antMatchers("/api/messages/*").hasRole("ADMIN")
                 .antMatchers("/api/admin/**").hasRole("ADMIN")
