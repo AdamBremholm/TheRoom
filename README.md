@@ -1,6 +1,7 @@
 # TheRoom
 
 [![Build Status](https://drone.kepr.org/api/badges/AdamBremholm/TheRoom/status.svg)](https://drone.kepr.org/AdamBremholm/TheRoom)
+[![codecov](https://codecov.io/gh/AdamBremholm/TheRoom/branch/develop/graph/badge.svg)](https://codecov.io/gh/AdamBremholm/TheRoom)
 
 ## mySQL setup:
 * create database theroom;
