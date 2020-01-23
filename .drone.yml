@@ -21,7 +21,7 @@ steps:
       token:
         from_secret: codecov-token
       files:
-        - *.xml
+        - jacoco.xml
         paths:
           - /drone/src/target/site/jacoco/
 
