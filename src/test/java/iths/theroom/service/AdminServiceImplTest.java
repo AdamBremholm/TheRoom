@@ -12,6 +12,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class AdminServiceImplTest {
@@ -48,11 +52,27 @@ public class AdminServiceImplTest {
     }
 
     @Test
-    public void banUserFromRoom() {
+    public void banUserAndRevertBan() {
         Mockito.when(roomRepository.findRoomByNameWithQuery(roomEntity.getRoomName())).thenReturn(roomEntity);
         Mockito.when(userRepository.findUserByNameWithQuery(userEntity.getUserName())).thenReturn(userEntity);
         RoomModel roomModel = roomFactory.entityToModel(roomEntity);
         Mockito.when(adminService.banUserFromRoom("hansen", "roomy")).thenReturn(roomModel);
         assertThat(roomEntity.getBannedUsers().contains(userEntity));
+        Mockito.when(adminService.removeBanFromUser("hansen", "roomy")).thenReturn(roomModel);
+        assertThat(roomEntity.getBannedUsers().isEmpty());
     }
+
+    @Test
+    public void deleteRoom() {
+        List<RoomEntity> rooms = new ArrayList<>();
+        rooms.add(roomEntity);
+        Mockito.when(roomRepository.findAll()).thenReturn(rooms);
+        assertThat(rooms.size() == 1);
+        RoomModel roomModel = roomFactory.entityToModel(roomEntity);
+        Mockito.when(roomRepository.findRoomByNameWithQuery(roomEntity.getRoomName())).thenReturn(roomEntity);
+        Mockito.when(adminService.deleteRoom(roomEntity.getRoomName())).thenReturn(roomModel);
+        assertThat(rooms.size() == 0);
+    }
+
 }
+
