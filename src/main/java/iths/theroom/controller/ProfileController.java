@@ -23,7 +23,7 @@ public class ProfileController {
     public ProfileModel addProfile(HttpServletRequest req, @RequestBody ProfileForm form) {
         return profileService.save(form, req);
     }
-    
+
     @GetMapping("/profile/{username}")
     public ProfileModel getProfile(@PathVariable("username") String username) {
         if(username != null && !username.isBlank()) {
