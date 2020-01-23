@@ -5,6 +5,7 @@ import iths.theroom.entity.RoomEntity;
 import iths.theroom.model.MessageModel;
 import iths.theroom.model.RoomModel;
 import org.springframework.stereotype.Component;
+
 import java.util.ArrayList;
 import java.util.List;
 

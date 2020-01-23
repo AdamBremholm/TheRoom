@@ -1,6 +1,6 @@
 package iths.theroom.controller;
 
-import iths.theroom.exception.NoSuchMessageException;
+import iths.theroom.exception.NotFoundException;
 import iths.theroom.model.MessageModel;
 import iths.theroom.service.MessageService;
 import org.junit.Before;
@@ -17,8 +17,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+
 import java.util.Collections;
 import java.util.List;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.mockito.ArgumentMatchers.any;
@@ -26,7 +28,8 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -97,7 +100,7 @@ public class MessageControllerIntegrationTest {
     @Test
     public void whenGetOneMessage_AndMessageNotFound_thenReturn_NotFoundException() throws Exception {
 
-        given(service.getMessageByUuid(any())).willThrow(NoSuchMessageException.class);
+        given(service.getMessageByUuid(any())).willThrow(NotFoundException.class);
 
         mvc.perform(get("/api/messages/abcdf-abcdef-abcdef-abcdef")
                 .contentType(MediaType.APPLICATION_JSON))

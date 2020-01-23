@@ -1,7 +1,7 @@
 package iths.theroom.service;
 
 import iths.theroom.entity.UserEntity;
-import iths.theroom.exception.NoSuchUserException;
+import iths.theroom.exception.NotFoundException;
 import iths.theroom.repository.UserRepository;
 import iths.theroom.security.UserPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,11 +21,10 @@ public class UserPrincipalDetailsService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        Optional<UserEntity> user = this.userRepository.findByUserName(s);
-        user.orElseThrow(NoSuchUserException::new);
-        UserPrincipal userPrincipal = new UserPrincipal(user.get());
+    public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
+        Optional<UserEntity> user = this.userRepository.findByUserName(userName);
+        user.orElseThrow(() -> new NotFoundException("User " + userName + " not found!"));
 
-        return userPrincipal;
+        return new UserPrincipal(user.get());
     }
 }

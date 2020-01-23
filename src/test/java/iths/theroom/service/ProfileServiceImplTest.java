@@ -3,7 +3,7 @@ package iths.theroom.service;
 import com.sun.security.auth.UserPrincipal;
 import iths.theroom.entity.ProfileEntity;
 import iths.theroom.entity.UserEntity;
-import iths.theroom.exception.*;
+import iths.theroom.exception.UnauthorizedException;
 import iths.theroom.pojos.ProfileForm;
 import org.junit.Before;
 import org.junit.Test;

@@ -5,7 +5,6 @@ import iths.theroom.entity.MessageRatingEntity;
 import iths.theroom.entity.RoomEntity;
 import iths.theroom.entity.UserEntity;
 import iths.theroom.exception.BadRequestException;
-import iths.theroom.exception.NoSuchUserException;
 import iths.theroom.exception.NotFoundException;
 import iths.theroom.model.MessageModel;
 import iths.theroom.pojos.MessageForm;
@@ -107,7 +106,7 @@ public class MessageServiceImplIntegrationTest {
        assertThat(messageService.getAllMessages().size()).isEqualTo(1);
     }
 
-    @Test(expected = NoSuchUserException.class)
+    @Test(expected = NotFoundException.class)
     public void save_NoUserFoundThrowsException() {
         Mockito.when(messageRepository.findByUuid(message.getUuid()))
                 .thenReturn(java.util.Optional.of(message));

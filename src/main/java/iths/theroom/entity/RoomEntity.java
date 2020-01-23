@@ -3,7 +3,9 @@ package iths.theroom.entity;
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
-import static iths.theroom.config.DataBaseConfig.*;
+
+import static iths.theroom.config.DataBaseConfig.COLUMN_ROOM_NAME;
+import static iths.theroom.config.DataBaseConfig.TABLE_ROOM;
 
 @Entity(name=TABLE_ROOM)
 public class RoomEntity {
